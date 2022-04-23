@@ -4,6 +4,7 @@ first 2 are on Nexus:
 https://nexus.lieberlieber.com/#browse/browse:lemontree-pipeline-tools
 
 ## LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
+If the Enterprise Architect Models are "poluted" with DIAGRAMIMAGEMAPS - you can use this little commandline Tool to delete those! (.eap(x) only)
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
 
 ```
@@ -13,6 +14,7 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
 ```
 
 ## LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
+Used to set "Filters" in LemonTree Single Session Files in the Pipeline. 
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
 
 ```
