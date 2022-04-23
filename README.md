@@ -1,6 +1,6 @@
 # LemonTree.Pipeline.Tools
 
-first 2 are on Nexus:\
+They are availble for downloard from the LieberLieber Nexus:\
 https://nexus.lieberlieber.com/#browse/browse:lemontree-pipeline-tools
 
 ## LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
