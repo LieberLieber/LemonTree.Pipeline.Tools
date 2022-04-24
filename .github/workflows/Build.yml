@@ -22,3 +22,11 @@ jobs:
  
      - name: Build Solution
        run: msbuild src/LemonTree.Pipeline.Tools.sln /p:Configuration=Release 
+       
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy app
+        run: exit 0
