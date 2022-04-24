@@ -39,5 +39,5 @@ jobs:
           $targetUrl = "${{env.NexusArtifactRepo}}/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
           echo "Uploading 	LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe to Nexus: $targetUrl"
           while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
-          curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T src\LemonTree.Pipeline.Tools.SetFilterInSessionFile\bin\Release\LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe $targetUrl
+          curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T src\LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams\bin\Release\LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe $targetUrl
       
