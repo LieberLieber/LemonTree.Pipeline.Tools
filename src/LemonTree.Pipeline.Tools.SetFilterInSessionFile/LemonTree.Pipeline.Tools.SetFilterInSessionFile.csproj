@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLineOptions\BaseOptions.cs" />
+    <Compile Include="CommandLineOptions\ConflictedOptions.cs" />
+    <Compile Include="CommandLineOptions\CustomOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
