@@ -23,25 +23,21 @@ jobs:
        run: nuget restore src/LemonTree.Pipeline.Tools.sln
  
      - name: Build Solution
-       run: msbuild src/LemonTree.Pipeline.Tools.sln /p:Configuration=Release 
+       run: msbuild src/LemonTree.Pipeline.Tools.sln /p:Configuration=Release
        
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Upload LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
-        run: |
+     - name: Upload LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
+       if: github.ref == 'refs/heads/main'
+       run: |
           $targetUrl = "${{env.NexusArtifactRepo}}/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
           echo "Uploading 	LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe to Nexus: $targetUrl"
           while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
           curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T /src/LemonTree.Pipeline.Tools.SetFilterInSessionFile/bin/Release/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe $targetUrl
           
-      - name: Upload LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
-        run: |
+     - name: Upload LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
+       if: github.ref == 'refs/heads/main'
+       run: |
           $targetUrl = "${{env.NexusArtifactRepo}}/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
           echo "Uploading 	LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe to Nexus: $targetUrl"
           while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
           curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T /src/LemonTree.Pipeline.Tools.SetFilterInSessionFile/bin/Release/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe $targetUrl
-      - name: Deploy app
-        run: exit 0
+      
