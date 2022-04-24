@@ -20,5 +20,5 @@ jobs:
      - name: Restore NuGet Packages
        run: nuget restore src/LemonTree.Pipeline.Tools.sln
  
-     - name: Build and Publish Web App
+     - name: Build Solution
        run: msbuild src/LemonTree.Pipeline.Tools.sln /p:Configuration=Release 
