@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommandLine;
+using LemonTree.Pipeline.Tools.SetFilterInSessionFile.CommandLineOptions;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Xml;
@@ -9,26 +11,39 @@ namespace SetFilterInSessionFile
     {
         static int Main(string[] args)
         {
+
+
             //Sample Commandline: SampleCompareSession.ltsfs "#Conflicted" "$HideGraphicalChanges "
             Console.WriteLine("SetFilterInSessionFile is starting");
+
+            // Parser.Default is case sensitive - so we use a custom parser to support in case sensitive verbs and options
+            var parser = new Parser(settings =>
+            {
+                settings.CaseSensitive = false;
+                settings.HelpWriter = Console.Error;
+            });
+
+            return parser.ParseArguments<ConflictedOptions, CustomOptions>(args)
+                .MapResult(
+                    (ConflictedOptions opts) => RunConflicted(opts),
+                    (CustomOptions opts) => RunCustom(opts),
+                    _ => (int)Exitcode.ErrorCmdParameter);
+        }
+
+        private static int RunCustom(CustomOptions opts)
+        {
+            return (int)SetFilterInFile(opts.SingleFileSession, opts.ImpactedElements, opts.ImpactedDiagrams);
+        }
+
+        private static int RunConflicted(ConflictedOptions opts)
+        {
+            return (int)SetFilterInFile(opts.SingleFileSession, "#Conflicted", "#Conflicted");
+        }
+
+        private static Exitcode SetFilterInFile(string filename, string impactedElementsValue, string impactedDiagramsValue)
+        {
             try
             {
-                if (args.Length != 3)
-                {
-                    Console.WriteLine($"Wrong number of commandline parameters! (3) e.g.:  SampleCompareSession.ltsfs \"#Conflicted\" \"$HideGraphicalChanges\"");
-                    return -1;
-                }
-
-                string filename = args[0];
-                if (!(File.Exists(filename)))
-                {
-                    Console.WriteLine($"{filename} doesn't exist!");
-                    return -2;
-                }
-                
-                string impactedElementsValue = args[1];
-                string impactedDiagramsValue = args[2];
-
                 using (ZipArchive archive = ZipFile.Open(filename, ZipArchiveMode.Update))
                 {
                     foreach (ZipArchiveEntry entry in archive.Entries)
@@ -62,17 +77,16 @@ namespace SetFilterInSessionFile
                             }
                         }
                     }
-                    WriteReadmeIntoZip(args, archive);
+                    WriteReadmeIntoZip(new string[] { filename, impactedElementsValue, impactedDiagramsValue}, archive);
                     Console.WriteLine("SetFilterInSessionFile is finished!");
-                    return 0;
+                    return Exitcode.Success;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception occured: {ex.Message}");
-                return -9;
+                return Exitcode.Error;
             }
-
         }
 
         private static void WriteReadmeIntoZip(string[] args, ZipArchive archive)
