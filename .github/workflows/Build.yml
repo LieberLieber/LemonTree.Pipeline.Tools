@@ -1,7 +1,9 @@
 name: Build 
  
 on: [push]
- 
+env:
+  NexusArtifactRepo: https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools
+  
 jobs:
   build:
  
@@ -28,5 +30,18 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main'
     steps:
+      - name: Upload LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
+        run: |
+          $targetUrl = "${{env.NexusArtifactRepo}}/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
+          echo "Uploading 	LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe to Nexus: $targetUrl"
+          while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+          curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T /src/bin/release/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe $targetUrl
+          
+      - name: Upload LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
+        run: |
+          $targetUrl = "${{env.NexusArtifactRepo}}/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
+          echo "Uploading 	LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe to Nexus: $targetUrl"
+          while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+          curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T /src/bin/release/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe $targetUrl
       - name: Deploy app
         run: exit 0
