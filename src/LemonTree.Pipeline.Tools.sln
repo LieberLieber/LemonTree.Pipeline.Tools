@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.SetFilterInSessionFile", "LemonTree.Pipeline.Tools.SetFilterInSessionFile\LemonTree.Pipeline.Tools.SetFilterInSessionFile.csproj", "{42A8BDD8-B038-437F-AD44-29FB41AA4913}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.ModelCheck", "LemonTree.Pipeline.Tools.ModelCheck\LemonTree.Pipeline.Tools.ModelCheck.csproj", "{2D43523B-04F5-4CE1-BD74-22623722FD31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{42A8BDD8-B038-437F-AD44-29FB41AA4913}.Release|Any CPU.Build.0 = Release|Any CPU
 		{42A8BDD8-B038-437F-AD44-29FB41AA4913}.Release|x86.ActiveCfg = Release|Any CPU
 		{42A8BDD8-B038-437F-AD44-29FB41AA4913}.Release|x86.Build.0 = Release|Any CPU
+		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Debug|x86.Build.0 = Debug|Any CPU
+		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Release|x86.ActiveCfg = Release|Any CPU
+		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

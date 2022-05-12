@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using LemonTree.Pipeline.Tools;
 using LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.CommandLineOptions;
 using System;
 using System.Data.OleDb;
@@ -8,22 +9,9 @@ namespace RemovePrerenderedDiagrams
 {
     class Program
     {
-        private static OleDbConnectionStringBuilder _builder = new OleDbConnectionStringBuilder();
+        
 
-        public static int RunSQLnonQuery(string sql)
-        {
-            int RecordCount = -1;
-            using (var cn = new OleDbConnection { ConnectionString = _builder.ConnectionString })
-            {
-                using (var cmd = new OleDbCommand { CommandText = sql, Connection = cn })
-                {
-                    cn.Open();
-                    RecordCount = cmd.ExecuteNonQuery();
-                }
-            }
-
-            return RecordCount;
-        }
+       
         static int Main(string[] args)
         {
             Console.WriteLine("RemovePrerenderedDiagrams is starting");
@@ -49,10 +37,11 @@ namespace RemovePrerenderedDiagrams
 
 
                 Console.WriteLine($"RemovePrerenderedDiagrams from {opts.Model}");
-                _builder.Provider = "Microsoft.Jet.OLEDB.4.0";
-                _builder.DataSource = opts.Model;
+               
 
-                int retVal = RunSQLnonQuery("Delete from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");
+                ModelAccess.ConfigureAccess("Microsoft.Jet.OLEDB.4.0", opts.Model);
+
+                int retVal = ModelAccess.RunSQLnonQuery("Delete from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");
                 Console.WriteLine($"Removed {retVal} Prerendered Diagrams from {opts.Model}");
                 Console.WriteLine("RemovePrerenderedDiagrams is finished");
                 return (int)Exitcode.Success;
