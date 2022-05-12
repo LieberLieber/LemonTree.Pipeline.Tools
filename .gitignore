@@ -348,3 +348,9 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+src/Models/GPUCache/data_0
+src/Models/GPUCache/data_1
+src/Models/GPUCache/data_2
+src/Models/GPUCache/data_3
+src/Models/GPUCache/index
+*.ldb
