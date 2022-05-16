@@ -95,14 +95,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         {
             Issue result = new Issue();
 
-            long  modelSize = new FileInfo(model).Length;
+            long modelSize = new FileInfo(model).Length;
 
-            string tempFile = Path.GetTempFileName() +".mdb"; 
+            string tempFile = Path.GetTempFileName() + ".mdb";
 
-            if (ModelAccess.CompactAndRepairJetDB(model,tempFile))
+            if (ModelAccess.CompactAndRepairJetDB(model, tempFile))
             {
                 long modelCompactSize = new FileInfo(tempFile).Length;
-                var  ratio = (double)modelCompactSize / (double)modelSize;   
+                var ratio = (double)modelCompactSize / (double)modelSize;
 
                 if (ratio < 0.50)
                 {
@@ -127,7 +127,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 result.Title = "Trying to compact the model failed.";
             }
 
-            
+
 
             return result;
         }
@@ -139,7 +139,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             long modelSize = new FileInfo(model).Length;
 
             string tempFile = Path.GetTempFileName() + ".mdb";
-            File.Copy(model,tempFile,true);
+            File.Copy(model, tempFile, true);
             ModelAccess.ConfigureAccess("Microsoft.Jet.OLEDB.4.0", tempFile);
 
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'ModelDocument'");
@@ -198,7 +198,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
 
 
-        internal static Issue CheckAudit(string model)
+        internal static Issue CheckAuditLogs(string model)
         {
             int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from t_snapshot");
 
@@ -213,6 +213,26 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 result.Level = IssueLevel.Error;
                 result.Detail = $"Audits are not helpful or required if you manage a model inside a VCS with LemonTree.";
                 result.Title = $"Model has {retVal} Audit Entires";
+            }
+
+            return result;
+        }
+
+        internal static Issue CheckAuditEnabled(string model)
+        {
+            int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"*enabled=1;*\"");
+
+            Issue result = new Issue();
+            if (retVal == 0)
+            {
+                result.Level = IssueLevel.Passed;
+                result.Title = "Auditing is disabled in the model";
+            }
+            else
+            {
+                result.Level = IssueLevel.Error;
+                result.Detail = $"Auditing is not helpful or required if you manage a model inside a VCS with LemonTree.";
+                result.Title = $"Auditing is enabled.";
             }
 
             return result;

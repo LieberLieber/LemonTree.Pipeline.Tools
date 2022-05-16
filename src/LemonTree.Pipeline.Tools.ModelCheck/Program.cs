@@ -39,7 +39,9 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
                 issues.AddIfNotNull(Checks.Checks.CheckBaseline(opts.Model));
 
-                issues.AddIfNotNull(Checks.Checks.CheckAudit(opts.Model));
+                issues.AddIfNotNull(Checks.Checks.CheckAuditEnabled(opts.Model));
+
+                issues.AddIfNotNull(Checks.Checks.CheckAuditLogs(opts.Model));
 
                 issues.AddIfNotNull(Checks.Checks.CheckUserSecurity(opts.Model));
                 
