@@ -11,5 +11,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions
         Error = -2,
         ErrorCmdParameter = -1, //Parsing error of command line parameter
         Success = 0, // Successful merge
+        ModelWarning =1,
+        ModelError = 2
     }
 }

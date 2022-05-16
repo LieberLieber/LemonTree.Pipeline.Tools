@@ -66,6 +66,22 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                     File.WriteAllText(opts.Out, issues.ToMd());
                 }
 
+                if (opts.FailOnErrors == true)
+                {
+                    if (issues.HasErrors())
+                    {
+                        return (int)Exitcode.ModelError;
+                    }
+                }
+
+                if (opts.FailOnWarnings == true)
+                {
+                    if (issues.HasWarnings())
+                    {
+                        return (int)Exitcode.ModelWarning;
+                    }
+                }
+
                 return (int)Exitcode.Success;
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -38,6 +39,34 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             {
                 this.Add(element);
             }
+        }
+
+        internal bool HasErrors()
+        {
+            //this can be done with Linq
+            var mySortedList = this.OrderBy(x => x.Level);
+            foreach (Issue issue in mySortedList)
+            {
+                if (issue.Level == IssueLevel.Error)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal bool HasWarnings()
+        {
+            //this can be done with Linq
+            var mySortedList = this.OrderBy(x => x.Level);
+            foreach (Issue issue in mySortedList)
+            {
+                if (issue.Level == IssueLevel.Warning)
+                    return true;
+            }
+
+            return false;
         }
     }
 }
