@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.OleDb;
 using System.Diagnostics;
-using System.IO;
 
 
 namespace LemonTree.Pipeline.Tools
@@ -14,7 +13,6 @@ namespace LemonTree.Pipeline.Tools
         {
             try
             {
-                Console.WriteLine($"Starting compact of model.");
                 var oParams = new object[]
                  {
                         source, destination
@@ -23,10 +21,9 @@ namespace LemonTree.Pipeline.Tools
                 string comName = "DAO.DBEngine.120";
 
                 object DBE = Activator.CreateInstance(Type.GetTypeFromProgID(comName));
-                
+
                 if (DBE == null)
                 {
-                    Console.WriteLine($"Compact failed couldn't get the {comName} Com object");
 
                     comName = "DAO.DBEngine.36";
                     DBE = Activator.CreateInstance(Type.GetTypeFromProgID(comName));
@@ -37,20 +34,15 @@ namespace LemonTree.Pipeline.Tools
                     }
                 }
 
-                Console.WriteLine($"Running with {comName} Com object");
+
                 DBE.GetType().InvokeMember("CompactDatabase", System.Reflection.BindingFlags.InvokeMethod, null, DBE, oParams);
 
-
-
-                // JetEngine engine = new JetEngine();
-                //engine.CompactDatabase(string.Format("Data Source={0};Provider=Microsoft.Jet.OLEDB.4.0;", source),
-                //string.Format("Data Source={0};Provider=Microsoft.Jet.OLEDB.4.0;", destination));
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(DBE);
                 DBE = null;
-                Console.WriteLine($"Finished compact of model.");
+
                 return true;
             }
-            catch (Exception ex)    
+            catch (Exception ex)
             {
                 Debug.WriteLine($"Compact failed: {ex.Message}");
                 Console.WriteLine($"Compact failed: {ex.Message}");
@@ -62,7 +54,6 @@ namespace LemonTree.Pipeline.Tools
         {
             try
             {
-                Console.WriteLine($"Starting compact of JET model.");
                 var oParams = new object[]
                  {
                         string.Format("Data Source={0};Provider=Microsoft.Jet.OLEDB.4.0;", source), string.Format("Data Source={0};Provider=Microsoft.Jet.OLEDB.4.0;", destination)
@@ -74,21 +65,20 @@ namespace LemonTree.Pipeline.Tools
 
                 if (DBE == null)
                 {
-                        Console.WriteLine($"Compact failed couldn't get the {comName} Com object");
-                        return false;
+                    Console.WriteLine($"Compact failed couldn't get the {comName} Com object");
+                    return false;
                 }
 
-                Console.WriteLine($"Running with {comName} Com object");
+
                 DBE.GetType().InvokeMember("CompactDatabase", System.Reflection.BindingFlags.InvokeMethod, null, DBE, oParams);
 
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(DBE);
                 DBE = null;
-                Console.WriteLine($"Finished compact of model.");
+
                 return true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Compact failed: {ex.Message}");
                 Console.WriteLine($"Compact failed: {ex.Message}");
                 return false;
             }
@@ -124,8 +114,8 @@ namespace LemonTree.Pipeline.Tools
                 using (var cmd = new OleDbCommand { CommandText = sql, Connection = cn })
                 {
                     cn.Open();
-                    RecordCount = (Int32)cmd.ExecuteScalar(); 
-                  
+                    RecordCount = (Int32)cmd.ExecuteScalar();
+
                 }
             }
 

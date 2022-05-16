@@ -10,8 +10,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
     {
         static int Main(string[] args)
         {
-            Console.WriteLine("RemovePrerenderedDiagrams is starting");
-
             // Parser.Default is case sensitive - so we use a custom parser to support in case sensitive verbs and options
             var parser = new Parser(settings =>
             {
@@ -44,18 +42,23 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 issues.AddIfNotNull(Checks.Checks.CheckAuditLogs(opts.Model));
 
                 issues.AddIfNotNull(Checks.Checks.CheckUserSecurity(opts.Model));
-                
+
                 issues.AddIfNotNull(Checks.Checks.CheckVCSConnection(opts.Model));
-                
+
                 issues.AddIfNotNull(Checks.Checks.CheckExtDoc(opts.Model));
-                
+
                 issues.AddIfNotNull(Checks.Checks.CheckModelDocument(opts.Model));
 
-                issues.AddIfNotNull(Checks.Checks.CheckCompact(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckStrippedCompact(opts.Model));
-
                 issues.AddIfNotNull(Checks.Checks.CheckT_image(opts.Model));
+
+                if (opts.NoCompact != true)
+                {
+                    issues.AddIfNotNull(Checks.Checks.CheckCompact(opts.Model));
+
+                    issues.AddIfNotNull(Checks.Checks.CheckStrippedCompact(opts.Model));
+                }
+
+                Console.WriteLine(issues.ToString());
 
                 if (opts.Out != null)
                 {

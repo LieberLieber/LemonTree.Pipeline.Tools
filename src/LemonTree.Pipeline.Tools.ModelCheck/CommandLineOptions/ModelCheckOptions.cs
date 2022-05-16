@@ -7,5 +7,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions
     {
         [Option("Out", Required = false, HelpText = "File to output .md e.g.: 'out.md'")]
         public string Out { get; set; }
+
+        [Option("NoCompact", Required = false, HelpText = "If set the Checks that compact the Model are not run!")]
+        public bool NoCompact { get; set; }
     }
 }

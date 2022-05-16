@@ -21,6 +21,17 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return sb.ToString();
         }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            var mySortedList = this.OrderBy(x => x.Level);
+            foreach (Issue issue in mySortedList)
+            {
+                sb.AppendLine($"{issue.Level}; {issue.Title}");
+            }
+            return sb.ToString();
+        }
+
         internal void AddIfNotNull(Issue element)
         {
             if (element != null)
