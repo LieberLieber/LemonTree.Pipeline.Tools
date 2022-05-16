@@ -51,24 +51,24 @@ jobs:
           curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.ModelCheck.exe $targetUrl
       
      - name: Run LemonTree Check Tool
-       id: sysmlCheck
+       id: modelcheck
        run: |
           echo "starting validation"
-          .\bin\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelName}}" --out ".\output.md"
+          .\bin\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelName}}" --out ".\output.md" --FailOnErrors 
           type "output.md"
 
           echo "finished validation with $LASTEXITCODE"
 
-          #  Exit codes of the CLI application:
-          #  * 0 = model is valid (no error, no warning, no runtime exception)
-          #  * 1 = CLI argument parsing error occurred
-          #  * 2 = other runtime exception occurred
-          #  * 3 = model has at least one warning
-          #  * 4 = model has at least one error
+          #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+          #  * -2 = other runtime exception occurred
+          #  * -1 = CLI argument parsing error occurred
+          #  *  0 = model is valid (no error, no warning, no runtime exception)
+          #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+          #  *  2 = model has at least one error  (only if --FailOnErrors)
 
           $Message = "output.md"
 
-          echo "::set-output name=ValidationExitCode::$($LASTEXITCODE)"
+          echo "::set-output name=modelcheckExitCode::$($LASTEXITCODE)"
       
           #for now never stop 
           exit 0
@@ -106,16 +106,16 @@ jobs:
      - name: evaulate Exit Code
        run: |
           echo "set job failed on ..."
-          echo "Current Exit Code ${{ steps.sysmlCheck.outputs.ValidationExitCode }}"
+          echo "Current Exit Code ${{ steps.modelcheck.outputs.modelcheckExitCode }}"
 
-          #  Exit codes of the CLI application:
-          #  * 0 = model is valid (no error, no warning, no runtime exception)
-          #  * 1 = CLI argument parsing error occurred
-          #  * 2 = other runtime exception occurred
-          #  * 3 = model has at least one warning
-          #  * 4 = model has at least one error
+          #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+          #  * -2 = other runtime exception occurred
+          #  * -1 = CLI argument parsing error occurred
+          #  *  0 = model is valid (no error, no warning, no runtime exception)
+          #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+          #  *  2 = model has at least one error  (only if --FailOnErrors)
 
-          if (${{ steps.sysmlCheck.outputs.ValidationExitCode }} -eq 3)
+          if (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 1)
           {
             #fail on warning
             Echo "model has at least one warning"
@@ -124,19 +124,19 @@ jobs:
             #ignore warning
             exit 0
           }
-          elseif (${{ steps.sysmlCheck.outputs.ValidationExitCode }} -eq 4)
+          elseif (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 2)
           {
               #fail on Error
               echo "model has at least one error"
-              exit 4
+              exit 2
           }
-          elseif (${{ steps.sysmlCheck.outputs.ValidationExitCode }} -eq 0)
+          elseif (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 0)
           {
             #brilliant model
-            Echo "model is valid"
+            Echo "modelcheck is passed"
             exit 0
           }
           else
           {
-            exit 1
+            exit steps.modelcheck.outputs.modelcheckExitCode
           }
