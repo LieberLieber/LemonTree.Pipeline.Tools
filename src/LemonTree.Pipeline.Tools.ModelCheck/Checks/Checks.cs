@@ -27,6 +27,28 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return result;
         }
 
+        internal static Issue CheckT_image(string model)
+        {
+            int retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_image");
+
+            Issue result = new Issue();
+            if (retVal == 0)
+            {
+                result.Level = IssueLevel.Passed;
+                result.Title = "No t_image entries in the model";
+            }
+            else
+            {
+                result.Level = IssueLevel.Information;
+                result.Detail = $"Binary image data makes the model bigger!";
+                result.Title = $"Model has {retVal} t_image entries";
+
+            }
+
+
+            return result;
+        }
+
         internal static Issue CheckBaseline(string model)
         {
             int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'");
@@ -125,6 +147,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'BaseLine'");
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'DIAGRAMIMAGEMAP'");
             ModelAccess.RunSQLnonQuery("Delete FROM t_snapshot");
+            ModelAccess.RunSQLnonQuery("Delete FROM t_image");
 
             string tempFileCompact = Path.GetTempFileName() + ".mdb";
 

@@ -51,7 +51,9 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
                 issues.AddIfNotNull(Checks.Checks.CheckCompact(opts.Model));
 
-                issues.AddIfNotNull(Checks.Checks.CheckStrippedCompact(opts.Model));    
+                issues.AddIfNotNull(Checks.Checks.CheckStrippedCompact(opts.Model));
+
+                issues.AddIfNotNull(Checks.Checks.CheckT_image(opts.Model));
 
                 if (opts.Out != null)
                 {
