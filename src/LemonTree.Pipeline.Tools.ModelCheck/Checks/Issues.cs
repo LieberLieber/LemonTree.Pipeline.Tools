@@ -11,13 +11,15 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("# LemonTree ModelCheck results");
-            sb.AppendLine("| Severity | Issue | Message |");
-            sb.AppendLine("|----------|---------|---------|");
+            sb.AppendLine("| | Severity | Issue | Message |");
+            sb.AppendLine("|----------|----------|---------|---------|");
 
             var mySortedList = this.OrderBy(x => x.Level);
             foreach (Issue issue in mySortedList)
             {
-                sb.AppendLine($"|{issue.Level}|{issue.Title}|{issue.Detail}|");
+
+
+                sb.AppendLine($"|{issue.Symbol}|{issue.Level}|{issue.Title}|{issue.Detail}|");
             }
             return sb.ToString();
         }

@@ -111,9 +111,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 else if (ratio < 0.75)
                 {
                     result.Level = IssueLevel.Information;
-            
-     
-
                 }
                 else
                 {
