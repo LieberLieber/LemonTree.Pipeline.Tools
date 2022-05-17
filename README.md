@@ -27,6 +27,7 @@ Used to check Models for LemonTree Readiness.
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe
 
 ...
+
   &"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe --output LemonTree.Pipeline.Tools.ModelCheck.exe
 
   LemonTree.Pipeline.Tools.ModelCheck.exe  --model "model.eapx" --out ".\output.md" --FailOnErrors --FailOnWarnings
@@ -37,4 +38,5 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
   #  *  0 = model is valid (no error, no warning, no runtime exception)
   #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
   #  *  2 = model has at least one error  (only if --FailOnErrors)
+
 ...
