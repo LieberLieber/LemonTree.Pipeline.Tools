@@ -27,14 +27,14 @@ Used to check Models for LemonTree Readiness.
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe
 
 ...
-          &"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe --output LemonTree.Pipeline.Tools.ModelCheck.exe
-          
-          LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelName}}" --out ".\output.md" --FailOnErrors --FailOnWarnings
-          echo "finished validation with $LASTEXITCODE"
-          #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
-          #  * -2 = other runtime exception occurred
-          #  * -1 = CLI argument parsing error occurred
-          #  *  0 = model is valid (no error, no warning, no runtime exception)
-          #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
-          #  *  2 = model has at least one error  (only if --FailOnErrors)
+&"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe --output LemonTree.Pipeline.Tools.ModelCheck.exe
+
+LemonTree.Pipeline.Tools.ModelCheck.exe  --model "model.eapx" --out ".\output.md" --FailOnErrors --FailOnWarnings
+echo "finished validation with $LASTEXITCODE"
+#  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+#  * -2 = other runtime exception occurred
+#  * -1 = CLI argument parsing error occurred
+#  *  0 = model is valid (no error, no warning, no runtime exception)
+#  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+#  *  2 = model has at least one error  (only if --FailOnErrors)
 ...
