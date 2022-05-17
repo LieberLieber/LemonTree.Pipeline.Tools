@@ -7,7 +7,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
     {
         internal static Issue CheckDiagramImagemaps(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");
+            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -29,7 +29,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckT_image(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_image");
+            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_image");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -51,7 +51,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckBaseline(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'");
+            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -72,7 +72,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckExtDoc(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where DocType = 'ExtDoc'");
+            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where DocType = 'ExtDoc'");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -97,20 +97,20 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             long modelSize = new FileInfo(model).Length;
 
-            string tempFile = Path.GetTempFileName() + ".mdb";
+            string tempFile = Path.GetTempFileName() + ModelAccess.GetExtension();
 
-            if (ModelAccess.CompactAndRepairJetDB(model, tempFile))
+            if (ModelAccess.Compact(model, tempFile))
             {
                 long modelCompactSize = new FileInfo(tempFile).Length;
                 var ratio = (double)modelCompactSize / (double)modelSize;
 
                 if (ratio < 0.50)
                 {
-                    result.Level = IssueLevel.Error;
+                    result.Level = IssueLevel.Warning;
                 }
                 else if (ratio < 0.75)
                 {
-                    result.Level = IssueLevel.Warning;
+                    result.Level = IssueLevel.Information;
                 }
                 else
                 {
@@ -138,9 +138,9 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             long modelSize = new FileInfo(model).Length;
 
-            string tempFile = Path.GetTempFileName() + ".mdb";
+            string tempFile = Path.GetTempFileName() + ModelAccess.GetExtension(); 
             File.Copy(model, tempFile, true);
-            ModelAccess.ConfigureAccess("Microsoft.Jet.OLEDB.4.0", tempFile);
+            ModelAccess.ConfigureAccess(tempFile);
 
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'ModelDocument'");
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'ExtDoc'");
@@ -149,18 +149,24 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             ModelAccess.RunSQLnonQuery("Delete FROM t_snapshot");
             ModelAccess.RunSQLnonQuery("Delete FROM t_image");
 
-            string tempFileCompact = Path.GetTempFileName() + ".mdb";
+            string tempFileCompact = Path.GetTempFileName() + ModelAccess.GetExtension(); 
 
-            ModelAccess.ConfigureAccess("Microsoft.Jet.OLEDB.4.0", model);
+            ModelAccess.ConfigureAccess(model);
 
-            if (ModelAccess.CompactAndRepairJetDB(tempFile, tempFileCompact))
+            if (ModelAccess.Compact(tempFile, tempFileCompact))
             {
                 long modelCompactSize = new FileInfo(tempFileCompact).Length;
 
                 var ratio = (double)modelCompactSize / (double)modelSize;
                 NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                result.Level = IssueLevel.Information;
+                if (ratio < 0.75)
+                {
+                    result.Level = IssueLevel.Information;
+                }
+                else
+                {
+                    result.Level = IssueLevel.Passed;
+                }
                 result.Title = $"Model size before strip and compact {Helper.ToSize(modelSize, Helper.SizeUnits.MB)} MB after {Helper.ToSize(modelCompactSize, Helper.SizeUnits.MB)} MB";
                 result.Detail = $"If you strip the model from binary content and run compact on the model you can reduce the size to {ratio.ToString("P")}";
             }
@@ -177,7 +183,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckModelDocument(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where DocType = 'ModelDocument'");
+            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where DocType = 'ModelDocument'");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -200,7 +206,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckAuditLogs(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from t_snapshot");
+            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from t_snapshot");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -220,7 +226,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckAuditEnabled(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"*enabled=1;*\"");
+            long retVal = ModelAccess.RunSQLQueryScalar($"SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{ModelAccess.GetWildcard()}enabled=1;{ModelAccess.GetWildcard()}\"");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -240,7 +246,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckUserSecurity(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from  t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'");
+            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from  t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -262,7 +268,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckVCSConnection(string model)
         {
-            int retVal = ModelAccess.RunSQLQueryScalar("SELECT count(*) FROM t_package WHERE IsControlled = True");
+            long retVal = ModelAccess.RunSQLQueryScalar("SELECT count(*) FROM t_package WHERE IsControlled = True");
 
             Issue result = new Issue();
             if (retVal == 0)
