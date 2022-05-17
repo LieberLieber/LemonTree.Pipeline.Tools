@@ -106,11 +106,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
                 if (ratio < 0.50)
                 {
-                    result.Level = IssueLevel.Error;
+                    result.Level = IssueLevel.Warning;
                 }
                 else if (ratio < 0.75)
                 {
-                    result.Level = IssueLevel.Warning;
+                    result.Level = IssueLevel.Information;
                 }
                 else
                 {
