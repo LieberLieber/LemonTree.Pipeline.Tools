@@ -30,6 +30,8 @@ namespace RemovePrerenderedDiagrams
 
         }
 
+     
+
         private static int RunRemove(RemoveOptions opts)
         {
             try
@@ -37,9 +39,8 @@ namespace RemovePrerenderedDiagrams
 
 
                 Console.WriteLine($"RemovePrerenderedDiagrams from {opts.Model}");
-               
-
-                ModelAccess.ConfigureAccess("Microsoft.Jet.OLEDB.4.0", opts.Model);
+                ModelAccess.ConfigureAccess(opts.Model);
+                
 
                 int retVal = ModelAccess.RunSQLnonQuery("Delete from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");
                 Console.WriteLine($"Removed {retVal} Prerendered Diagrams from {opts.Model}");

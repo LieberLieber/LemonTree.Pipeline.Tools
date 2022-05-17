@@ -3,6 +3,7 @@ using LemonTree.Pipeline.Tools.ModelCheck.Checks;
 using LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace LemonTree.Pipeline.Tools.ModelCheck
 {
@@ -26,12 +27,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
         private static int RunModelCheck(ModelCheckOptions opts)
         {
 
+            
+
             try
             {
                 Issues issues = new Issues();
 
                 Console.WriteLine($"ModelCheck on {opts.Model}");
-                ModelAccess.ConfigureAccess("Microsoft.Jet.OLEDB.4.0", opts.Model);
+                ModelAccess.ConfigureAccess(opts.Model);
 
                 issues.AddIfNotNull(Checks.Checks.CheckDiagramImagemaps(opts.Model));
 

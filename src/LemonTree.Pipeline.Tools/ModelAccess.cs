@@ -1,125 +1,125 @@
-﻿using System;
-using System.Data.OleDb;
-using System.Diagnostics;
-
+﻿using LemonTree.Pipeline.Tools.Database;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace LemonTree.Pipeline.Tools
 {
     public static class ModelAccess
     {
-        private static OleDbConnectionStringBuilder _builder = new OleDbConnectionStringBuilder();
+        private static IEADatabase eaDatabase = null;
+        private static bool sqLiteDatabaseExpanded = false;
 
-        public static bool CompactAndRepairAccessDB(string source, string destination)
+        public static bool Compact(string source, string destination)
         {
-            try
+            if (eaDatabase != null)
             {
-                var oParams = new object[]
-                 {
-                        source, destination
-                 };
-
-                string comName = "DAO.DBEngine.120";
-
-                object DBE = Activator.CreateInstance(Type.GetTypeFromProgID(comName));
-
-                if (DBE == null)
-                {
-
-                    comName = "DAO.DBEngine.36";
-                    DBE = Activator.CreateInstance(Type.GetTypeFromProgID(comName));
-                    if (DBE == null)
-                    {
-                        Console.WriteLine($"Compact failed couldn't get the {comName} Com object");
-                        return false;
-                    }
-                }
-
-
-                DBE.GetType().InvokeMember("CompactDatabase", System.Reflection.BindingFlags.InvokeMethod, null, DBE, oParams);
-
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(DBE);
-                DBE = null;
-
-                return true;
+                return eaDatabase.Compact(source, destination);
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine($"Compact failed: {ex.Message}");
-                Console.WriteLine($"Compact failed: {ex.Message}");
-                return false;
-            }
-        }
-
-        public static bool CompactAndRepairJetDB(string source, string destination)
-        {
-            try
-            {
-                var oParams = new object[]
-                 {
-                        string.Format("Data Source={0};Provider=Microsoft.Jet.OLEDB.4.0;", source), string.Format("Data Source={0};Provider=Microsoft.Jet.OLEDB.4.0;", destination)
-                 };
-
-                string comName = "JRO.JetEngine";
-
-                object DBE = Activator.CreateInstance(Type.GetTypeFromProgID(comName));
-
-                if (DBE == null)
-                {
-                    Console.WriteLine($"Compact failed couldn't get the {comName} Com object");
-                    return false;
-                }
-
-
-                DBE.GetType().InvokeMember("CompactDatabase", System.Reflection.BindingFlags.InvokeMethod, null, DBE, oParams);
-
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(DBE);
-                DBE = null;
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Compact failed: {ex.Message}");
-                return false;
+                throw new Exception("Model not set");
             }
         }
 
         public static int RunSQLnonQuery(string sql)
         {
-            int RecordCount = -1;
-            using (var cn = new OleDbConnection { ConnectionString = _builder.ConnectionString })
+            if (eaDatabase != null)
             {
-                using (var cmd = new OleDbCommand { CommandText = sql, Connection = cn })
+                return eaDatabase.RunSQLnonQuery(sql);
+            }
+            else
+            {
+                throw new Exception("Model not set");
+            }
+        }
+
+        public static long RunSQLQueryScalar(string sql)
+        {
+            if (eaDatabase != null)
+            {
+                return eaDatabase.RunSQLQueryScalar(sql);
+            }
+            else
+            {
+                throw new Exception("Model not set");
+            }
+        }
+
+        public static void ConfigureAccess(string model)
+        {
+            if (model.EndsWith(".eap") || model.EndsWith(".eapx"))
+            {
+                eaDatabase = new JetDatabase();
+                eaDatabase.SetModel(model);
+            }
+            else if (model.EndsWith(".qea") || model.EndsWith(".qeax"))
+            {
+                eaDatabase = new SqLiteDatabase();
+                eaDatabase.SetModel(model);
+                if (!sqLiteDatabaseExpanded)
                 {
-                    cn.Open();
-                    RecordCount = cmd.ExecuteNonQuery();
+                    ExpandSqliteInt();
+                    sqLiteDatabaseExpanded = true;
                 }
             }
-
-            return RecordCount;
-        }
-
-        public static void ConfigureAccess(string provider, string model)
-        {
-            _builder.Provider = "Microsoft.Jet.OLEDB.4.0";
-            _builder.DataSource = model;
-        }
-
-        public static int RunSQLQueryScalar(string sql)
-        {
-            int RecordCount = 0;
-
-            using (var cn = new OleDbConnection { ConnectionString = _builder.ConnectionString })
+            else
             {
-                using (var cmd = new OleDbCommand { CommandText = sql, Connection = cn })
-                {
-                    cn.Open();
-                    RecordCount = (Int32)cmd.ExecuteScalar();
+                Console.WriteLine("only .eap, .eapx, .qea and .qeax are suported");
+                throw new Exception("only .eap, .eapx, .qea and .qeax are suported");
+            }
+        }
 
+       
+        private static void ExpandSqliteInt()
+        {
+            string sqllitefile = "SQLite.Interop.dll";
+            Assembly currentAssembly = Assembly.GetExecutingAssembly();
+
+            using (FileStream fs = File.OpenWrite(sqllitefile))
+            {
+                //LemonTree.Pipeline.Tools.EmbeddedResources.x86.SQLite.Interop.dll
+                using (Stream resourceStream = currentAssembly.GetManifestResourceStream($"LemonTree.Pipeline.Tools.EmbeddedResources.x86.{sqllitefile}"))
+                {
+                    const int size = 4096;
+                    byte[] bytes = new byte[4096];
+                    int numBytes;
+                    while ((numBytes = resourceStream.Read(bytes, 0, size)) > 0)
+                    {
+                        fs.Write(bytes, 0, numBytes);
+                    }
+                    fs.Flush();
+                    fs.Close();
+                    resourceStream.Close();
                 }
             }
-
-            return RecordCount;
         }
+
+        public static string GetExtension()
+        {
+            if (eaDatabase != null)
+            {
+                return  eaDatabase.GetExtension();
+            }
+            else
+            {
+                throw new Exception("Model not set");
+            }
+            
+        }
+
+        public static string GetWildcard()
+        {
+            if (eaDatabase != null)
+            {
+                return  eaDatabase.GetWildcard();
+            }
+            else
+            {
+                throw new Exception("Model not set");
+            }
+
+        }
+
     }
 }
