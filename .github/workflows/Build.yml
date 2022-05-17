@@ -4,6 +4,7 @@ on: [push]
 env:
   NexusArtifactRepo: https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools
   ModelName: src\models\pwc.eapx
+  ModelNameSqLite: src\models\model.qeax
   
 jobs:
   build:
@@ -50,7 +51,7 @@ jobs:
           while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
           curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.ModelCheck.exe $targetUrl
       
-     - name: Run LemonTree Check Tool
+     - name: Run LemonTree Check Tool JET
        id: modelcheck
        run: |
           echo "starting validation"
@@ -72,6 +73,29 @@ jobs:
       
           #for now never stop 
           exit 0
+
+     - name: Run LemonTree Check Tool SqLite
+       id: modelcheckSqlite
+       run: |
+          echo "starting validation"
+          .\bin\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelNameSqLite}}" --out ".\output.md" 
+          type "output.md"
+
+          echo "finished validation with $LASTEXITCODE"
+
+          #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+          #  * -2 = other runtime exception occurred
+          #  * -1 = CLI argument parsing error occurred
+          #  *  0 = model is valid (no error, no warning, no runtime exception)
+          #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+          #  *  2 = model has at least one error  (only if --FailOnErrors)
+
+          $Message = "output.md"
+
+          echo "::set-output name=modelcheckExitCode::$($LASTEXITCODE)"
+      
+          #for now never stop 
+          exit $LASTEXITCODE
 
      - name: Extract branch name
        shell: bash
