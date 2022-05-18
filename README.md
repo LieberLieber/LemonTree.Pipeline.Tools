@@ -7,7 +7,7 @@ https://nexus.lieberlieber.com/#browse/browse:lemontree-pipeline-tools
 If the Enterprise Architect Models are "poluted" with DIAGRAMIMAGEMAPS - you can use this little commandline Tool to delete those! (.eap(x) only)\
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
 
-###Powershell Example:
+### Powershell Example:
 ```
 &"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe --output LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
 
@@ -18,7 +18,7 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
 Used to set "Filters" in LemonTree Single Session Files in the Pipeline.\
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
 
-###Powershell Example:
+### Powershell Example:
 ```
 &"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe --output LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
 
@@ -29,7 +29,7 @@ Used to check Models for LemonTree Readiness.
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe
 
 
-###Powershell Example:
+### Powershell Example:
 ```
 &"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe --output LemonTree.Pipeline.Tools.ModelCheck.exe
 
@@ -43,7 +43,7 @@ echo "*  1 = model has at least one warning (only if --FailOnWarnings or --FailO
 echo "*  2 = model has at least one error  (only if --FailOnErrors)"
 ```
 
-###Sample Output:
+### Sample Output:
 
 | | Severity | Issue | Message |
 |----------|----------|---------|---------|
