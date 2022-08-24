@@ -1,5 +1,8 @@
-﻿using System.Globalization;
+﻿using System.Data;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 {
@@ -286,6 +289,131 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
 
             return result;
+        }
+
+        /// <summary>
+        /// get EA's project statistic view
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        internal static Issue CheckProjectStatitics(string model)
+        {
+            #region get result table
+
+            const string statisticSql = @"select count(t_package.Package_ID) as ['Count'], 'Total Packages' as Measure from t_package
+                                            UNION
+                                            select count(t_package.Package_ID) as ['Count'], 'Total Root Packages' as Measure from t_package where t_package.Parent_ID = 0
+                                            UNION
+                                            select count(t_diagram.Diagram_ID) as ['Count''], 'Total Diagrams' as Measure from t_diagram
+                                            UNION
+                                            select count(t_object.Object_ID) as ['Count'], 'Total Elements' as Measure from t_object
+                                            UNION
+                                            select count(t_connector.Connector_ID) as ['Count'], 'Total Connectors' as Measure from t_connector
+                                            UNION
+                                            select count(t_diagramobjects.Instance_ID) as ['Count'], 'Elements in Diagrams' as Measure from t_diagramobjects
+                                            UNION
+                                            select count(t_attribute.ID) as ['Count'], 'Attributes in Elements' as Measure from t_attribute
+                                            UNION
+                                            select count(t_operation.OperationID) as ['Count'], 'Opertions in Elements' as Measure from t_operation
+                                            UNION
+                                            select count(t_operationparams.ea_guid) as ['Count'], 'Parameters in Operations' as Measure from t_operationparams
+                                            UNION
+                                            select count(t_objecttests.Test) as ['Count'], 'Element Testing' as Measure from t_objecttests
+                                            UNION
+                                            select count(t_objectconstraint.ConstraintType) as ['Count'], 'Constraints on Elements' as Measure from t_objectconstraint
+                                            UNION
+                                            select count(t_objecteffort.Effort) as ['Count'], 'Efforts on Elements' as Measure from t_objecteffort
+                                            UNION
+                                            select count(t_objectfiles.FileName) as ['Count'], 'File on Elements' as Measure from t_objectfiles
+                                            UNION
+                                            select count(t_objectmetrics.Metric) as ['Count'], 'Metrics on Elements' as Measure from t_objectmetrics
+                                            UNION
+                                            select count(t_objectrequires.ReqID) as ['Count'], 'Requirements in Elements' as Measure from t_objectrequires
+                                            UNION
+                                            select count(t_objectresource.Resource) as ['Count'], 'Resources Allocated to Elements' as Measure from t_objectresource
+                                            UNION
+                                            select count(t_objecteffort.Effort) as ['Count'], 'Efforts on Elements' as Measure from t_objecteffort
+                                            UNION
+                                            select count(t_objectrisks.Risk) as ['Count'], 'Risks on Elements' as Measure from t_objectrisks
+                                            UNION
+                                            select count(t_objectrisks.Risk) as ['Count'], 'Risks on Elements' as Measure from t_objectrisks
+                                            UNION
+                                            select count(t_object.Object_Type) as ['Count'], t_object.Object_Type as ['Measure'] from t_object
+                                            Group by t_object.Object_Type";
+
+
+
+
+            var resultTable =  ModelAccess.RunSql(statisticSql);
+            Debug.WriteLine(ToCSV(resultTable, header: true));
+
+            #endregion
+
+            #region process result table and calculate Issue number
+
+            long retVal = 0;
+
+
+            #endregion
+
+            #region set Issue Level
+
+            Issue result = new Issue();
+            if (retVal == 0)
+            {
+                result.Level = IssueLevel.Passed;
+                result.Title = "VCS is not configured in the Model";
+            }
+            else
+            {
+                result.Level = IssueLevel.Warning;
+                result.Detail = $"Models with Package based VCS  are not a supported scenario.";
+                result.Title = $"Model has {retVal} VCS enabled Packages";
+
+            }
+
+            #endregion
+
+            return result;
+        }
+
+
+        private static string ToCSV(DataTable t, bool header)
+        {
+            StringBuilder sb = new StringBuilder();
+            int i = 0;
+            int maxColIdx = 0;
+
+            if (t?.Columns?.Count > 0)
+            {
+                maxColIdx = t.Columns.Count - 1;
+                if (header)
+                {
+                    foreach (DataColumn c in t.Columns)
+                    {
+                        sb.Append(c.ColumnName);
+                        if (i < maxColIdx) sb.Append(", ");
+                        i++;
+                    }
+                    sb.AppendLine();
+                }
+
+                if (t?.Rows?.Count > 0)
+                {
+                    foreach (DataRow r in t.Rows)
+                    {
+                        i = 0;
+                        foreach (var item in r.ItemArray)
+                        {
+                            sb.Append(item);
+                            if (i < maxColIdx) sb.Append(',');
+                            i++;
+                        }
+                        sb.AppendLine();
+                    }
+                }
+            }
+            return sb.ToString();
         }
     }
 }

@@ -7,9 +7,4 @@
         Information = 0,
         Passed = 1
     }
-
-
-
-    
-
 }

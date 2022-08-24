@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
@@ -92,6 +93,30 @@ namespace LemonTree.Pipeline.Tools.Database
             }
 
             return RecordCount;
+        }
+
+
+        /// <summary>
+        /// run SQL and return result table
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns>dataTable with result table or null</returns>
+        public DataTable RunSql(string sql)
+        {
+            DataTable result;
+
+            using (var cn = new SQLiteConnection { ConnectionString = _builder.ConnectionString })
+            {
+                using (var cmd = new SQLiteCommand { CommandText = sql, Connection = cn })
+                {
+                    cn.Open();
+                    var dataReader = cmd.ExecuteReader();
+                    result = new DataTable();
+                    result.Load(dataReader);
+                }
+            }
+
+            return result;
         }
 
         public void SetModel(string model)

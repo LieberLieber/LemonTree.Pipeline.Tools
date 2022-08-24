@@ -1,5 +1,6 @@
 ﻿using LemonTree.Pipeline.Tools.Database;
 using System;
+using System.Data;
 using System.IO;
 using System.Reflection;
 
@@ -39,6 +40,23 @@ namespace LemonTree.Pipeline.Tools
             if (eaDatabase != null)
             {
                 return eaDatabase.RunSQLQueryScalar(sql);
+            }
+            else
+            {
+                throw new Exception("Model not set");
+            }
+        }
+
+        /// <summary>
+        /// run SQL and return result table
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns>dataTable with result table or null</returns>
+        public static DataTable RunSql(string sql)
+        {
+            if (eaDatabase != null)
+            {
+                return eaDatabase.RunSql(sql);
             }
             else
             {
