@@ -18,7 +18,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 settings.HelpWriter = Console.Error;
             });
 
-            RunMyTest();
+            //RunMyTest();
 
             return parser.ParseArguments<ModelCheckOptions>(args)
                 .MapResult(
@@ -28,28 +28,28 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
 
 
-        private static void RunMyTest()
-        {
-            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string path = Uri.UnescapeDataString(uri.Path);
-            var path2 = Path.GetDirectoryName(path);
-            var path3 = Path.Combine(path2, "Model.qeax");
+        //private static void RunMyTest()
+        //{
+        //    string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+        //    UriBuilder uri = new UriBuilder(codeBase);
+        //    string path = Uri.UnescapeDataString(uri.Path);
+        //    var path2 = Path.GetDirectoryName(path);
+        //    var path3 = Path.Combine(path2, "Model.qeax");
 
-            ModelCheckOptions myOpts = new ModelCheckOptions
-            {
-                Model = path3
-            };
+        //    ModelCheckOptions myOpts = new ModelCheckOptions
+        //    {
+        //        Model = path3
+        //    };
 
-            ModelAccess.ConfigureAccess(myOpts.Model);
+        //    ModelAccess.ConfigureAccess(myOpts.Model);
 
-            var issue = Checks.Checks.CheckProjectStatitics(myOpts.Model);
-        }
+        //    var issue = Checks.Checks.CheckProjectStatitics(myOpts.Model);
+        //}
 
         private static int RunModelCheck(ModelCheckOptions opts)
         {
 
-            
+
 
             try
             {
