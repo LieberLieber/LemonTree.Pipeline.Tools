@@ -18,39 +18,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 settings.HelpWriter = Console.Error;
             });
 
-            //RunMyTest();
-
             return parser.ParseArguments<ModelCheckOptions>(args)
                 .MapResult(
                     (ModelCheckOptions opts) => RunModelCheck(opts),
                     _ => (int)Exitcode.ErrorCmdParameter);
         }
 
-
-
-        //private static void RunMyTest()
-        //{
-        //    string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-        //    UriBuilder uri = new UriBuilder(codeBase);
-        //    string path = Uri.UnescapeDataString(uri.Path);
-        //    var path2 = Path.GetDirectoryName(path);
-        //    var path3 = Path.Combine(path2, "Model.qeax");
-
-        //    ModelCheckOptions myOpts = new ModelCheckOptions
-        //    {
-        //        Model = path3
-        //    };
-
-        //    ModelAccess.ConfigureAccess(myOpts.Model);
-
-        //    var issue = Checks.Checks.CheckProjectStatitics(myOpts.Model);
-        //}
-
         private static int RunModelCheck(ModelCheckOptions opts)
         {
-
-
-
             try
             {
                 Issues issues = new Issues();
