@@ -362,7 +362,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             if (retVal == 0)
             {
                 result.Level = IssueLevel.Passed;
-                result.Title = "VCS is not configured in the Model";
+                result.Title = "Project Statistics";
+                result.Detail = ToCSV(resultTable, header: true);
             }
             else
             {

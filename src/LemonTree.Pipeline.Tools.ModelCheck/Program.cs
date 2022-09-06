@@ -76,6 +76,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
                 issues.AddIfNotNull(Checks.Checks.CheckT_image(opts.Model));
 
+                issues.AddIfNotNull(Checks.Checks.CheckProjectStatitics(opts.Model));
+
                 if (opts.NoCompact != true)
                 {
                     issues.AddIfNotNull(Checks.Checks.CheckCompact(opts.Model));
