@@ -141,7 +141,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             long modelSize = new FileInfo(model).Length;
 
-            string tempFile = Path.GetTempFileName() + ModelAccess.GetExtension(); 
+            string tempFile = Path.GetTempFileName() + ModelAccess.GetExtension();
             File.Copy(model, tempFile, true);
             ModelAccess.ConfigureAccess(tempFile);
 
@@ -152,7 +152,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             ModelAccess.RunSQLnonQuery("Delete FROM t_snapshot");
             ModelAccess.RunSQLnonQuery("Delete FROM t_image");
 
-            string tempFileCompact = Path.GetTempFileName() + ModelAccess.GetExtension(); 
+            string tempFileCompact = Path.GetTempFileName() + ModelAccess.GetExtension();
 
             ModelAccess.ConfigureAccess(model);
 
@@ -332,10 +332,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                                             UNION
                                             select count(t_objectresource.Resource) as ['Count'], 'Resources Allocated to Elements' as Measure from t_objectresource
                                             UNION
-                                            select count(t_objecteffort.Effort) as ['Count'], 'Efforts on Elements' as Measure from t_objecteffort
-                                            UNION
-                                            select count(t_objectrisks.Risk) as ['Count'], 'Risks on Elements' as Measure from t_objectrisks
-                                            UNION
                                             select count(t_objectrisks.Risk) as ['Count'], 'Risks on Elements' as Measure from t_objectrisks
                                             UNION
                                             select count(t_object.Object_Type) as ['Count'], t_object.Object_Type as ['Measure'] from t_object
@@ -344,14 +340,16 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
 
 
-            var resultTable =  ModelAccess.RunSql(statisticSql);
-            Debug.WriteLine(ToCSV(resultTable, header: true));
+            var resultTable = ModelAccess.RunSql(statisticSql);
+            resultTable.DefaultView.Sort = "Measure";
+
+            Debug.WriteLine(ToHTML(resultTable, header: true));
 
             #endregion
 
             #region process result table and calculate Issue number
 
-            long retVal = 0;
+           
 
 
             #endregion
@@ -359,19 +357,13 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             #region set Issue Level
 
             Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "Project Statistics";
-                result.Detail = ToCSV(resultTable, header: true);
-            }
-            else
-            {
-                result.Level = IssueLevel.Warning;
-                result.Detail = $"Models with Package based VCS  are not a supported scenario.";
-                result.Title = $"Model has {retVal} VCS enabled Packages";
 
-            }
+            result.Level = IssueLevel.Information;
+            result.Title = "Project Statistics";
+
+
+            result.Detail = ToHTML(resultTable.DefaultView.ToTable(), header: true);
+
 
             #endregion
 
@@ -379,8 +371,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         }
 
 
-        private static string ToCSV(DataTable t, bool header)
+        private static string ToHTML(DataTable t, bool header)
         {
+
+            //dd syntay might be better down the road then <BR>
+            //|< dl >< dt > Beast of Bodmin</ dt >< dd > A large feline inhabiting Bodmin Moor.</ dd >< dt > Morgawr </ dt >< dd > A sea serpent</ dd >< dt > Owlman </ dt >< dd > A giant owl-like creature.</ dd ></ dl
             StringBuilder sb = new StringBuilder();
             int i = 0;
             int maxColIdx = 0;
@@ -393,10 +388,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     foreach (DataColumn c in t.Columns)
                     {
                         sb.Append(c.ColumnName);
-                        if (i < maxColIdx) sb.Append(", ");
+                        if (i < maxColIdx) sb.Append(" ");
                         i++;
                     }
-                    sb.AppendLine();
+                    sb.Append("<br>");
                 }
 
                 if (t?.Rows?.Count > 0)
@@ -407,10 +402,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                         foreach (var item in r.ItemArray)
                         {
                             sb.Append(item);
-                            if (i < maxColIdx) sb.Append(',');
+                            if (i < maxColIdx) sb.Append(" ");
                             i++;
                         }
-                        sb.AppendLine();
+                        sb.Append("<br>");
                     }
                 }
             }
