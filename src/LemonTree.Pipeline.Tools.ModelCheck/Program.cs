@@ -26,9 +26,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
         private static int RunModelCheck(ModelCheckOptions opts)
         {
-
-            
-
             try
             {
                 Issues issues = new Issues();
@@ -53,6 +50,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 issues.AddIfNotNull(Checks.Checks.CheckModelDocument(opts.Model));
 
                 issues.AddIfNotNull(Checks.Checks.CheckT_image(opts.Model));
+
+                issues.AddIfNotNull(Checks.Checks.CheckProjectStatitics(opts.Model));
 
                 if (opts.NoCompact != true)
                 {

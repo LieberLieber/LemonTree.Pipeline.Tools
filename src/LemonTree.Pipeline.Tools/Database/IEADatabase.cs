@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 
 namespace LemonTree.Pipeline.Tools.Database
 {
@@ -15,6 +11,14 @@ namespace LemonTree.Pipeline.Tools.Database
         int RunSQLnonQuery(string sql);
 
         long RunSQLQueryScalar(string sql);
+
+        /// <summary>
+        /// run SQL and return result table
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns>dataTable with result table or null</returns>
+        DataTable RunSql(string sql);
+
         string GetExtension();
         string GetWildcard();
     }
