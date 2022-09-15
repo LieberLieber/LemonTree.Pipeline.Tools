@@ -1,4 +1,6 @@
-﻿using System.Data;
+
+﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -291,11 +293,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return result;
         }
 
+
         /// <summary>
         /// get EA's project statistic view
         /// </summary>
         /// <param name="model"></param>
+
         /// <returns></returns>
+
         internal static Issue CheckProjectStatitics(string model)
         {
             #region get result table
@@ -343,9 +348,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             var resultTable = ModelAccess.RunSql(statisticSql);
             resultTable.DefaultView.Sort = "Measure";
 
-            Debug.WriteLine(ToHTML(resultTable, header: true));
+
+            Debug.WriteLine(ToMD(resultTable, header: true));
 
             #endregion
+
 
             #region process result table and calculate Issue number
 
@@ -362,7 +369,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             result.Title = "Project Statistics";
 
 
-            result.Detail = ToHTML(resultTable.DefaultView.ToTable(), header: true);
+
+            result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
 
 
             #endregion
@@ -371,7 +379,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         }
 
 
-        private static string ToHTML(DataTable t, bool header)
+        private static string ToMD(DataTable t, bool header)
         {
 
             //dd syntay might be better down the road then <BR>
@@ -387,11 +395,22 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     foreach (DataColumn c in t.Columns)
                     {
-                        sb.Append(c.ColumnName);
-                        if (i < maxColIdx) sb.Append(" ");
-                        i++;
+
+                        sb.Append("|");
+                        sb.Append(c.ColumnName.Replace("'",""));
+                        
                     }
-                    sb.Append("<br>");
+                    sb.Append("|");
+                    sb.Append(Environment.NewLine);
+                    foreach (DataColumn c in t.Columns)
+                    {
+                        sb.Append("|");
+                        sb.Append("-------");
+
+                    }
+                    sb.Append("|");
+                    sb.Append(Environment.NewLine);
+
                 }
 
                 if (t?.Rows?.Count > 0)
@@ -401,15 +420,20 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                         i = 0;
                         foreach (var item in r.ItemArray)
                         {
+
+                            sb.Append("|");
                             sb.Append(item);
-                            if (i < maxColIdx) sb.Append(" ");
-                            i++;
+                            
                         }
-                        sb.Append("<br>");
+                        sb.Append("|");
+                        sb.Append(Environment.NewLine);
+
                     }
                 }
             }
             return sb.ToString();
+
         }
     }
 }
+
