@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Data;
 using System.Diagnostics;
@@ -292,11 +293,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return result;
         }
 
+
         /// <summary>
         /// get EA's project statistic view
         /// </summary>
         /// <param name="model"></param>
+
         /// <returns></returns>
+
         internal static Issue CheckProjectStatitics(string model)
         {
             #region get result table
@@ -344,9 +348,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             var resultTable = ModelAccess.RunSql(statisticSql);
             resultTable.DefaultView.Sort = "Measure";
 
+
             Debug.WriteLine(ToMD(resultTable, header: true));
 
             #endregion
+
 
             #region process result table and calculate Issue number
 
@@ -361,6 +367,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             result.Level = IssueLevel.Information;
             result.Title = "Project Statistics";
+
 
 
             result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
@@ -388,6 +395,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     foreach (DataColumn c in t.Columns)
                     {
+
                         sb.Append("|");
                         sb.Append(c.ColumnName.Replace("'",""));
                         
@@ -402,6 +410,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     }
                     sb.Append("|");
                     sb.Append(Environment.NewLine);
+
                 }
 
                 if (t?.Rows?.Count > 0)
@@ -411,16 +420,20 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                         i = 0;
                         foreach (var item in r.ItemArray)
                         {
+
                             sb.Append("|");
                             sb.Append(item);
                             
                         }
                         sb.Append("|");
                         sb.Append(Environment.NewLine);
+
                     }
                 }
             }
             return sb.ToString();
+
         }
     }
 }
+
