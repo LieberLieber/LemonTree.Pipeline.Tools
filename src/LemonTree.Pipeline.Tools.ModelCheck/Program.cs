@@ -4,6 +4,7 @@ using LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace LemonTree.Pipeline.Tools.ModelCheck
 {
@@ -51,7 +52,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
                 issues.AddIfNotNull(Checks.Checks.CheckT_image(opts.Model));
 
-                issues.AddIfNotNull(Checks.Checks.CheckProjectStatitics(opts.Model));
+                
 
                 if (opts.NoCompact != true)
                 {
@@ -60,12 +61,19 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                     issues.AddIfNotNull(Checks.Checks.CheckStrippedCompact(opts.Model));
                 }
 
+
+               // issues.WriteOutPut(Checks.Checks.CheckProjectStatitics(opts.Model));
+
+
                 Console.WriteLine(issues.ToString());
 
                 if (opts.Out != null)
                 {
-
-                    File.WriteAllText(opts.Out, issues.ToMd());
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine(issues.ToMd());
+                    sb.AppendLine("# Project Statistics");
+                    sb.AppendLine(Checks.Checks.CheckProjectStatitics(opts.Model).Detail);
+                    File.WriteAllText(opts.Out, sb.ToString());
                 }
 
                 if (opts.FailOnErrors == true)

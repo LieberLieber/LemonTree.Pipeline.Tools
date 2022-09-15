@@ -70,5 +70,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             return false;
         }
+
+        internal void WriteOutPut(Issue issue)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
