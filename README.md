@@ -23,10 +23,12 @@ echo "*  2 = model has at least one error  (only if --FailOnErrors)"
 
 ### Sample Output:
 
+# LemonTree ModelCheck results
 | | Severity | Issue | Message |
 |----------|----------|---------|---------|
 |:red_circle:|Error|Auditing is enabled.|Auditing is not helpful or required if you manage a model inside a VCS with LemonTree.|
-|:red_circle:|Error|Model has 8 Audit Entires|Audits are not helpful or required if you manage a model inside a VCS with LemonTree.|
+|:red_circle:|Error|Model has 12 Audit Entires|Audits are not helpful or required if you manage a model inside a VCS with LemonTree.|
+|:red_circle:|Error|Model has 1 Resource Allocation Entires|Resource Allocations are not supported when using LemonTree.|
 |:orange_circle:|Warning|Model has 1 VCS enabled Packages|Models with Package based VCS  are not a supported scenario.|
 |:green_circle:|Passed|No DIAGRAMIMAGEMAP entries in the model||
 |:green_circle:|Passed|No Baseline entries in the model||
@@ -34,8 +36,35 @@ echo "*  2 = model has at least one error  (only if --FailOnErrors)"
 |:green_circle:|Passed|No embedded binary images or document entries in the model||
 |:green_circle:|Passed|No ModelDocument entries in the model||
 |:green_circle:|Passed|No t_image entries in the model||
-|:green_circle:|Passed|Model size before compact 1.45 MB after 1.44 MB|If you run compact on the model you can reduce the size to 99.46%|
-|:green_circle:|Passed|Model size before strip and compact 1.45 MB after 1.43 MB|If you strip the model from binary content and run compact on the model you can reduce the size to 98.92%|
+|:green_circle:|Passed|Model size before compact 1.45 MB after 1.45 MB|If you run compact on the model you can reduce the size to 99.46%|
+|:green_circle:|Passed|Model size before strip and compact 1.45 MB after 1.43 MB|If you strip the model from binary content and run compact on the model you can reduce the size to 98.66%|
+
+# Project Statistics
+|Count|Measure|
+|-------|-------|
+|0|Attributes in Elements|
+|0|Constraints on Elements|
+|0|Efforts on Elements|
+|0|Element Testing|
+|10|Elements in Diagrams|
+|0|File on Elements|
+|0|Metrics on Elements|
+|3|Note|
+|0|Opertions in Elements|
+|7|Package|
+|0|Parameters in Operations|
+|1|Part|
+|0|Requirements in Elements|
+|1|Resources Allocated to Elements|
+|0|Risks on Elements|
+|2|Signal|
+|0|Total Connectors|
+|4|Total Diagrams|
+|13|Total Elements|
+|8|Total Packages|
+|1|Total Root Packages|
+
+
 
 
 ## LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
