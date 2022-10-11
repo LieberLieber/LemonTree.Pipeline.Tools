@@ -52,6 +52,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
                 issues.AddIfNotNull(Checks.Checks.CheckT_image(opts.Model));
 
+                issues.AddIfNotNull(Checks.Checks.CheckResourceAllocation(opts.Model));
+
 
                 if (opts.NoCompact != true)
                 {

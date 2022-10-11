@@ -249,6 +249,27 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return result;
         }
 
+
+        internal static Issue CheckResourceAllocation(string model)
+        {
+            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from t_objectresource");
+
+            Issue result = new Issue();
+            if (retVal == 0)
+            {
+                result.Level = IssueLevel.Passed;
+                result.Title = "No Resource Allocation entries in the model";
+            }
+            else
+            {
+                result.Level = IssueLevel.Error;
+                result.Detail = $"Resource Allocations are not supported when using LemonTree.";
+                result.Title = $"Model has {retVal} Resource Allocation Entires";
+            }
+
+            return result;
+        }
+
         internal static Issue CheckUserSecurity(string model)
         {
             long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from  t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'");
