@@ -32,6 +32,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return result;
         }
 
+
+
         internal static Issue CheckT_image(string model)
         {
             long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_image");
@@ -224,6 +226,26 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 result.Level = IssueLevel.Error;
                 result.Detail = $"Audits are not helpful or required if you manage a model inside a VCS with LemonTree.";
                 result.Title = $"Model has {retVal} Audit Entires";
+            }
+
+            return result;
+        }
+
+        internal static Issue CheckJournal(string model)
+        {
+            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_document where t_document.DocType = \"JEntry\"");
+
+            Issue result = new Issue();
+            if (retVal == 0)
+            {
+                result.Level = IssueLevel.Passed;
+                result.Title = "No Journal entries in the model";
+            }
+            else
+            {
+                result.Level = IssueLevel.Error;
+                result.Detail = $"Journal entries are not merged by LemonTree.";
+                result.Title = $"Model has {retVal} Journal Entires";
             }
 
             return result;

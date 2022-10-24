@@ -54,6 +54,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
                 issues.AddIfNotNull(Checks.Checks.CheckResourceAllocation(opts.Model));
 
+                issues.AddIfNotNull(Checks.Checks.CheckJournal(opts.Model));
 
                 if (opts.NoCompact != true)
                 {
