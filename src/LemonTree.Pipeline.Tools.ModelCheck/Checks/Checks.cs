@@ -12,7 +12,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
     {
         internal static Issue CheckDiagramImagemaps(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("Select Count(*) from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -36,7 +36,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckT_image(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_image");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("Select Count(*) from t_image");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -58,7 +58,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckBaseline(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -79,7 +79,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckExtDoc(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where DocType = 'ExtDoc'");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("SELECT Count(*) FROM t_document where DocType = 'ExtDoc'");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -190,7 +190,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckModelDocument(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where DocType = 'ModelDocument'");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("SELECT Count(*) FROM t_document where DocType = 'ModelDocument'");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -213,7 +213,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckAuditLogs(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from t_snapshot");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("SELECT Count(*) from t_snapshot");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -233,7 +233,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckJournal(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_document where t_document.DocType = \"JEntry\"");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("Select Count(*) from t_document where t_document.DocType = \"JEntry\"");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -253,7 +253,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckAuditEnabled(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar($"SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{ModelAccess.GetWildcard()}enabled=1;{ModelAccess.GetWildcard()}\"");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong($"SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{ModelAccess.GetWildcard()}enabled=1;{ModelAccess.GetWildcard()}\"");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -274,7 +274,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckResourceAllocation(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from t_objectresource");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("SELECT Count(*) from t_objectresource");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -294,7 +294,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckUserSecurity(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from  t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("SELECT Count(*) from  t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -316,7 +316,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckVCSConnection(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT count(*) FROM t_package WHERE IsControlled = True");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong("SELECT count(*) FROM t_package WHERE IsControlled = True");
 
             Issue result = new Issue();
             if (retVal == 0)
@@ -428,12 +428,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             //dd syntay might be better down the road then <BR>
             //|< dl >< dt > Beast of Bodmin</ dt >< dd > A large feline inhabiting Bodmin Moor.</ dd >< dt > Morgawr </ dt >< dd > A sea serpent</ dd >< dt > Owlman </ dt >< dd > A giant owl-like creature.</ dd ></ dl
             StringBuilder sb = new StringBuilder();
-            int i = 0;
-            int maxColIdx = 0;
-
+           
             if (t?.Columns?.Count > 0)
             {
-                maxColIdx = t.Columns.Count - 1;
+                
                 if (header)
                 {
                     foreach (DataColumn c in t.Columns)
@@ -460,7 +458,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     foreach (DataRow r in t.Rows)
                     {
-                        i = 0;
+                       
                         foreach (var item in r.ItemArray)
                         {
 

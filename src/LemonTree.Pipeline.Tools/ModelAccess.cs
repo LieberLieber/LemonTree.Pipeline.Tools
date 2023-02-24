@@ -34,7 +34,7 @@ namespace LemonTree.Pipeline.Tools
             }
         }
 
-        public static long RunSQLQueryScalar(string sql)
+        public static object RunSQLQueryScalar(string sql)
         {
             if (eaDatabase != null)
             {
@@ -46,6 +46,15 @@ namespace LemonTree.Pipeline.Tools
             }
         }
 
+        public static long RunSQLQueryScalarAsLong(string sql)
+        {
+            return Convert.ToInt64(RunSQLQueryScalar(sql));            
+        }
+
+        public static string RunSQLQueryScalarAsString(string sql)
+        {
+            return Convert.ToString(RunSQLQueryScalar(sql));
+        }
         /// <summary>
         /// run SQL and return result table
         /// </summary>
@@ -74,7 +83,7 @@ namespace LemonTree.Pipeline.Tools
             {
                 eaDatabase = new SqLiteDatabase();
                 eaDatabase.SetModel(model);
-            }
+                }
             else
             {
                 Console.WriteLine("only .eap, .eapx, .qea and .qeax are suported");
@@ -82,7 +91,7 @@ namespace LemonTree.Pipeline.Tools
             }
         }
 
- 
+       
         public static string GetExtension()
         {
             if (eaDatabase != null)

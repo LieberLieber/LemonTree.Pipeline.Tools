@@ -66,21 +66,21 @@ namespace LemonTree.Pipeline.Tools.Database
             return RecordCount;
         }
 
-        public long RunSQLQueryScalar(string sql)
+        public object RunSQLQueryScalar(string sql)
         {
-            long RecordCount = 0;
+            object scaler = null;
 
             using (var cn = new OleDbConnection { ConnectionString = _builder.ConnectionString })
             {
                 using (var cmd = new OleDbCommand { CommandText = sql, Connection = cn })
                 {
                     cn.Open();
-                    RecordCount = Convert.ToInt64(cmd.ExecuteScalar());
+                    scaler = cmd.ExecuteScalar();
 
                 }
             }
 
-            return RecordCount;
+            return scaler;
         }
 
 

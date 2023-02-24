@@ -78,21 +78,21 @@ namespace LemonTree.Pipeline.Tools.Database
             return RecordCount;
         }
 
-        public long RunSQLQueryScalar(string sql)
+        public object RunSQLQueryScalar(string sql)
         {
-            long RecordCount = 0;
+            object scalar = 0;
 
             using (var cn = new SQLiteConnection { ConnectionString = _builder.ConnectionString })
             {
                 using (var cmd = new SQLiteCommand { CommandText = sql, Connection = cn })
                 {
                     cn.Open();
-                    RecordCount = (long)cmd.ExecuteScalar();
+                    scalar = cmd.ExecuteScalar();
 
                 }
             }
 
-            return RecordCount;
+            return scalar;
         }
 
 
