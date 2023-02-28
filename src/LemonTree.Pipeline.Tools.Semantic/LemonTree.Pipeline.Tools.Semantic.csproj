@@ -73,11 +73,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeLevel.cs" />
     <Compile Include="CommandLineOptions\BaseOptions.cs" />
     <Compile Include="CommandLineOptions\Exitcode.cs" />
     <Compile Include="CommandLineOptions\SemanticOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SemanticVersionRules.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Models\Semantic-Change.eapx">

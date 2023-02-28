@@ -65,9 +65,20 @@ namespace LemonTree.Pipeline.Tools.Semantic
 
                     string guid = modifedElement.Attribute("guid").Value.ToString();
                     string version = GetVersionInfoFormElement(guid);
-                    string newVersion = "2.0";
-                    Console.WriteLine($"{guid} - {version} ==> {newVersion}");
-                    UpdateVersion(guid, newVersion);
+                    ChangeLevel changeLevel = ChangeLevel.None;
+
+                    changeLevel = SemanticVersionRules.DetectChangeLevel(modifedElement);
+
+                    if (changeLevel != ChangeLevel.None)
+                    {
+                        string newVersion = CreateNewVersion(version, changeLevel);
+                        Console.WriteLine($"{guid} - {version} ==> {newVersion}");
+                        UpdateVersion(guid, newVersion);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{guid} - {version} ==> {version}");
+                    }
 
                 }
                 // run the rules here and update the Model Element via SQL UPdate.
@@ -79,6 +90,36 @@ namespace LemonTree.Pipeline.Tools.Semantic
                 Console.WriteLine($"Exception occured: {ex.Message}");
                 return (int)Exitcode.Error;
             }
+        }
+
+        private static string CreateNewVersion(string version, ChangeLevel changeLevel)
+        {
+            //We should detect if the version number supplied fits the standard pattern
+            try
+            {
+                string[] versionDetails = version.Split('.');
+                int major = Convert.ToInt32(versionDetails[0]);
+                int minor = Convert.ToInt32(versionDetails[1]);
+
+                if (changeLevel == ChangeLevel.Major)
+                {
+                    major++;
+                    minor = 0;
+                }
+                else if (changeLevel == ChangeLevel.Minor)
+                {
+                    minor++;
+                }
+                return $"{major}.{minor}";
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"{version} doesn't seem to fit the pattern major.minor e.g. 1.1");
+                Console.WriteLine(ex.Message);
+            }
+            //We couldnot modify it - doesn't fit the logic
+            return version;
         }
 
         private static void UpdateVersion(string guid, string newVersion)
