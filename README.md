@@ -69,7 +69,7 @@ echo "*  2 = model has at least one error  (only if --FailOnErrors)"
 
 
 ## LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
-If the Enterprise Architect Models are "poluted" with DIAGRAMIMAGEMAPS - you can use this little commandline Tool to delete those! (.eap(x) only)\
+If the Enterprise Architect Models are "poluted" with DIAGRAMIMAGEMAPS - you can use this little commandline Tool to delete those! (.eap(x) and .qea(x) only)\
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
 
 ### Powershell Example:
