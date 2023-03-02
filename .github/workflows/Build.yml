@@ -68,6 +68,14 @@ jobs:
           echo "Uploading 	LemonTree.Pipeline.Tools.ModelCheck.exe to Nexus: $targetUrl"
           while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
           curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.ModelCheck.exe $targetUrl
+
+     - name: Upload LemonTree.Pipeline.Tools.GetModelRoots.exe
+       if: github.ref == 'refs/heads/main'
+       run: |
+          $targetUrl = "${{env.NexusArtifactRepo}}/LemonTree.Pipeline.Tools.GetModelRoots.exe"
+          echo "Uploading 	LemonTree.Pipeline.Tools.ModelCheck.exe to Nexus: $targetUrl"
+          while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+          curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.GetModelRoots.exe $targetUrl
       
      - name: Upload LemonTree.Pipeline.Tools.ModelCheck
        if: github.ref == 'refs/heads/main'

@@ -48,14 +48,6 @@ namespace LemonTree.Pipeline.Tools.Semantic
                 Console.WriteLine($"Semantic on {opts.Model}");
                 ModelAccess.ConfigureAccess(opts.Model);
 
-
-                if (!File.Exists(opts.DiffFile))
-                {
-                    //Check File exists and is kinda XML.
-                    Console.WriteLine($"File not Found: {opts.DiffFile}");
-                    return (int)Exitcode.ErrorCmdParameter;
-                }
-
                 var doc = XDocument.Parse(File.ReadAllText(opts.DiffFile));
                 var elements = doc.Root.Descendants().Where(item => item.Name.LocalName == "element");
                 var modified = elements.Where(item => item.Attributes().Any(attribute => attribute.Name.LocalName == "diffState" && attribute.Value == "Modified"));
@@ -95,6 +87,8 @@ namespace LemonTree.Pipeline.Tools.Semantic
         private static string CreateNewVersion(string version, ChangeLevel changeLevel)
         {
             //We should detect if the version number supplied fits the standard pattern
+            // we should use System.Version for this? 
+            // should add 3 rd Level for proper semantic version.
             try
             {
                 string[] versionDetails = version.Split('.');
@@ -132,9 +126,5 @@ namespace LemonTree.Pipeline.Tools.Semantic
             return ModelAccess.RunSQLQueryScalarAsString($"SELECT DISTINCT t_object.version FROM t_object  Where t_object.ea_guid = \"{ guid}\"");
         }
 
-        private static bool EvaluateVersionRules(XElement modifedElement)
-        {
-            return true;
-        }
     }
 }
