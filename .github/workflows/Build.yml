@@ -5,6 +5,7 @@ env:
   NexusArtifactRepo: https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools
   ModelName: src\models\pwc.eapx
   ModelNameSqLite: src\models\model.qeax
+  ProductVersion: ${{vars.PRODUCTVERSION}}
   
 jobs:
   build:
@@ -23,6 +24,17 @@ jobs:
      
      - name: Restore NuGet Packages
        run: nuget restore src/LemonTree.Pipeline.Tools.sln
+
+     - name: Set version in AssemblyInfo.cs
+       id: set-assembly-version
+       uses: secondbounce/assemblyinfo-update@v2
+       with:
+        version: '${{env.ProductVersion}}'
+        directory: '.\src\'
+        recursive: true
+
+     - name: Display the version used
+       run: echo "${{steps.set-assembly-version.outputs.version}}"
  
      - name: Build Solution
        run: msbuild src/LemonTree.Pipeline.Tools.sln /p:Configuration=Release
@@ -51,6 +63,14 @@ jobs:
           while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
           curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.ModelCheck.exe $targetUrl
       
+     - name: Upload LemonTree.Pipeline.Tools.ModelCheck.exe
+       if: github.ref == 'refs/heads/main'
+       run: |
+          $targetUrl = "${{env.NexusArtifactRepo}}/LemonTree.Pipeline.Tools.GetModelRoots"
+          echo "Uploading 	LemonTree.Pipeline.Tools.GetModelRoots to Nexus: $targetUrl"
+          while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+          curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.GetModelRoots.exe $targetUrl
+
      - name: Run LemonTree Check Tool JET
        id: modelcheck
        run: |
