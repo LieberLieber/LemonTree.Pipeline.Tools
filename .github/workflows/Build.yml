@@ -5,7 +5,7 @@ env:
   NexusArtifactRepo: https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools
   ModelName: src\models\pwc.eapx
   ModelNameSqLite: src\models\model.qeax
-  ProductVersion: ${{vars.PRODUCTVERSION}}
+  ProductVersion: ${{vars.PRODUCTVERSION}} 
   
 jobs:
   build:
@@ -14,14 +14,14 @@ jobs:
     
     steps:
      - name: Checkout Code
-       uses: actions/checkout@v1
+       uses: actions/checkout@v3.4.0
      
      - name: Setup MSBuild Path
        uses: microsoft/setup-msbuild@v1.1
        
      - name: Setup NuGet
-       uses: NuGet/setup-nuget@v1.0.6
-     
+       uses: NuGet/setup-nuget@v1.1.1
+      
      - name: Restore NuGet Packages
        run: nuget restore src/LemonTree.Pipeline.Tools.sln
 
@@ -89,7 +89,7 @@ jobs:
 
           $Message = "output.md"
 
-          echo "::set-output name=modelcheckExitCode::$($LASTEXITCODE)"
+          echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
       
           #for now never stop 
           exit 0
@@ -112,14 +112,14 @@ jobs:
 
           $Message = "output.md"
 
-          echo "::set-output name=modelcheckExitCode::$($LASTEXITCODE)"
+          echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
       
           #for now never stop 
           exit $LASTEXITCODE
 
      - name: Extract branch name
        shell: bash
-       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+       run: echo "branch=${GITHUB_REF#refs/heads/})" >> $env:GITHUB_OUTPUT
        id: extract_branch
 
      - name: Find Pull Request
@@ -137,7 +137,7 @@ jobs:
 
      - name: Create PR comment
        if: ${{ steps.find-pull-request.outputs.number > 0}} #only makes sense if we have a PR for the branch
-       uses: actions/github-script@v5
+       uses: actions/github-script@v6.4.0
        with:
           script: |
             await github.rest.issues.createComment({
