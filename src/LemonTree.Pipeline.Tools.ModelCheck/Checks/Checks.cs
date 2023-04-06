@@ -151,7 +151,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'ModelDocument'");
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'ExtDoc'");
-            ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'BaseLine'");
+            ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'Baseline'");
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'DIAGRAMIMAGEMAP'");
             ModelAccess.RunSQLnonQuery("Delete FROM t_snapshot");
             ModelAccess.RunSQLnonQuery("Delete FROM t_image");
