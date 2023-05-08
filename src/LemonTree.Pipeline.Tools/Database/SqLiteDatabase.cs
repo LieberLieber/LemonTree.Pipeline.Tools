@@ -8,7 +8,7 @@ namespace LemonTree.Pipeline.Tools.Database
 {
     internal class SqLiteDatabase : IEADatabase
     {
-        private static SQLiteConnectionStringBuilder _builder = new SQLiteConnectionStringBuilder();
+        private static readonly SQLiteConnectionStringBuilder _builder = new SQLiteConnectionStringBuilder();
 
         public SqLiteDatabase()
         {
@@ -46,7 +46,6 @@ namespace LemonTree.Pipeline.Tools.Database
                     cn.Open();
                     command.CommandText = "vacuum;";
                     command.ExecuteNonQuery();
-
                 }
             }
             SetModel(source);
@@ -63,22 +62,22 @@ namespace LemonTree.Pipeline.Tools.Database
             return "%";
         }
 
-        public int RunSQLnonQuery(string sql)
+        public int RunSqlNonQuery(string sql)
         {
-            int RecordCount = -1;
+            int recordCount = -1;
             using (var cn = new SQLiteConnection { ConnectionString = _builder.ConnectionString })
             {
                 using (var cmd = new SQLiteCommand { CommandText = sql, Connection = cn })
                 {
                     cn.Open();
-                    RecordCount = cmd.ExecuteNonQuery();
+                    recordCount = cmd.ExecuteNonQuery();
                 }
             }
 
-            return RecordCount;
+            return recordCount;
         }
 
-        public object RunSQLQueryScalar(string sql)
+        public object RunSqlQueryScalar(string sql)
         {
             object scalar = 0;
 

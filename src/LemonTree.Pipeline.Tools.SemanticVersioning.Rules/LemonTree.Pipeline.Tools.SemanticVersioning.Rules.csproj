@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+	</PropertyGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\LemonTree.Pipeline.Tools.SemanticVersioning.Contracts\LemonTree.Pipeline.Tools.SemanticVersioning.Contracts.csproj">
+		  <Private>false</Private>
+		  <!--<ExcludeAssets>runtime</ExcludeAssets>-->
+	  </ProjectReference>
+  </ItemGroup>
+
+</Project>

@@ -8,9 +8,9 @@ namespace LemonTree.Pipeline.Tools.Database
 
         bool Compact(string source, string destination);
 
-        int RunSQLnonQuery(string sql);
+        int RunSqlNonQuery(string sql);
 
-        object RunSQLQueryScalar(string sql);
+        object RunSqlQueryScalar(string sql);
 
         /// <summary>
         /// run SQL and return result table

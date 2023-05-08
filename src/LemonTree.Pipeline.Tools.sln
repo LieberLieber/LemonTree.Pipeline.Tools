@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33328.57
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools", "LemonTree.Pipeline.Tools\LemonTree.Pipeline.Tools.csproj", "{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}"
 EndProject
@@ -13,9 +13,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LemonTree.Pipeline.Tools.ModelMetric.Test", "LemonTree.Pipeline.Tools.ModelMetric\LemonTree.Pipeline.Tools.ModelMetric.Test.csproj", "{73AD5D99-A670-4C95-8F16-94E7334B1AA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.Semantic", "LemonTree.Pipeline.Tools.Semantic\LemonTree.Pipeline.Tools.Semantic.csproj", "{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LemonTree.Pipeline.Tools.SemanticVersioning", "LemonTree.Pipeline.Tools.SemanticVersioning\LemonTree.Pipeline.Tools.SemanticVersioning.csproj", "{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.GetModelRoots", "LemonTree.Pipeline.Tools.GetModelRoots\LemonTree.Pipeline.Tools.GetModelRoots.csproj", "{2D1E7BB6-852B-45ED-AF61-74BC7934435A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LemonTree.Pipeline.Tools.SemanticVersioning.Rules.Examples", "LemonTree.Pipeline.Tools.SemanticVersioning.Rules.Examples\LemonTree.Pipeline.Tools.SemanticVersioning.Rules.Examples.csproj", "{8A56C9E6-0F47-4C60-BC39-4F39586827BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LemonTree.Pipeline.Tools.SemanticVersioning.Rules", "LemonTree.Pipeline.Tools.SemanticVersioning.Rules\LemonTree.Pipeline.Tools.SemanticVersioning.Rules.csproj", "{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LemonTree.Pipeline.Tools.SemanticVersioning.Contracts", "LemonTree.Pipeline.Tools.SemanticVersioning.Contracts\LemonTree.Pipeline.Tools.SemanticVersioning.Contracts.csproj", "{66904D29-02A1-42E3-B369-145647D7A883}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SemanticVersioning", "SemanticVersioning", "{D4105C2A-5E7C-4E92-B88D-354D9A46358B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LemonTree.Pipeline.Tools.SemanticVersioning.Runner", "LemonTree.Pipeline.Tools.SemanticVersioning.Runner\LemonTree.Pipeline.Tools.SemanticVersioning.Runner.csproj", "{3104397E-379E-4021-B7C4-8B57E3B81F02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +37,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Debug|x86.ActiveCfg = Debug|x86
-		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Debug|x86.Build.0 = Debug|x86
+		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Debug|x86.Build.0 = Debug|Any CPU
 		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}.Release|x86.ActiveCfg = Release|x86
@@ -65,8 +75,8 @@ Global
 		{73AD5D99-A670-4C95-8F16-94E7334B1AA4}.Release|x86.Build.0 = Release|x86
 		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Debug|x86.ActiveCfg = Debug|x86
-		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Debug|x86.Build.0 = Debug|x86
+		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Debug|x86.Build.0 = Debug|Any CPU
 		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE}.Release|x86.ActiveCfg = Release|x86
@@ -79,9 +89,48 @@ Global
 		{2D1E7BB6-852B-45ED-AF61-74BC7934435A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2D1E7BB6-852B-45ED-AF61-74BC7934435A}.Release|x86.ActiveCfg = Release|x86
 		{2D1E7BB6-852B-45ED-AF61-74BC7934435A}.Release|x86.Build.0 = Release|x86
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC}.Debug|x86.Build.0 = Debug|Any CPU
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC}.Release|x86.ActiveCfg = Release|Any CPU
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC}.Release|x86.Build.0 = Release|Any CPU
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}.Debug|x86.Build.0 = Debug|Any CPU
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}.Release|x86.ActiveCfg = Release|Any CPU
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0}.Release|x86.Build.0 = Release|Any CPU
+		{66904D29-02A1-42E3-B369-145647D7A883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66904D29-02A1-42E3-B369-145647D7A883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66904D29-02A1-42E3-B369-145647D7A883}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{66904D29-02A1-42E3-B369-145647D7A883}.Debug|x86.Build.0 = Debug|Any CPU
+		{66904D29-02A1-42E3-B369-145647D7A883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66904D29-02A1-42E3-B369-145647D7A883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66904D29-02A1-42E3-B369-145647D7A883}.Release|x86.ActiveCfg = Release|Any CPU
+		{66904D29-02A1-42E3-B369-145647D7A883}.Release|x86.Build.0 = Release|Any CPU
+		{3104397E-379E-4021-B7C4-8B57E3B81F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3104397E-379E-4021-B7C4-8B57E3B81F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3104397E-379E-4021-B7C4-8B57E3B81F02}.Debug|x86.ActiveCfg = Debug|x86
+		{3104397E-379E-4021-B7C4-8B57E3B81F02}.Debug|x86.Build.0 = Debug|x86
+		{3104397E-379E-4021-B7C4-8B57E3B81F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3104397E-379E-4021-B7C4-8B57E3B81F02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3104397E-379E-4021-B7C4-8B57E3B81F02}.Release|x86.ActiveCfg = Release|Any CPU
+		{3104397E-379E-4021-B7C4-8B57E3B81F02}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A056C15D-9FC1-47BE-8CE2-ACFFEF4BCCAE} = {D4105C2A-5E7C-4E92-B88D-354D9A46358B}
+		{8A56C9E6-0F47-4C60-BC39-4F39586827BC} = {D4105C2A-5E7C-4E92-B88D-354D9A46358B}
+		{565F7A3D-E8E6-4D1A-AD47-B2E09C12A4C0} = {D4105C2A-5E7C-4E92-B88D-354D9A46358B}
+		{66904D29-02A1-42E3-B369-145647D7A883} = {D4105C2A-5E7C-4E92-B88D-354D9A46358B}
+		{3104397E-379E-4021-B7C4-8B57E3B81F02} = {D4105C2A-5E7C-4E92-B88D-354D9A46358B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2D59916-04B0-41F5-BDFD-565B34ADEA2D}

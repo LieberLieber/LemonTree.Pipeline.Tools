@@ -6,31 +6,32 @@ namespace LemonTree.Pipeline.Tools.Database
 {
     internal class JetDatabase : IEADatabase
     {
-        private  OleDbConnectionStringBuilder _builder = new OleDbConnectionStringBuilder();
+        private readonly OleDbConnectionStringBuilder _builder = new OleDbConnectionStringBuilder();
         public bool Compact(string source, string destination)
         {
             try
             {
                 var oParams = new object[]
                  {
-                        string.Format("Data Source={0};Provider=Microsoft.Jet.OLEDB.4.0;", source), string.Format("Data Source={0};Provider=Microsoft.Jet.OLEDB.4.0;", destination)
+	                 $"Data Source={source};Provider=Microsoft.Jet.OLEDB.4.0;",
+	                 $"Data Source={destination};Provider=Microsoft.Jet.OLEDB.4.0;"
                  };
 
                 string comName = "JRO.JetEngine";
 
-                object DBE = Activator.CreateInstance(Type.GetTypeFromProgID(comName));
+                object dbe = Activator.CreateInstance(Type.GetTypeFromProgID(comName));
 
-                if (DBE == null)
+                if (dbe == null)
                 {
                     Console.WriteLine($"Compact failed couldn't get the {comName} Com object");
                     return false;
                 }
 
 
-                DBE.GetType().InvokeMember("CompactDatabase", System.Reflection.BindingFlags.InvokeMethod, null, DBE, oParams);
+                dbe.GetType().InvokeMember("CompactDatabase", System.Reflection.BindingFlags.InvokeMethod, null, dbe, oParams);
 
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(DBE);
-                DBE = null;
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(dbe);
+                dbe = null;
 
                 return true;
             }
@@ -51,36 +52,34 @@ namespace LemonTree.Pipeline.Tools.Database
             return "*";
         }
 
-        public int RunSQLnonQuery(string sql)
+        public int RunSqlNonQuery(string sql)
         {
-            int RecordCount = -1;
+            int recordCount = -1;
             using (var cn = new OleDbConnection { ConnectionString = _builder.ConnectionString })
             {
                 using (var cmd = new OleDbCommand { CommandText = sql, Connection = cn })
                 {
                     cn.Open();
-                    RecordCount = cmd.ExecuteNonQuery();
+                    recordCount = cmd.ExecuteNonQuery();
                 }
             }
 
-            return RecordCount;
+            return recordCount;
         }
 
-        public object RunSQLQueryScalar(string sql)
+        public object RunSqlQueryScalar(string sql)
         {
-            object scaler = null;
-
+            object scalar = null;
             using (var cn = new OleDbConnection { ConnectionString = _builder.ConnectionString })
             {
                 using (var cmd = new OleDbCommand { CommandText = sql, Connection = cn })
                 {
                     cn.Open();
-                    scaler = cmd.ExecuteScalar();
-
+                    scalar = cmd.ExecuteScalar();
                 }
             }
 
-            return scaler;
+            return scalar;
         }
 
 

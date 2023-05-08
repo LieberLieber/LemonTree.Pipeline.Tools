@@ -26,7 +26,7 @@ namespace LemonTree.Pipeline.Tools
         {
             if (eaDatabase != null)
             {
-                return eaDatabase.RunSQLnonQuery(sql);
+                return eaDatabase.RunSqlNonQuery(sql);
             }
             else
             {
@@ -38,7 +38,7 @@ namespace LemonTree.Pipeline.Tools
         {
             if (eaDatabase != null)
             {
-                return eaDatabase.RunSQLQueryScalar(sql);
+                return eaDatabase.RunSqlQueryScalar(sql);
             }
             else
             {
@@ -55,6 +55,7 @@ namespace LemonTree.Pipeline.Tools
         {
             return Convert.ToString(RunSQLQueryScalar(sql));
         }
+
         /// <summary>
         /// run SQL and return result table
         /// </summary>
