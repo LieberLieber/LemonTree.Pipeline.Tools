@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Security;
 using LemonTree.Pipeline.Tools.SemanticVersioning.Contracts;
 
 namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner;
@@ -13,8 +12,7 @@ public class PluginLoader
 		string root = Path.GetDirectoryName(typeof(Program).Assembly.Location);
 
 		string pluginLocation = Path.GetFullPath(Path.Combine(root, relativePath.Replace('\\', Path.DirectorySeparatorChar)));
-		Console.WriteLine($"Loading rules from: {pluginLocation}");
-		PluginLoadContext loadContext = new PluginLoadContext(pluginLocation);
+		var loadContext = new PluginLoadContext(pluginLocation);
 		return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginLocation)));
 	}
 
@@ -51,15 +49,24 @@ public class PluginLoader
 			//@"..\..\..\..\LemonTree.Pipeline.Tools.SemanticVersioning.Rules.Examples\bin\Debug\net472\LemonTree.Pipeline.Tools.SemanticVersioning.Rules.Examples.dll",
 		};
 
+		Console.WriteLine($"Loaded rules plugins: {pluginPaths.Length}");
 		Rules = pluginPaths.SelectMany(pluginPath =>
 		{
-			var pluginAssembly = LoadPlugin(pluginPath);
-			return CreateRules(pluginAssembly);
+			try
+			{
+				var pluginAssembly = LoadPlugin(pluginPath);
+				var rules = CreateRules(pluginAssembly);
+
+				Console.WriteLine($"- {pluginAssembly.GetName().Name} ({rules.Count()} rules)");
+				return rules;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"WARN: unable to load rules from assembly '{pluginPath}'");
+			}
+			return new List<ISemanticVersioningRule>();
 		}).ToList();
 
-		foreach (ISemanticVersioningRule rule in Rules)
-		{
-			Console.WriteLine($"{rule.Name}\t - {rule.Description}");
-		}
+		Console.WriteLine($"Loaded rules in total: {Rules.Count()}");
 	}
 }

@@ -8,26 +8,44 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
     {
 	    private static IEnumerable<ISemanticVersioningRule> _rules;
 
-        static int Main(string[] args)
+		static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Console.WriteLine($"Unhandled Exception: {(e.ExceptionObject as Exception).Message}");
+		}
+
+		static int Main(string[] args)
         {
 			//Sample Options
-			// --model Semantic-Change.eapx --changes export_202302240831421465.xml
+			// --model Semantic-Change.qeax --changes export_202302240831421465.xml
 
-			// Parser.Default is case sensitive - so we use a custom parser to support in case sensitive verbs and options
-			var parser = new Parser(settings =>
-            {
-                settings.CaseSensitive = false;
-                settings.HelpWriter = Console.Error;
-            });
+			int returnValue = -1;
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-            var pluginLoader = new PluginLoader();
-            pluginLoader.Run();
-            _rules = pluginLoader.Rules;
+			try
+			{
+				// Parser.Default is case sensitive - so we use a custom parser to support caseINsensitive verbs and options
+				var parser = new Parser(settings =>
+				{
+					settings.CaseSensitive = false;
+					settings.HelpWriter = Console.Error;
+				});
 
-				return parser.ParseArguments<SemanticOptions>(args)
-                .MapResult(
-	                RunSemanticVersioning,
-                    _ => (int)ExitCode.ErrorCmdParameter);
+				var pluginLoader = new PluginLoader();
+				pluginLoader.Run();
+				_rules = pluginLoader.Rules;
+
+				returnValue = parser.ParseArguments<SemanticOptions>(args)
+					.MapResult(
+						RunSemanticVersioning,
+						_ => (int)ExitCode.ErrorCmdParameter);
+
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Error: " + ex.Message);
+			}
+
+			return returnValue;
         }
 
         private static int RunSemanticVersioning(SemanticOptions opts)
@@ -48,13 +66,15 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
                     return (int)ExitCode.ErrorCmdParameter;
                 }
 
-                Console.WriteLine($"Semantic on {opts.Model}");
+                Console.WriteLine($"Semantic on: {opts.Model}");
                 ModelAccess.ConfigureAccess(opts.Model);
 
                 var semVer = new SemanticVersioning(_rules);
                 semVer.Run(opts.Changes);
 
-                return (int)ExitCode.Success;
+				WriteStatistics(semVer.RunStatistics);
+
+				return (int)ExitCode.Success;
             }
             catch (Exception ex)
             {
@@ -62,5 +82,22 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
                 return (int)ExitCode.Error;
             }
         }
-    }
+
+		private static void WriteStatistics(Statistics runStatistics)
+		{
+			Console.WriteLine("Applied rules:");
+			var numberOfAppliedByRuleName = runStatistics.NumberOfAppliedByRuleName();
+			foreach (var item in numberOfAppliedByRuleName)
+			{
+				Console.WriteLine($"- {item.Key}: {item.Value}");
+			}
+
+			Console.WriteLine("Applied changes:");
+			var numberOfAppliedByChangeLevel = runStatistics.NumberOfAppliedByChangeLevel();
+			foreach (var item in numberOfAppliedByChangeLevel)
+			{
+				Console.WriteLine($"- {item.Key}: {item.Value}");
+			}
+		}
+	}
 }

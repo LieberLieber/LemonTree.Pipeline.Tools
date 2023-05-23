@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Runtime;
 using System.Xml.Linq;
 
 using LemonTree.Pipeline.Tools.SemanticVersioning.Contracts;
@@ -27,9 +25,9 @@ public class SemanticVersioning
 		try
 		{
 			string[] versionDetails = version.Split('.');
-			int major = Convert.ToInt32(versionDetails[0]);
-			int minor = Convert.ToInt32(versionDetails[1]);
-			int patch = Convert.ToInt32(versionDetails[2]);
+			int major = versionDetails.Length > 0 ? Convert.ToInt32(versionDetails[0]) : 0;
+			int minor = versionDetails.Length > 1 ? Convert.ToInt32(versionDetails[1]) : 0;
+			int patch = versionDetails.Length > 2 ? Convert.ToInt32(versionDetails[2]) : 0;
 
 			switch (changeLevel)
 			{
@@ -68,21 +66,25 @@ public class SemanticVersioning
 	private static void UpdateVersion(string guid, string newVersion)
 	{
 		// TODO: don't use string concatenation, SQL injection !!!
-		ModelAccess.RunSql($"Update t_object Set t_object.version =\"{newVersion}\" where t_object.ea_guid = \"{guid}\"");
+		ModelAccess.RunSql($"UPDATE t_object SET version =\"{newVersion}\" WHERE ea_guid = \"{guid}\"");
 	}
 
 	private static string GetVersionInfoFormElement(string guid)
 	{
 		// TODO: don't use string concatenation, SQL injection !!!
-		return ModelAccess.RunSQLQueryScalarAsString($"SELECT DISTINCT t_object.version FROM t_object  Where t_object.ea_guid = \"{guid}\"");
+		return ModelAccess.RunSQLQueryScalarAsString($"SELECT DISTINCT t_object.version FROM t_object WHERE t_object.ea_guid = \"{guid}\"");
 	}
 
+	public Statistics RunStatistics { get; private set; } = new Statistics();
+ 
 	/// <summary>
 	/// Runs the semantic versioning for a set of changes 
 	/// </summary>
 	/// <param name="file">xml file with all changes</param>
 	public void Run(string file)
 	{
+		RunStatistics.Reset();
+
 		var doc = XDocument.Parse(File.ReadAllText(file));
 		var elements = doc.Root.Descendants().Where(item => item.Name.LocalName == "element");
 		var modified = elements.Where(item =>
@@ -102,6 +104,8 @@ public class SemanticVersioning
 				{
 					overallChange = singleChange;
 				}
+
+				RunStatistics.Update(rule, singleChange);
 			}
 
 			if (overallChange != ChangeLevel.None)
