@@ -253,7 +253,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckAuditEnabled(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalarAsLong($"SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{ModelAccess.GetWildcard()}enabled=1;{ModelAccess.GetWildcard()}\"");
+            long retVal = ModelAccess.RunSQLQueryScalarAsLong($"SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{ModelAccess.WildcardCharacter()}enabled=1;{ModelAccess.WildcardCharacter()}\"");
 
             Issue result = new Issue();
             if (retVal == 0)

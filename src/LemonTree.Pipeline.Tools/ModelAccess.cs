@@ -22,11 +22,11 @@ namespace LemonTree.Pipeline.Tools
             }
         }
 
-        public static int RunSQLnonQuery(string sql)
+        public static int RunSQLnonQuery(string sql, params IEAParameter[] parameters)
         {
             if (eaDatabase != null)
             {
-                return eaDatabase.RunSqlNonQuery(sql);
+                return eaDatabase.RunSqlNonQuery(sql, parameters);
             }
             else
             {
@@ -34,11 +34,11 @@ namespace LemonTree.Pipeline.Tools
             }
         }
 
-        public static object RunSQLQueryScalar(string sql)
+        public static object RunSQLQueryScalar(string sql, params IEAParameter[] parameters)
         {
             if (eaDatabase != null)
             {
-                return eaDatabase.RunSqlQueryScalar(sql);
+                return eaDatabase.RunSqlQueryScalar(sql, parameters);
             }
             else
             {
@@ -46,14 +46,14 @@ namespace LemonTree.Pipeline.Tools
             }
         }
 
-        public static long RunSQLQueryScalarAsLong(string sql)
+        public static long RunSQLQueryScalarAsLong(string sql, params IEAParameter[] parameters)
         {
-            return Convert.ToInt64(RunSQLQueryScalar(sql));            
+            return Convert.ToInt64(RunSQLQueryScalar(sql, parameters));            
         }
 
-        public static string RunSQLQueryScalarAsString(string sql)
+        public static string RunSQLQueryScalarAsString(string sql, params IEAParameter[] parameters)
         {
-            return Convert.ToString(RunSQLQueryScalar(sql));
+            return Convert.ToString(RunSQLQueryScalar(sql, parameters));
         }
 
         /// <summary>
@@ -61,11 +61,11 @@ namespace LemonTree.Pipeline.Tools
         /// </summary>
         /// <param name="sql"></param>
         /// <returns>dataTable with result table or null</returns>
-        public static DataTable RunSql(string sql)
+        public static DataTable RunSql(string sql, params IEAParameter[] parameters)
         {
             if (eaDatabase != null)
             {
-                return eaDatabase.RunSql(sql);
+                return eaDatabase.RunSql(sql, parameters);
             }
             else
             {
@@ -93,29 +93,33 @@ namespace LemonTree.Pipeline.Tools
         }
 
        
-        public static string GetExtension()
+        public static string Extension()
         {
-            if (eaDatabase != null)
-            {
-                return  eaDatabase.GetExtension();
-            }
-            else
-            {
-                throw new Exception("Model not set");
-            }
+			if (null == eaDatabase)
+			{
+				throw new Exception("Model not set");
+			}
             
+			return eaDatabase.DbFileExtension;
         }
 
-        public static string GetWildcard()
+        public static string WildcardCharacter()
         {
-            if (eaDatabase != null)
-            {
-                return  eaDatabase.GetWildcard();
-            }
-            else
-            {
-                throw new Exception("Model not set");
-            }
+			if (null == eaDatabase)
+			{
+				throw new Exception("Model not set");
+			}
+			
+			return eaDatabase.WildcardCharacter;
         }
-    }
+
+		public static string ParameterPlaceholder()
+		{
+			if (null == eaDatabase)
+			{
+				throw new Exception("Model not set");
+			}
+			return eaDatabase.ParameterPlaceholder;
+		}
+	}
 }

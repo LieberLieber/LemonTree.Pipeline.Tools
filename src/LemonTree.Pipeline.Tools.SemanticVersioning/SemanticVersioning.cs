@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-
+using LemonTree.Pipeline.Tools.Database;
 using LemonTree.Pipeline.Tools.SemanticVersioning.Contracts;
 
 namespace LemonTree.Pipeline.Tools.SemanticVersioning;
@@ -65,14 +65,18 @@ public class SemanticVersioning
 
 	private static void UpdateVersion(string guid, string newVersion)
 	{
-		// TODO: don't use string concatenation, SQL injection !!!
-		ModelAccess.RunSql($"UPDATE t_object SET version =\"{newVersion}\" WHERE ea_guid = \"{guid}\"");
+		string placeholder = ModelAccess.ParameterPlaceholder();
+		ModelAccess.RunSql($"UPDATE t_object SET version = {placeholder} WHERE ea_guid = {placeholder}",
+			new EAParameter("newVersion", newVersion),
+			new EAParameter("guid", guid));
 	}
 
 	private static string GetVersionInfoFormElement(string guid)
 	{
-		// TODO: don't use string concatenation, SQL injection !!!
-		return ModelAccess.RunSQLQueryScalarAsString($"SELECT DISTINCT t_object.version FROM t_object WHERE t_object.ea_guid = \"{guid}\"");
+		string placeholder = ModelAccess.ParameterPlaceholder();
+
+		return ModelAccess.RunSQLQueryScalarAsString($"SELECT DISTINCT t_object.version FROM t_object WHERE t_object.ea_guid = {placeholder}",
+			new EAParameter("guid", guid));
 	}
 
 	public Statistics RunStatistics { get; private set; } = new Statistics();
