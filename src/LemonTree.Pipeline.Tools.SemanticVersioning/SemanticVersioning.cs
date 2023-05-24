@@ -65,10 +65,17 @@ public class SemanticVersioning
 
 	private static void UpdateVersion(string guid, string newVersion)
 	{
-		string placeholder = ModelAccess.ParameterPlaceholder();
-		ModelAccess.RunSql($"UPDATE t_object SET version = {placeholder} WHERE ea_guid = {placeholder}",
-			new EAParameter("newVersion", newVersion),
-			new EAParameter("guid", guid));
+		try
+		{
+			string placeholder = ModelAccess.ParameterPlaceholder();
+			ModelAccess.RunSql($"UPDATE t_object SET version = {placeholder} WHERE ea_guid = {placeholder}",
+				new EAParameter("newVersion", newVersion),
+				new EAParameter("guid", guid));
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error UpdateVersion: {ex.Message}");
+		}
 	}
 
 	private static string GetVersionInfoFormElement(string guid)
