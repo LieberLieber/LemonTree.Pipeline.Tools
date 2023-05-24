@@ -2,8 +2,8 @@
 {
     public enum ExitCode
     {
-        Error = -2,
-        ErrorCmdParameter = -1, //Parsing error of command line parameter
+        Error = 2,
+        ErrorCmdParameter = 1, //Parsing error of command line parameter
         Success = 0, // Successful merge
     }
 }

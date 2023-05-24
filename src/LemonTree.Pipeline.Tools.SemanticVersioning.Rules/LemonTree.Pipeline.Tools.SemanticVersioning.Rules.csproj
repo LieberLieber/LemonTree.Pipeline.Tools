@@ -5,6 +5,9 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<EnableDynamicLoading>true</EnableDynamicLoading>
+		<BaseOutputPath>..\LemonTree.Pipeline.Tools.SemanticVersioning.Runner\bin\Debug\net6.0\Rules</BaseOutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	</PropertyGroup>
 
   <ItemGroup>

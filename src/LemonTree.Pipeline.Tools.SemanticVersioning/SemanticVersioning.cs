@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Xml.Linq;
 using LemonTree.Pipeline.Tools.Database;
 using LemonTree.Pipeline.Tools.SemanticVersioning.Contracts;
@@ -16,6 +17,8 @@ public class SemanticVersioning
 	{
 		_rules = rules;
 	}
+
+	public List<string> Exceptions = new List<string>();
 
 	private static string CreateNewVersion(string version, ChangeLevel changeLevel)
 	{
@@ -63,30 +66,40 @@ public class SemanticVersioning
 		return version;
 	}
 
-	private static void UpdateVersion(string guid, string newVersion)
+	private void UpdateVersion(string guid, string newVersion)
 	{
 		try
 		{
 			string placeholder = ModelAccess.ParameterPlaceholder();
+
 			ModelAccess.RunSql($"UPDATE t_object SET version = {placeholder} WHERE ea_guid = {placeholder}",
 				new EAParameter("newVersion", newVersion),
 				new EAParameter("guid", guid));
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"Error UpdateVersion: {ex.Message}");
+			Exceptions.Add($"Error update version on item {guid}: {ex.Message}");
 		}
 	}
 
-	private static string GetVersionInfoFormElement(string guid)
+	private string GetVersionInfoFormElement(string guid)
 	{
-		string placeholder = ModelAccess.ParameterPlaceholder();
+		try
+		{
+			string placeholder = ModelAccess.ParameterPlaceholder();
 
-		return ModelAccess.RunSQLQueryScalarAsString($"SELECT DISTINCT t_object.version FROM t_object WHERE t_object.ea_guid = {placeholder}",
-			new EAParameter("guid", guid));
+			return ModelAccess.RunSQLQueryScalarAsString($"SELECT DISTINCT t_object.version FROM t_object WHERE t_object.ea_guid = {placeholder}",
+				new EAParameter("guid", guid));
+		}
+		catch (Exception ex)
+		{
+			Exceptions.Add($"Error get version on item {guid}: {ex.Message}");
+		}
+
+		return null;
 	}
 
-	public Statistics RunStatistics { get; private set; } = new Statistics();
+	public SemanticVersionStatistics VersioningStatistics { get; private set; } = new SemanticVersionStatistics();
  
 	/// <summary>
 	/// Runs the semantic versioning for a set of changes 
@@ -94,7 +107,8 @@ public class SemanticVersioning
 	/// <param name="file">xml file with all changes</param>
 	public void Run(string file)
 	{
-		RunStatistics.Reset();
+		VersioningStatistics.Reset();
+		Exceptions.Clear();
 
 		var doc = XDocument.Parse(File.ReadAllText(file));
 		var elements = doc.Root.Descendants().Where(item => item.Name.LocalName == "element");
@@ -106,6 +120,12 @@ public class SemanticVersioning
 			string guid = modifiedElement.Attribute("guid").Value.ToString();
 			string version = GetVersionInfoFormElement(guid);
 
+			if (string.IsNullOrEmpty(version))
+			{
+				Console.WriteLine($"{guid} - {version} ==> not set");
+				continue;
+			}
+
 			var overallChange = ChangeLevel.None;
 			foreach (var rule in _rules)
 			{
@@ -116,7 +136,7 @@ public class SemanticVersioning
 					overallChange = singleChange;
 				}
 
-				RunStatistics.Update(rule, singleChange);
+				VersioningStatistics.Add(rule, singleChange);
 			}
 
 			if (overallChange != ChangeLevel.None)

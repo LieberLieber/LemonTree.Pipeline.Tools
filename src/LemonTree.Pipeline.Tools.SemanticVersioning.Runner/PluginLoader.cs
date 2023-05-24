@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 using LemonTree.Pipeline.Tools.SemanticVersioning.Contracts;
 
 namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner;
@@ -42,30 +43,32 @@ public class PluginLoader
 
 	internal void Run()
 	{
-		string[] pluginPaths = new[]
-		{
-			// Paths to plugins to load.
-			@"..\..\..\..\LemonTree.Pipeline.Tools.SemanticVersioning.Rules\bin\Debug\netstandard2.0\LemonTree.Pipeline.Tools.SemanticVersioning.Rules.dll",
-			//@"..\..\..\..\LemonTree.Pipeline.Tools.SemanticVersioning.Rules.Examples\bin\Debug\net472\LemonTree.Pipeline.Tools.SemanticVersioning.Rules.Examples.dll",
-		};
+		//default plugin search path is <ExecutingAssembly>/Rules/Debug
 
-		Console.WriteLine($"Loaded rules plugins: {pluginPaths.Length}");
-		Rules = pluginPaths.SelectMany(pluginPath =>
+		string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+		string pluginPath = Path.Combine(exePath, "Rules", "Debug");
+		
+		var rules = new List<ISemanticVersioningRule>();
+		int pluginsLoaded = 0;
+		foreach (string dll in Directory.GetFiles(pluginPath, "*.dll"))
 		{
 			try
 			{
-				var pluginAssembly = LoadPlugin(pluginPath);
-				var rules = CreateRules(pluginAssembly);
+				var pluginAssembly = LoadPlugin(dll);
+				var rulesFromDLL = CreateRules(pluginAssembly);
 
-				Console.WriteLine($"- {pluginAssembly.GetName().Name} ({rules.Count()} rules)");
-				return rules;
+				Console.WriteLine($"- {pluginAssembly.GetName().Name} ({rulesFromDLL.Count()} rules)");
+				rules.AddRange(rulesFromDLL);
+
+				pluginsLoaded++;
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"WARN: unable to load rules from assembly '{pluginPath}'");
+				Console.WriteLine($"WARN: unable to load rules from assembly '{pluginPath}': {ex.Message}");
 			}
-			return new List<ISemanticVersioningRule>();
-		}).ToList();
+		}
+				
+		Rules = rules;
 
 		Console.WriteLine($"Loaded rules in total: {Rules.Count()}");
 	}

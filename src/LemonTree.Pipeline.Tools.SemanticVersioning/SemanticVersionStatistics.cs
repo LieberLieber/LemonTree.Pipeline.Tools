@@ -1,36 +1,11 @@
-﻿using LemonTree.Pipeline.Tools.SemanticVersioning.Contracts;
+﻿
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LemonTree.Pipeline.Tools.SemanticVersioning
+namespace LemonTree.Pipeline.Tools.SemanticVersioning.Contracts
 {
-	public class StatisticsItem
+	public class SemanticVersionStatistics: Statistics
 	{
-		public ISemanticVersioningRule Rule { get; set; }
-		public ChangeLevel ChangeLevel { get; set; }
-
-		public StatisticsItem(ISemanticVersioningRule rule, ChangeLevel changeLevel)
-		{
-			Rule = rule;
-			ChangeLevel = changeLevel;
-		}
-	}
-
-
-	public class Statistics
-	{
-		private List<StatisticsItem> _appliedRules { get; set; } = new List<StatisticsItem>();
-
-		public void Reset()
-		{
-			_appliedRules.Clear();
-		}
-
-		public void Update(ISemanticVersioningRule rule, ChangeLevel changeLevel)
-		{
-			_appliedRules.Add(new StatisticsItem(rule, changeLevel));
-		}
-
 		public Dictionary<string, int> NumberOfAppliedByRuleName()
 		{
 			var statistics = new Dictionary<string, int>();

@@ -18,7 +18,7 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
 			//Sample Options
 			// --model Semantic-Change.qeax --changes export_202302240831421465.xml
 
-			int returnValue = -1;
+			int returnValue = (int)ExitCode.Success;
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
 			try
@@ -43,6 +43,7 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
 			catch (Exception ex)
 			{
 				Console.WriteLine("Error: " + ex.Message);
+				returnValue = (int)ExitCode.Error;
 			}
 
 			return returnValue;
@@ -72,7 +73,7 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
                 var semVer = new SemanticVersioning(_rules);
                 semVer.Run(opts.Changes);
 
-				WriteStatistics(semVer.RunStatistics);
+				WriteStatistics(semVer.VersioningStatistics, semVer.Exceptions);
 
 				return (int)ExitCode.Success;
             }
@@ -83,7 +84,7 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
             }
         }
 
-		private static void WriteStatistics(Statistics runStatistics)
+		private static void WriteStatistics(SemanticVersionStatistics runStatistics, List<string> exceptions)
 		{
 			Console.WriteLine("Applied rules:");
 			var numberOfAppliedByRuleName = runStatistics.NumberOfAppliedByRuleName();
@@ -98,6 +99,18 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
 			{
 				Console.WriteLine($"- {item.Key}: {item.Value}");
 			}
+
+			Console.WriteLine("Exceptions:");
+			if (exceptions.Count > 0)
+			{				
+				foreach (string item in exceptions)
+				{
+					Console.WriteLine(item);
+				}
+			}
+			else
+			{
+				Console.WriteLine("- <none>");			}
 		}
 	}
 }
