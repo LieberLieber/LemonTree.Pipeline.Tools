@@ -1,5 +1,4 @@
 ﻿using LemonTree.Pipeline.Tools.SemanticVersioning.Contracts;
-
 using System.Xml.Linq;
 
 namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
@@ -15,13 +14,20 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 		public ChangeLevel Apply(XElement modifiedElement)
 		{
 			ChangeLevel localChangeLevel = ChangeLevel.None;
-			foreach (var element in modifiedElement.Elements().Elements())
+
+			bool nameHasChanged = false;
+			var changedProperties = modifiedElement.Elements().Elements();
+			foreach (var element in changedProperties)
 			{
 				string changedProperty = element.Attribute("name").Value;
+				
 				//we need to find the highest ranked change off all the attributes that have changed.
 				switch (changedProperty)
 				{
 					case "Name":
+						//Name property has changed
+						nameHasChanged = true;
+
 						localChangeLevel = SetChangeLevel(ChangeLevel.Major, localChangeLevel);
 						break;
 
@@ -30,6 +36,13 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 						break;
 				}
 			}
+
+			//Name property has NOT changed
+			if (!nameHasChanged)
+			{
+				localChangeLevel = ChangeLevel.Downgrade;
+			}
+
 			return localChangeLevel;
 		}
 

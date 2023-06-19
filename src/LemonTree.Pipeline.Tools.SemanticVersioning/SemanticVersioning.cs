@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Xml.Linq;
 using LemonTree.Pipeline.Tools.Database;
 using LemonTree.Pipeline.Tools.SemanticVersioning.Contracts;
@@ -82,7 +81,7 @@ public class SemanticVersioning
 		}
 	}
 
-	private string GetVersionInfoFormElement(string guid)
+	private string GetVersionInfoFromElement(string guid)
 	{
 		try
 		{
@@ -117,8 +116,10 @@ public class SemanticVersioning
 
 		foreach (var modifiedElement in modified)
 		{
+			//TODO: check for name property exists -> if not, possible downgrade of version
+
 			string guid = modifiedElement.Attribute("guid").Value.ToString();
-			string version = GetVersionInfoFormElement(guid);
+			string version = GetVersionInfoFromElement(guid);
 
 			if (string.IsNullOrEmpty(version))
 			{
@@ -139,12 +140,23 @@ public class SemanticVersioning
 				VersioningStatistics.Add(rule, singleChange);
 			}
 
-			if (overallChange != ChangeLevel.None)
+			if (overallChange == ChangeLevel.Downgrade)
+			{
+				//downgrade version number to old value in diff file
+				var oldVersionItem = elements.Elements().Elements().FirstOrDefault(i => i.FirstAttribute.Value.Equals("EA Specifics 1.0::Version"));
+				if (null != oldVersionItem)
+				{
+					string oldVersion = oldVersionItem.Attribute("oldValue").Value;
+					Console.WriteLine($"{guid} - {version} ==> {oldVersion}");
+					UpdateVersion(guid, oldVersion);
+				}
+			}
+			else if (overallChange != ChangeLevel.None)
 			{
 				string newVersion = CreateNewVersion(version, overallChange);
 				Console.WriteLine($"{guid} - {version} ==> {newVersion}");
 				UpdateVersion(guid, newVersion);
-			}
+			} 
 			else
 			{
 				Console.WriteLine($"{guid} - {version} ==> {version}");

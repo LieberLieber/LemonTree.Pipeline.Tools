@@ -5,6 +5,7 @@
         None = 0,
         Patch,
         Minor,
-        Major
+        Major,
+		Downgrade
     }
 }
