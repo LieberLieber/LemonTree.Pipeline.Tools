@@ -15,7 +15,9 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 		{
 			ChangeLevel localChangeLevel = ChangeLevel.None;
 
-			bool nameHasChanged = false;
+			bool versionHasChanged = false;
+			bool otherPropertyHasChanged = false;
+
 			var changedProperties = modifiedElement.Elements().Elements();
 			foreach (var element in changedProperties)
 			{
@@ -25,20 +27,22 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 				switch (changedProperty)
 				{
 					case "Name":
-						//Name property has changed
-						nameHasChanged = true;
-
+						otherPropertyHasChanged = true;
 						localChangeLevel = SetChangeLevel(ChangeLevel.Major, localChangeLevel);
+						break;
+					case "EA Specifics 1.0::Version":
+						versionHasChanged = true;
 						break;
 
 					default:
+						otherPropertyHasChanged = true;
 						localChangeLevel = SetChangeLevel(ChangeLevel.Minor, localChangeLevel);
 						break;
 				}
 			}
 
-			//Name property has NOT changed
-			if (!nameHasChanged)
+			//no changes at all but version number
+			if (versionHasChanged && !otherPropertyHasChanged)
 			{
 				localChangeLevel = ChangeLevel.Downgrade;
 			}
