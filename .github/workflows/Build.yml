@@ -10,7 +10,7 @@ env:
 jobs:
   build:
  
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     steps:
      - name: Checkout Code
@@ -38,6 +38,12 @@ jobs:
  
      - name: Build Solution
        run: msbuild src/LemonTree.Pipeline.Tools.sln /p:Configuration=Release
+
+     - name: Publish Solution for Windows
+       run: dotnet publish -c Release -r win-x86 src/LemonTree.Pipeline.Tools.sln
+
+     - name: Publish Solution for Linux
+       run: dotnet publish -c Release -r linux-x64 src/LemonTree.Pipeline.Tools.sln
        
      - name: Upload LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
        if: github.ref == 'refs/heads/main'
