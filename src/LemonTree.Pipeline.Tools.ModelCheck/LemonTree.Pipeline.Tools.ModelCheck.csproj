@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+	<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
     <OutputType>Exe</OutputType>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -34,7 +34,10 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
   </ItemGroup>
-  <Target Name="PostPublish" AfterTargets="Publish">
+  <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
 	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck.exe" DestinationFolder="$(SolutionDir)..\bin\"/>
   </Target>
-</Project>
+  <Target Name="PostPublishLinux" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck" DestinationFolder="$(SolutionDir)..\bin\"/>
+  </Target>
+</Project> 
