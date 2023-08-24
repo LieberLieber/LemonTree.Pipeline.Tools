@@ -5,6 +5,9 @@
     <OutputType>Exe</OutputType>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<PublishSingleFile>true</PublishSingleFile>
+	<SelfContained>true</SelfContained>
+	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <OutputPath>bin\x86\Debug\</OutputPath>
@@ -30,7 +33,7 @@
     <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.115.5" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy $(TargetPath) $(SolutionDir)..\bin\" />
+  <Target Name="PostPublish" AfterTargets="Publish">
+	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe" DestinationFolder="$(SolutionDir)..\bin\"/>
   </Target>
 </Project>
