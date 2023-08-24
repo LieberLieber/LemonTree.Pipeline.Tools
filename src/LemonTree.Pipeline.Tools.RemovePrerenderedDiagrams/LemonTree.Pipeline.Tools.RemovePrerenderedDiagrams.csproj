@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RuntimeIdentifier>win-x86</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <RestorePackages>true</RestorePackages>
@@ -27,7 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="Stub.System.Data.SQLite.Core.NetFramework" Version="1.0.115.5" />
+    <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.115.5" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
