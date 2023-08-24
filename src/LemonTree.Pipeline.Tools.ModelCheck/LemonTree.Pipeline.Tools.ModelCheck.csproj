@@ -29,14 +29,14 @@
     <ProjectReference Include="..\LemonTree.Pipeline.Tools\LemonTree.Pipeline.Tools.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.6.0-preview3.19128.7" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
   </ItemGroup>
   <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
-	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck.exe" DestinationFolder="$(SolutionDir)..\bin\"/>
+	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck.exe" DestinationFolder="$(SolutionDir)..\bin\" />
   </Target>
   <Target Name="PostPublishLinux" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
-	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck" DestinationFolder="$(SolutionDir)..\bin\"/>
+	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck" DestinationFolder="$(SolutionDir)..\bin\" />
   </Target>
 </Project> 
