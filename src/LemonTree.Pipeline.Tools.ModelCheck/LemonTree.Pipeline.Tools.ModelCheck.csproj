@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-	<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+	<RuntimeIdentifiers>win-x86;linux-x64</RuntimeIdentifiers>
     <OutputType>Exe</OutputType>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -30,11 +30,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard " Version="1.0.115.5" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
   </ItemGroup>
-  <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+  <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
 	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck.exe" DestinationFolder="$(SolutionDir)..\bin\"/>
   </Target>
   <Target Name="PostPublishLinux" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
