@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-  <TargetFramework>net6.0</TargetFramework>
-	<RuntimeIdentifiers>win-x86;linux-x64</RuntimeIdentifiers>
-  <OutputType>Exe</OutputType>
-  <RestorePackages>true</RestorePackages>
-  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<PublishSingleFile>true</PublishSingleFile>
-	<SelfContained>true</SelfContained>
-	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <TargetFramework>net6.0</TargetFramework>
+    <RuntimeIdentifiers>win-x86;linux-x64</RuntimeIdentifiers>
+    <OutputType>Exe</OutputType>
+    <RestorePackages>true</RestorePackages>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <OutputPath>bin\x86\Debug\</OutputPath>
@@ -31,7 +30,7 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.6.0-preview3.19128.7" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
   </ItemGroup>
   <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
 	  <Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck.exe" DestinationFolder="$(SolutionDir)..\bin\" />
