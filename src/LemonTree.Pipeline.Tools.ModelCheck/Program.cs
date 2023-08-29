@@ -29,7 +29,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
         {
             try
             {
-                Issues issues = new Issues();
+                var issues = new Issues();
 
                 Console.WriteLine($"ModelCheck on {opts.Model}");
                 ModelAccess.ConfigureAccess(opts.Model);
@@ -98,11 +98,9 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occured: {ex.Message}");
+                Console.WriteLine($"Exception occurred: {ex.Message}");
                 return (int)Exitcode.Error;
             }
         }
-
-
     }
 }

@@ -75,11 +75,11 @@ namespace LemonTree.Pipeline.Tools
             {
                 eaDatabase = new SqLiteDatabase();
                 eaDatabase.SetModel(model);
-                if (!sqLiteDatabaseExpanded)
-                {
-                    ExpandSqliteInt();
-                    sqLiteDatabaseExpanded = true;
-                }
+                //if (!sqLiteDatabaseExpanded)
+                //{
+                //    ExpandSqliteInt();
+                //    sqLiteDatabaseExpanded = true;
+                //}
             }
             else
             {
@@ -91,13 +91,13 @@ namespace LemonTree.Pipeline.Tools
        
         private static void ExpandSqliteInt()
         {
-            string sqllitefile = "SQLite.Interop.dll";
+            string sqlitefile = "SQLite.Interop.dll";
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
 
-            using (FileStream fs = File.OpenWrite(sqllitefile))
+            using (FileStream fs = File.OpenWrite(sqlitefile))
             {
                 //LemonTree.Pipeline.Tools.EmbeddedResources.x86.SQLite.Interop.dll
-                using (Stream resourceStream = currentAssembly.GetManifestResourceStream($"LemonTree.Pipeline.Tools.EmbeddedResources.x86.{sqllitefile}"))
+                using (Stream resourceStream = currentAssembly.GetManifestResourceStream($"LemonTree.Pipeline.Tools.EmbeddedResources.x86.{sqlitefile}"))
                 {
                     const int size = 4096;
                     byte[] bytes = new byte[4096];
