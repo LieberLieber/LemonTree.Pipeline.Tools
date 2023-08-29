@@ -22,14 +22,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.6.0-preview3.19128.7" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\LemonTree.Pipeline.Tools\LemonTree.Pipeline.Tools.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
   </ItemGroup>
   <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
 	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe" DestinationFolder="$(SolutionDir)..\bin\" />
