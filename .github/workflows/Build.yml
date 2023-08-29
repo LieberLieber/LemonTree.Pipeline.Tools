@@ -3,8 +3,8 @@ name: Build
 on: [push]
 env:
   NexusArtifactRepo: https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools
-  ModelName: src\Models\pwc.eapx
-  ModelNameSqLite: src\Models\Model.qeax
+  ModelName: ./src/Models/pwc.eapx
+  ModelNameSqLite: ./src/Models/Model.qeax
   ProductVersion: ${{vars.PRODUCTVERSION}} 
   
 jobs:
