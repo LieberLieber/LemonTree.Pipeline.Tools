@@ -184,7 +184,10 @@ jobs:
         run: |
                 echo "starting validation"
                 ls -l
-                &./LemonTree.Pipeline.Tools.ModelCheck  --model "${{env.ModelNameSqLite}}" --out "./output.md" 
+                chmod 777 ./LemonTree.Pipeline.Tools.ModelCheck
+                ls -l
+                
+                ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{env.ModelNameSqLite}}" --out "./output.md" 
                 type "./output.md"
       
                 echo "finished validation with $LASTEXITCODE"
