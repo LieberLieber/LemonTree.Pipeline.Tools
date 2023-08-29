@@ -183,7 +183,8 @@ jobs:
         shell: pwsh
         run: |
                 echo "starting validation"
-                dotnet "./LemonTree.Pipeline.Tools.ModelCheck"  --model "${{env.ModelNameSqLite}}" --out "./output.md" 
+                ls -l
+                &./LemonTree.Pipeline.Tools.ModelCheck  --model "${{env.ModelNameSqLite}}" --out "./output.md" 
                 type "./output.md"
       
                 echo "finished validation with $LASTEXITCODE"
