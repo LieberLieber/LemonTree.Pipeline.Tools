@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--ChangeReport document version: 1.4-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.lieberlieber.com" xmlns="http://www.lieberlieber.com"
+           attributeFormDefault="unqualified" elementFormDefault="qualified">
+
+    <xs:simpleType name="DiffStateEnumType">
+        <xs:restriction base="xs:normalizedString">
+            <xs:enumeration value="Unknown"/>
+            <xs:enumeration value="Unmodified"/>
+            <xs:enumeration value="Moved"/>
+            <xs:enumeration value="Removed"/>
+            <xs:enumeration value="New"/>
+            <xs:enumeration value="Nonexistence"/>
+            <xs:enumeration value="Modified"/>
+            <xs:enumeration value="SubElementModified"/>
+            <xs:enumeration value="New, SubElementModified"/>
+            <xs:enumeration value="Removed, SubElementModified"/>
+            <xs:enumeration value="Modified"/>
+            <xs:enumeration value="Modified, SubElementModified"/>
+            <xs:enumeration value="Moved, Modified, SubElementModified"/>
+            <xs:enumeration value="Unmodified, Modified"/>
+            <xs:enumeration value="Unmodified, Modified, SubElementModified"/>
+            <xs:enumeration value="Unmodified, Moved"/>
+            <xs:enumeration value="Unmodified, Moved, Modified, SubElementModified"/>
+            <xs:enumeration value="Unmodified, SubElementModified"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ElementType" abstract="true">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="changedProperties">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="property">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required" />
+                                <xs:attribute name="namespace" type="xs:string" use="required" />
+                                <xs:attribute name="oldValue" type="xs:string" use="required" />
+                                <xs:attribute name="newValue" type="xs:string" use="required" />
+                                <xs:attribute name="diffState" type="DiffStateEnumType" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="pathToClassifier" type="xs:string" use="required" />
+        <xs:attribute name="qualifiedName" type="xs:string" use="required" />
+        <xs:attribute name="ltName" type="xs:string" use="required" />
+        <xs:attribute name="ltQualifiedName" type="xs:string" use="required" />
+        <xs:attribute name="qualifiedNameOld" type="xs:string" use="required" />
+        <xs:attribute name="guid" type="xs:string" use="required" />
+        <xs:attribute name="umlType" type="xs:string" use="required" />
+        <xs:attribute name="eaUmlType" type="xs:string" use="required" />
+        <xs:attribute name="diffState" type="DiffStateEnumType" use="required" />
+    </xs:complexType>
+    
+    <!--DiagramLink, DiagramObject, Diagram-->
+    <xs:complexType name="ElementWithRepresentsType">
+        <xs:complexContent>
+            <xs:extension base="ElementType">
+                <xs:sequence>
+                    <xs:element name="represents" minOccurs="0" maxOccurs="1"> <!--minOccurs="0" to eneble diagram itself-->
+                        <xs:complexType>
+                            <xs:attribute name="umlType" type="xs:string" use="required" />
+                            <xs:attribute name="qualifiedName" type="xs:string" use="required" />
+                            <xs:attribute name="guid" type="xs:string" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!--Element with diagrams displaying it-->
+    <xs:complexType name="ElementWithDiagramsType">
+        <xs:complexContent>
+            <xs:extension base="ElementType">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="connectedElements" type="ConnectedElementsType" />
+                    <xs:element minOccurs="0" name="connectedElementsOld" type="ConnectedElementsType" />
+                    <xs:element minOccurs="0" name="diagrams">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" name="diagram" type="DiagramType" />
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ConnectedElementsType">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="connectedElement">
+                <xs:complexType>
+                    <xs:attribute name="umlType" type="xs:string" use="required" />
+                    <xs:attribute name="qualifiedName" type="xs:string" use="required" />
+                    <xs:attribute name="guid" type="xs:string" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DiagramType">
+        <xs:attribute name="diagramType" type="xs:string" use="required" />
+        <xs:attribute name="guid" type="xs:string" use="required" />
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="qualifiedName" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <!--Diagram which is grouping changed DiagramLinks, DiagramObjects; contains also itself if is changed-->
+    <xs:complexType name="DiagramWithObjectsAndLinksType">
+        <xs:complexContent>
+            <xs:extension base="DiagramType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="element" type="ElementWithRepresentsType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DiagramPictureType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" use="required" />
+                <xs:attribute name="qualifiedName" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="StructurePackageType">
+        <xs:sequence minOccurs="0">
+            <xs:element maxOccurs="unbounded" name="sPackage" type="StructurePackageType" />
+        </xs:sequence>
+        <xs:attribute name="umlType" type="xs:string" use="required" />
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="qualifiedName" type="xs:string" use="required" />
+        <xs:attribute name="guid" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <!--Main-->
+    <xs:element name="report">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="fileDetailsA">
+                    <xs:complexType>
+                        <xs:attribute name="title" type="xs:string" use="required" />
+                        <xs:attribute name="isInVcs" type="xs:boolean" use="required" />
+                        <xs:attribute name="name" type="xs:string" use="required" />
+                        <xs:attribute name="size" type="xs:string" use="required" />
+                        <xs:attribute name="path" type="xs:string" use="required" />
+                        <xs:attribute name="dateModified" type="xs:dateTime" use="optional" />
+                        <xs:attribute name="commitRevision" type="xs:string" use="required" />
+                        <xs:attribute name="commitAuthor" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="fileDetailsB">
+                    <xs:complexType>
+                        <xs:attribute name="title" type="xs:string" use="required" />
+                        <xs:attribute name="isInVcs" type="xs:boolean" use="required" />
+                        <xs:attribute name="name" type="xs:string" use="required" />
+                        <xs:attribute name="size" type="xs:string" use="required" />
+                        <xs:attribute name="path" type="xs:string" use="required" />
+                        <xs:attribute name="dateModified" type="xs:dateTime" use="optional" />
+                        <xs:attribute name="commitRevision" type="xs:string" use="required" />
+                        <xs:attribute name="commitAuthor" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                
+                <xs:element maxOccurs="1" name="changes">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="unbounded" name="package">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element minOccurs="0" maxOccurs="unbounded" name="element" type="ElementWithDiagramsType" />
+                                        <xs:element minOccurs="0" maxOccurs="unbounded" name="classifier">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element maxOccurs="unbounded" name="element" type="ElementWithDiagramsType" />
+                                                </xs:sequence>
+                                                <xs:attribute name="umlType" type="xs:string" use="required" />
+                                                <xs:attribute name="name" type="xs:string" use="required" />
+                                                <xs:attribute name="qualifiedName" type="xs:string" use="required" />
+                                                <xs:attribute name="guid" type="xs:string" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element minOccurs="0" maxOccurs="unbounded" name="diagram" type="DiagramWithObjectsAndLinksType" />
+                                    </xs:sequence>
+                                    <xs:attribute name="name" type="xs:string" use="required" />
+                                    <xs:attribute name="qualifiedName" type="xs:string" use="required" />
+                                    <xs:attribute name="guid" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element minOccurs="0" maxOccurs="1" name="packageStructure">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="sPackage" type="StructurePackageType" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                
+                <xs:element minOccurs="0" maxOccurs="1" name="diagramPictures">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="diagramPicture">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element minOccurs="0" name="diagramPictureA" type="DiagramPictureType" />
+                                        <xs:element minOccurs="0" name="diagramPictureB" type="DiagramPictureType" />
+                                    </xs:sequence>
+                                    <xs:attribute name="guid" type="xs:string" use="required" />
+                                    <xs:attribute name="diagramType" type="xs:string" use="required" />
+                                    <xs:attribute name="packageGuid" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:decimal" use="required" />
+            <xs:attribute name="creatorName" type="xs:string" use="required" />
+            <xs:attribute name="creatorVersion" type="xs:string" use="required" />
+            <xs:attribute name="date" type="xs:dateTime" use="required" />
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LemonTree.Pipeline.Tools.SemanticVersioning.Runner": {
+      "commandName": "Project",
+      "commandLineArgs": "--model Semantic-Change.qeax --changes export_202302240831421465.xml"
+    }
+  }
+}

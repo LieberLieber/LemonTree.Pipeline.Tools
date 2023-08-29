@@ -1,0 +1,10 @@
+﻿using CommandLine;
+
+namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner.CommandLineOptions
+{
+	internal class BaseOptions
+	{
+		[Option("Model", Required = true, HelpText = "The 'model' to apply the semantic versioning")]
+		public string Model { get; set; }
+	}
+}

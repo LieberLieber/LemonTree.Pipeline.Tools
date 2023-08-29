@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type='text/xsl' href='ChangeReportWithPictures.xsl'?>
+<report xmlns="http://www.lieberlieber.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.lieberlieber.com ChangeReport.xsd" version="1.4" creatorName="LemonTree" creatorVersion="2.6.0.0" date="2023-02-24T08:31:42">
+  <fileDetailsA title="Semantic-Base.eapx" isInVcs="false" name="Semantic-Base.eapx" size="2,38 MB" path="C:\Users\WDAGUtilityAccount\Desktop\Semantic-Base.eapx" commitRevision="" commitAuthor="" dateModified="2023-02-24T08:13:00" />
+  <fileDetailsB title="Semantic-Change.eapx" isInVcs="false" name="Semantic-Change.eapx" size="2,38 MB" path="C:\Users\WDAGUtilityAccount\Desktop\Semantic-Change.eapx" commitRevision="" commitAuthor="" dateModified="2023-02-24T08:15:00" />
+  <changes>
+    <package name="Package1" qualifiedName="Model.Package1" guid="{B1E6B382-8BC4-4c0e-B6CD-AE8875D96422}">
+      <classifier umlType="Class" name="e1 evolved" qualifiedName="Model.Package1.e1_evolved" guid="{6D5BE158-478A-40a8-8622-F2E2BE81151D}">
+        <element name="e1 evolved" pathToClassifier="" qualifiedName="Model.Package1.e1_evolved" ltName="e1 evolved:Class" ltQualifiedName="Model.Package1.e1_evolved:Class" qualifiedNameOld="Model.Package1.e1" guid="{6D5BE158-478A-40a8-8622-F2E2BE81151D}" umlType="Class" eaUmlType="Requirement" diffState="Modified">
+          <changedProperties>
+            <property name="Name" namespace="MyUml" oldValue="e1" newValue="e1 evolved" diffState="Modified" />
+          </changedProperties>
+        </element>
+      </classifier>
+      <classifier umlType="Class" name="e2" qualifiedName="Model.Package1.e2" guid="{EF6D4189-710A-4d66-B6D3-96A442C30D80}">
+        <element name="e2" pathToClassifier="" qualifiedName="Model.Package1.e2" ltName="e2:Class" ltQualifiedName="Model.Package1.e2:Class" qualifiedNameOld="Model.Package1.e2" guid="{EF6D4189-710A-4d66-B6D3-96A442C30D80}" umlType="Class" eaUmlType="Requirement" diffState="Modified">
+          <changedProperties>
+            <property name="EA Specifics 1.0::Status" namespace="" oldValue="Proposed" newValue="Implemented" diffState="Modified" />
+            <property name="EA Specifics 1.0::requirement::Difficulty" namespace="" oldValue="Medium" newValue="High" diffState="Modified" />
+            <property name="EA Specifics 1.0::requirement::Priority" namespace="" oldValue="Medium" newValue="High" diffState="Modified" />
+            <property name="EA Specifics 1.0::requirement::Status" namespace="" oldValue="Proposed" newValue="Implemented" diffState="Modified" />
+          </changedProperties>
+        </element>
+      </classifier>
+      <classifier umlType="Class" name="e3" qualifiedName="Model.Package1.e3" guid="{A2296B45-FB74-4780-8CFF-D989A4511609}">
+        <element name="e3" pathToClassifier="" qualifiedName="Model.Package1.e3" ltName="e3:Class" ltQualifiedName="Model.Package1.e3:Class" qualifiedNameOld="Model.Package1.e3" guid="{A2296B45-FB74-4780-8CFF-D989A4511609}" umlType="Class" eaUmlType="Requirement" diffState="Removed" />
+      </classifier>
+      <classifier umlType="Class" name="e4" qualifiedName="Model.Package1.e4" guid="{EAE122A2-834A-44ae-BE07-541ACC25D18A}">
+        <element name="e4" pathToClassifier="" qualifiedName="Model.Package1.e4" ltName="e4:Class" ltQualifiedName="Model.Package1.e4:Class" qualifiedNameOld="" guid="{EAE122A2-834A-44ae-BE07-541ACC25D18A}" umlType="Class" eaUmlType="Requirement" diffState="New">
+          <changedProperties>
+            <property name="Alias" namespace="MyUmlExt" oldValue="" newValue="" diffState="New" />
+            <property name="ClassifierBehavior" namespace="" oldValue="" newValue="" diffState="New" />
+            <property name="CompositeDiagram" namespace="" oldValue="" newValue="" diffState="New" />
+            <property name="Documentation" namespace="MyUml" oldValue="" newValue="" diffState="New" />
+            <property name="EA Specifics 1.0::Author" namespace="" oldValue="" newValue="dsiegl" diffState="New" />
+            <property name="EA Specifics 1.0::Backcolor" namespace="" oldValue="" newValue="-1" diffState="New" />
+            <property name="EA Specifics 1.0::BorderStyle" namespace="" oldValue="" newValue="0" diffState="New" />
+            <property name="EA Specifics 1.0::BorderWidth" namespace="" oldValue="" newValue="-1" diffState="New" />
+            <property name="EA Specifics 1.0::Bordercolor" namespace="" oldValue="" newValue="-1" diffState="New" />
+            <property name="EA Specifics 1.0::Complexity" namespace="" oldValue="" newValue="1" diffState="New" />
+            <property name="EA Specifics 1.0::Fontcolor" namespace="" oldValue="" newValue="-1" diffState="New" />
+            <property name="EA Specifics 1.0::Language" namespace="" oldValue="" newValue="&lt;none&gt;" diffState="New" />
+            <property name="EA Specifics 1.0::NType" namespace="" oldValue="" newValue="0" diffState="New" />
+            <property name="EA Specifics 1.0::Phase" namespace="" oldValue="" newValue="1.0" diffState="New" />
+            <property name="EA Specifics 1.0::Pos" namespace="" oldValue="" newValue="" diffState="New" />
+            <property name="EA Specifics 1.0::Status" namespace="" oldValue="" newValue="Proposed" diffState="New" />
+            <property name="EA Specifics 1.0::Style" namespace="" oldValue="" newValue="" diffState="New" />
+            <property name="EA Specifics 1.0::StyleEx" namespace="" oldValue="" newValue="" diffState="New" />
+            <property name="EA Specifics 1.0::Version" namespace="" oldValue="" newValue="1.0" diffState="New" />
+            <property name="EA Specifics 1.0::requirement::Difficulty" namespace="" oldValue="" newValue="Medium" diffState="New" />
+            <property name="EA Specifics 1.0::requirement::Priority" namespace="" oldValue="" newValue="Medium" diffState="New" />
+            <property name="EA Specifics 1.0::requirement::Status" namespace="" oldValue="" newValue="Proposed" diffState="New" />
+            <property name="Element Metadata 1.0::CreatedDate" namespace="" oldValue="" newValue="2023-02-24T08:14:58Z" diffState="New" />
+            <property name="Element Metadata 1.0::ModifiedDate" namespace="" oldValue="" newValue="2023-02-24T08:14:58Z" diffState="New" />
+            <property name="HasCompositeDiagram" namespace="MyUmlExt" oldValue="" newValue="false" diffState="New" />
+            <property name="IsAbstract" namespace="MyUml" oldValue="" newValue="false" diffState="New" />
+            <property name="IsActive" namespace="MyUml" oldValue="" newValue="false" diffState="New" />
+            <property name="IsFinalSpecialization" namespace="MyUml" oldValue="" newValue="false" diffState="New" />
+            <property name="Name" namespace="MyUml" oldValue="" newValue="e4" diffState="New" />
+            <property name="Stereotype" namespace="" oldValue="" newValue="requirement{EA Specifics 1.0::requirement}:Stereotype" diffState="New" />
+            <property name="Stereotypes" namespace="" oldValue="" newValue="requirement{EA Specifics 1.0::requirement}:Stereotype" diffState="New" />
+            <property name="TemplateBindings" namespace="" oldValue="" newValue="" diffState="New" />
+            <property name="TemplateSignature" namespace="" oldValue="" newValue="" diffState="New" />
+            <property name="UmlType" namespace="" oldValue="" newValue="Class" diffState="New" />
+            <property name="Visibility" namespace="MyUml" oldValue="" newValue="Public" diffState="New" />
+          </changedProperties>
+        </element>
+      </classifier>
+    </package>
+  </changes>
+
+</report>

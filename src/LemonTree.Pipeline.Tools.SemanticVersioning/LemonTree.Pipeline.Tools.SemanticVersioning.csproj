@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\LemonTree.Pipeline.Tools.SemanticVersioning.Contracts\LemonTree.Pipeline.Tools.SemanticVersioning.Contracts.csproj" />
+	  <ProjectReference Include="..\LemonTree.Pipeline.Tools\LemonTree.Pipeline.Tools.csproj" />
+	</ItemGroup>
+
+</Project>
