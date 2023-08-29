@@ -31,6 +31,12 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
             {
                 var issues = new Issues();
 
+                if (!File.Exists(opts.Model))
+                {
+                    Console.WriteLine($"File '{opts.Model}' does not exist.");
+                    throw new FileNotFoundException("File not found.", opts.Model);
+                }
+
                 Console.WriteLine($"ModelCheck on {opts.Model}");
                 ModelAccess.ConfigureAccess(opts.Model);
 
