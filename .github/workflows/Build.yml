@@ -3,7 +3,7 @@ name: Build
 on: [push]
 env:
   NexusArtifactRepo: https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools
-  ModelName: ./src/Models/pwc.eapx
+  ModelName: ./src/Models/PWC.eapx
   ModelNameSqLite: ./src/Models/Model.qeax
   ProductVersion: ${{vars.PRODUCTVERSION}} 
   
@@ -85,14 +85,21 @@ jobs:
     #       while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
     #       curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.GetModelRoots.exe $targetUrl
 
-     - name: Archive LemonTree.Pipeline.Tools.Bin
+
+     - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Windows
        uses: actions/upload-artifact@v3
        with:
-            name: LemonTree.Pipeline.Tools.Bin
-            path: "bin/*.*"
+            name: LemonTree.Pipeline.Tools.ModelCheck.Windows
+            path: "bin/LemonTree.Pipeline.Tools.ModelCheck.exe"
             retention-days: 2
 
-     
+     - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Linux
+       uses: actions/upload-artifact@v3
+       with:
+            name: LemonTree.Pipeline.Tools.ModelCheck.Linux
+            path: "bin/LemonTree.Pipeline.Tools.ModelCheck"
+            retention-days: 2
+
      
   TestOnWindows:
     runs-on: windows-latest
@@ -110,7 +117,8 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-            name: LemonTree.Pipeline.Tools.Bin
+            name: LemonTree.Pipeline.Tools.ModelCheck.Windows
+
       
       - name: Run LemonTree Check Tool JET
         id: modelcheck
@@ -118,7 +126,9 @@ jobs:
         run: |
              echo "starting validation"
              .\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelName}}" --out ".\output.md" --FailOnErrors 
-             type "output.md"
+
+             Write-Output "# Modelcheck Windows .eapx" >> $env:GITHUB_STEP_SUMMARY
+             Get-Content "output.md" >> $env:GITHUB_STEP_SUMMARY
    
              echo "finished validation with $LASTEXITCODE"
    
@@ -128,10 +138,6 @@ jobs:
              #  *  0 = model is valid (no error, no warning, no runtime exception)
              #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
              #  *  2 = model has at least one error  (only if --FailOnErrors)
-   
-             $Message = "output.md"
-   
-             echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
          
              #for now never stop 
              exit 0
@@ -142,8 +148,10 @@ jobs:
         run: |
                 echo "starting validation"
                 .\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelNameSqLite}}" --out ".\output.md" 
-                type "output.md"
-      
+
+                Write-Output "# Modelcheck Windows .qeax" >> $env:GITHUB_STEP_SUMMARY
+                Get-Content "output.md" >> $env:GITHUB_STEP_SUMMARY
+
                 echo "finished validation with $LASTEXITCODE"
       
                 #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
@@ -159,6 +167,7 @@ jobs:
             
                 #for now never stop 
                 exit $LASTEXITCODE
+
 
   TestOnUbuntu:
     runs-on: ubuntu-latest
@@ -176,24 +185,20 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-            name: LemonTree.Pipeline.Tools.Bin
+            name: LemonTree.Pipeline.Tools.ModelCheck.Linux
       
       - name: Run LemonTree Check Tool SqLite
         id: modelcheckSqlite
         shell: pwsh
         run: |
                 echo "starting validation"
-                ls -l
+
+                #workaround beause github doesn't maintain properties
                 chmod 777 ./LemonTree.Pipeline.Tools.ModelCheck
-                ls -l
-
-                ls -l ./src/Models/
-                
+              
                 ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{env.ModelNameSqLite}}" --out "./output.md" 
-                
-                ls -l ./src/Models/
-
-                type "./output.md"
+                Write-Output "# Modelcheck Linux .qeax" >> $env:GITHUB_STEP_SUMMARY
+                Get-Content "output.md" >> $env:GITHUB_STEP_SUMMARY
       
                 echo "finished validation with $LASTEXITCODE"
       
@@ -203,10 +208,7 @@ jobs:
                 #  *  0 = model is valid (no error, no warning, no runtime exception)
                 #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
                 #  *  2 = model has at least one error  (only if --FailOnErrors)
-      
-                $Message = "output.md"
-      
-                echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
-            
+                
                 #for now never stop 
-                exit $LASTEXITCODEsms
+                exit 0
+
