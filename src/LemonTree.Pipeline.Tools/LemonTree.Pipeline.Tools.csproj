@@ -15,6 +15,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.OleDb" Version="7.0.0" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
   </ItemGroup>
 </Project>
