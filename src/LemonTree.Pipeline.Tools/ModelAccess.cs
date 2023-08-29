@@ -84,7 +84,7 @@ namespace LemonTree.Pipeline.Tools
             {
                 eaDatabase = new SqLiteDatabase();
                 eaDatabase.SetModel(model);
-                }
+            }
             else
             {
                 Console.WriteLine("only .eap, .eapx, .qea and .qeax are suported");
@@ -92,8 +92,8 @@ namespace LemonTree.Pipeline.Tools
             }
         }
 
-       
-        public static string Extension()
+
+        public static string GetExtension()
         {
 			if (null == eaDatabase)
 			{
