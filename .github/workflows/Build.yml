@@ -69,12 +69,13 @@ jobs:
           while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
           curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.ModelCheck.exe $targetUrl
       
-     - name: Archive Session Files
-       uses: actions/upload-artifact@v3
-       with:
-          name: LemonTree.Pipeline.Tools.Bin
-          path: "bin/*.*"
-          retention-days: 2
+     - name: Upload LemonTree.Pipeline.Tools.ModelCheck
+       if: github.ref == 'refs/heads/main'
+       run: |
+             $targetUrl = "${{env.NexusArtifactRepo}}/LemonTree.Pipeline.Tools.ModelCheck"
+             echo "Uploading 	LemonTree.Pipeline.Tools.ModelCheck to Nexus: $targetUrl"
+             while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+             curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.ModelCheck $targetUrl 
 
     #  - name: Upload LemonTree.Pipeline.Tools.GetModelRoots.exe
     #    if: github.ref == 'refs/heads/main'
@@ -84,119 +85,80 @@ jobs:
     #       while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
     #       curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T bin\LemonTree.Pipeline.Tools.GetModelRoots.exe $targetUrl
 
-     - name: Run LemonTree Check Tool JET
-       id: modelcheck
-       run: |
-          echo "starting validation"
-          .\bin\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelName}}" --out ".\output.md" --FailOnErrors 
-          type "output.md"
+     - name: Archive LemonTree.Pipeline.Tools.Bin
+       uses: actions/upload-artifact@v3
+       with:
+            name: LemonTree.Pipeline.Tools.Bin
+            path: "bin/*.*"
+            retention-days: 2
 
-          echo "finished validation with $LASTEXITCODE"
+     
+     
+  TestOnWindows:
+    runs-on: windows-latest
+    needs: build
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+          fetch-depth: 0
 
-          #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
-          #  * -2 = other runtime exception occurred
-          #  * -1 = CLI argument parsing error occurred
-          #  *  0 = model is valid (no error, no warning, no runtime exception)
-          #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
-          #  *  2 = model has at least one error  (only if --FailOnErrors)
-
-          $Message = "output.md"
-
-          echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
+      - name: Check out repository code
+        uses: actions/checkout@v3
       
-          #for now never stop 
-          exit 0
-
-     - name: Run LemonTree Check Tool SqLite
-       id: modelcheckSqlite
-       run: |
-          echo "starting validation"
-          .\bin\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelNameSqLite}}" --out ".\output.md" 
-          type "output.md"
-
-          echo "finished validation with $LASTEXITCODE"
-
-          #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
-          #  * -2 = other runtime exception occurred
-          #  * -1 = CLI argument parsing error occurred
-          #  *  0 = model is valid (no error, no warning, no runtime exception)
-          #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
-          #  *  2 = model has at least one error  (only if --FailOnErrors)
-
-          $Message = "output.md"
-
-          echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+            name: LemonTree.Pipeline.Tools.Bin
       
-          #for now never stop 
-          exit $LASTEXITCODE
+      - name: Run LemonTree Check Tool JET
+        id: modelcheck
+        shell: pwsh
+        run: |
+             echo "starting validation"
+             .\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelName}}" --out ".\output.md" --FailOnErrors 
+             type "output.md"
+   
+             echo "finished validation with $LASTEXITCODE"
+   
+             #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+             #  * -2 = other runtime exception occurred
+             #  * -1 = CLI argument parsing error occurred
+             #  *  0 = model is valid (no error, no warning, no runtime exception)
+             #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+             #  *  2 = model has at least one error  (only if --FailOnErrors)
+   
+             $Message = "output.md"
+   
+             echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
+         
+             #for now never stop 
+             exit 0
 
-     - name: Extract branch name
-       shell: bash
-       run: echo "branch=${GITHUB_REF#refs/heads/})" >> $env:GITHUB_OUTPUT
-       id: extract_branch
-
-     - name: Find Pull Request
-       uses: juliangruber/find-pull-request-action@v1
-       id: find-pull-request
-       with:
-           branch: ${{ steps.extract_branch.outputs.branch }}
-
-     - name: Read output.md
-       if: ${{ steps.find-pull-request.outputs.number > 0}} #only makes sense if we have a PR for the branch
-       id: package
-       uses: juliangruber/read-file-action@v1
-       with:
-            path: .\output.md
-
-     - name: Create PR comment
-       if: ${{ steps.find-pull-request.outputs.number > 0}} #only makes sense if we have a PR for the branch
-       uses: actions/github-script@v6.4.0
-       with:
-          script: |
-            await github.rest.issues.createComment({
-              issue_number: ${{ steps.find-pull-request.outputs.number }},
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${{ steps.package.outputs.content }}`
-            })
-
-     - name: evaulate Exit Code
-       run: |
-          echo "set job failed on ..."
-          echo "Current Exit Code ${{ steps.modelcheck.outputs.modelcheckExitCode }}"
-
-          #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
-          #  * -2 = other runtime exception occurred
-          #  * -1 = CLI argument parsing error occurred
-          #  *  0 = model is valid (no error, no warning, no runtime exception)
-          #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
-          #  *  2 = model has at least one error  (only if --FailOnErrors)
-
-          if (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 1)
-          {
-            #fail on warning
-            Echo "model has at least one warning"
-            #fail on warning
-            #exit 3
-            #ignore warning
-            exit 0
-          }
-          elseif (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 2)
-          {
-              #fail on Error
-              echo "model has at least one error"
-              exit 2
-          }
-          elseif (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 0)
-          {
-            #brilliant model
-            Echo "modelcheck is passed"
-            exit 0
-          }
-          else
-          {
-            exit steps.modelcheck.outputs.modelcheckExitCode
-          }
+      - name: Run LemonTree Check Tool SqLite
+        id: modelcheckSqlite
+        shell: pwsh
+        run: |
+                echo "starting validation"
+                .\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelNameSqLite}}" --out ".\output.md" 
+                type "output.md"
+      
+                echo "finished validation with $LASTEXITCODE"
+      
+                #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+                #  * -2 = other runtime exception occurred
+                #  * -1 = CLI argument parsing error occurred
+                #  *  0 = model is valid (no error, no warning, no runtime exception)
+                #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+                #  *  2 = model has at least one error  (only if --FailOnErrors)
+      
+                $Message = "output.md"
+      
+                echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
+            
+                #for now never stop 
+                exit $LASTEXITCODE
 
   TestOnUbuntu:
     runs-on: ubuntu-latest
@@ -214,31 +176,28 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-           name: LemonTree.Pipeline.Tools.Bin
-      
-      - name: Unzip LemonTree.Pipeline.Tools.Bin
-        run: |
-          Expand-Archive LemonTree.Pipeline.Tools.Bin.zip -DestinationPath .\bin\ -Force
+            name: LemonTree.Pipeline.Tools.Bin
       
       - name: Run LemonTree Check Tool SqLite
         id: modelcheckSqlite
+        shell: pwsh
         run: |
-               echo "starting validation"
-               dotnet .\bin\LemonTree.Pipeline.Tools.ModelCheck  --model "${{env.ModelNameSqLite}}" --out ".\output.md" 
-               type "output.md"
-     
-               echo "finished validation with $LASTEXITCODE"
-     
-               #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
-               #  * -2 = other runtime exception occurred
-               #  * -1 = CLI argument parsing error occurred
-               #  *  0 = model is valid (no error, no warning, no runtime exception)
-               #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
-               #  *  2 = model has at least one error  (only if --FailOnErrors)
-     
-               $Message = "output.md"
-     
-               echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
-           
-               #for now never stop 
-               exit $LASTEXITCODE
+                echo "starting validation"
+                dotnet ".\LemonTree.Pipeline.Tools.ModelCheck"  --model "${{env.ModelNameSqLite}}" --out ".\output.md" 
+                type "output.md"
+      
+                echo "finished validation with $LASTEXITCODE"
+      
+                #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+                #  * -2 = other runtime exception occurred
+                #  * -1 = CLI argument parsing error occurred
+                #  *  0 = model is valid (no error, no warning, no runtime exception)
+                #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+                #  *  2 = model has at least one error  (only if --FailOnErrors)
+      
+                $Message = "output.md"
+      
+                echo "modelcheckExitCode=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
+            
+                #for now never stop 
+                exit $LASTEXITCODE
