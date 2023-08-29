@@ -9,7 +9,6 @@ namespace LemonTree.Pipeline.Tools
     public static class ModelAccess
     {
         private static IEADatabase eaDatabase = null;
-        private static bool sqLiteDatabaseExpanded = false;
 
         public static bool Compact(string source, string destination)
         {
@@ -75,44 +74,15 @@ namespace LemonTree.Pipeline.Tools
             {
                 eaDatabase = new SqLiteDatabase();
                 eaDatabase.SetModel(model);
-                if (!sqLiteDatabaseExpanded)
-                {
-                    ExpandSqliteInt();
-                    sqLiteDatabaseExpanded = true;
-                }
             }
             else
             {
                 Console.WriteLine("only .eap, .eapx, .qea and .qeax are suported");
-                throw new Exception("only .eap, .eapx, .qea and .qeax are suported");
+                throw new NotSupportedException("only .eap, .eapx, .qea and .qeax are suported");
             }
         }
 
-       
-        private static void ExpandSqliteInt()
-        {
-            string sqllitefile = "SQLite.Interop.dll";
-            Assembly currentAssembly = Assembly.GetExecutingAssembly();
-
-            using (FileStream fs = File.OpenWrite(sqllitefile))
-            {
-                //LemonTree.Pipeline.Tools.EmbeddedResources.x86.SQLite.Interop.dll
-                using (Stream resourceStream = currentAssembly.GetManifestResourceStream($"LemonTree.Pipeline.Tools.EmbeddedResources.x86.{sqllitefile}"))
-                {
-                    const int size = 4096;
-                    byte[] bytes = new byte[4096];
-                    int numBytes;
-                    while ((numBytes = resourceStream.Read(bytes, 0, size)) > 0)
-                    {
-                        fs.Write(bytes, 0, numBytes);
-                    }
-                    fs.Flush();
-                    fs.Close();
-                    resourceStream.Close();
-                }
-            }
-        }
-
+ 
         public static string GetExtension()
         {
             if (eaDatabase != null)
@@ -136,8 +106,6 @@ namespace LemonTree.Pipeline.Tools
             {
                 throw new Exception("Model not set");
             }
-
         }
-
     }
 }
