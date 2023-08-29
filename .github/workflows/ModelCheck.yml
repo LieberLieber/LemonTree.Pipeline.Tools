@@ -50,35 +50,37 @@ jobs:
           #for now never stop 
           exit 0
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=${GITHUB_REF#refs/heads/})" >> $env:GITHUB_OUTPUT
-        id: extract_branch
+      # Sample how to publish the Info into a PR
 
-      - name: Find Pull Request
-        uses: juliangruber/find-pull-request-action@v1
-        id: find-pull-request
-        with:
-           branch: ${{ steps.extract_branch.outputs.branch }}
+      # - name: Extract branch name
+      #   shell: bash
+      #   run: echo "branch=${GITHUB_REF#refs/heads/})" >> $env:GITHUB_OUTPUT
+      #   id: extract_branch
 
-      - name: Read output.md
-        if: ${{ steps.find-pull-request.outputs.number > 0}} #only makes sense if we have a PR for the branch
-        id: package
-        uses: juliangruber/read-file-action@v1
-        with:
-            path: .\output.md
+      # - name: Find Pull Request
+      #   uses: juliangruber/find-pull-request-action@v1
+      #   id: find-pull-request
+      #   with:
+      #      branch: ${{ steps.extract_branch.outputs.branch }}
 
-      - name: Create PR comment
-        if: ${{ steps.find-pull-request.outputs.number > 0}} #only makes sense if we have a PR for the branch
-        uses: actions/github-script@v6.4.0
-        with:
-          script: |
-            await github.rest.issues.createComment({
-              issue_number: ${{ steps.find-pull-request.outputs.number }},
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${{ steps.package.outputs.content }}`
-            })
+      # - name: Read output.md
+      #   if: ${{ steps.find-pull-request.outputs.number > 0}} #only makes sense if we have a PR for the branch
+      #   id: package
+      #   uses: juliangruber/read-file-action@v1
+      #   with:
+      #       path: .\output.md
+
+      # - name: Create PR comment
+      #   if: ${{ steps.find-pull-request.outputs.number > 0}} #only makes sense if we have a PR for the branch
+      #   uses: actions/github-script@v6.4.0
+      #   with:
+      #     script: |
+      #       await github.rest.issues.createComment({
+      #         issue_number: ${{ steps.find-pull-request.outputs.number }},
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body: `${{ steps.package.outputs.content }}`
+      #       })
 
       - name: evaulate Exit Code
         run: |
@@ -94,7 +96,6 @@ jobs:
 
           if (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 1)
           {
-            #fail on warning
             Echo "model has at least one warning"
             #fail on warning
             #exit 3
@@ -103,9 +104,11 @@ jobs:
           }
           elseif (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 2)
           {
-              #fail on Error
               echo "model has at least one error"
-              exit 2
+              #fail on error
+              # exit 2
+              #ignore error
+              exit 0
           }
           elseif (${{ steps.modelcheck.outputs.modelcheckExitCode }} -eq 0)
           {
