@@ -101,7 +101,7 @@ jobs:
             retention-days: 2
 
      
-  TestOnWindows:
+  TestOnWindowsJet:
     runs-on: windows-latest
     needs: build
     timeout-minutes: 15
@@ -120,28 +120,45 @@ jobs:
             name: LemonTree.Pipeline.Tools.ModelCheck.Windows
 
       
-      # - name: Run LemonTree Check Tool JET
-      #   id: modelcheck
-      #   shell: pwsh
-      #   run: |
-      #        echo "starting validation"
-      #        .\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelName}}" --out ".\output.md" --FailOnErrors 
+      - name: Run LemonTree Check Tool JET
+        id: modelcheck
+        shell: pwsh
+        run: |
+             echo "starting validation"
+             .\LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{env.ModelName}}" --out ".\output.md" --FailOnErrors 
 
-      #        Write-Output "# Modelcheck Windows .eapx" >> $env:GITHUB_STEP_SUMMARY
-      #        Get-Content "output.md" >> $env:GITHUB_STEP_SUMMARY
+             Write-Output "# Modelcheck Windows .eapx" >> $env:GITHUB_STEP_SUMMARY
+             Get-Content "output.md" >> $env:GITHUB_STEP_SUMMARY
    
-      #        echo "finished validation with $LASTEXITCODE"
+             echo "finished validation with $LASTEXITCODE"
    
-      #        #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
-      #        #  * -2 = other runtime exception occurred
-      #        #  * -1 = CLI argument parsing error occurred
-      #        #  *  0 = model is valid (no error, no warning, no runtime exception)
-      #        #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
-      #        #  *  2 = model has at least one error  (only if --FailOnErrors)
+             #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+             #  * -2 = other runtime exception occurred
+             #  * -1 = CLI argument parsing error occurred
+             #  *  0 = model is valid (no error, no warning, no runtime exception)
+             #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+             #  *  2 = model has at least one error  (only if --FailOnErrors)
          
-      #        #for now never stop 
-      #        exit 0
+             #for now never stop 
+             exit 0
 
+  TestOnWindowsSqlite:
+    runs-on: windows-latest
+    needs: build
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+            name: LemonTree.Pipeline.Tools.ModelCheck.Windows
       - name: Run LemonTree Check Tool SqLite
         id: modelcheckSqlite
         shell: pwsh
