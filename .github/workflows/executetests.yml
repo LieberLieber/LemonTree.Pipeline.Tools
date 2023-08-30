@@ -1,0 +1,37 @@
+name: excute tests 
+ 
+on:
+  workflow_call:
+jobs:         
+    call-test-workflow-windows-qeax:
+        # needs: prepare-test
+        uses: ./.github/workflows/TestModelCheck.yml
+        with:
+            runs-on: windows-latest
+            model-path: ./Model.qeax
+        secrets: inherit
+    
+    call-test-workflow-windows-eapx:
+        # needs: prepare-test
+        uses: ./.github/workflows/TestModelCheck.yml
+        with:
+            runs-on: windows-latest
+            model-path: ./PWC.eapx
+        secrets: inherit
+
+    call-test-workflow-windows-filenotfound:
+        # needs: prepare-test
+        uses: ./.github/workflows/TestModelCheck.yml
+        with:
+            runs-on: windows-latest
+            model-path: ./filenotfound.qeax
+            expected-exitcode: -2
+        secrets: inherit
+
+    call-test-workflow-linux:
+        # needs: prepare-test
+        uses: ./.github/workflows/TestModelCheck.yml
+        with:
+            runs-on: ubuntu-latest
+            model-path: ./Model.qeax
+        secrets: inherit

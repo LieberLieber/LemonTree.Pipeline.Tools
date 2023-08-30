@@ -1,0 +1,44 @@
+name: Push on Release 
+
+on:
+    release:
+      types: [created]
+
+jobs:
+    prepareVersion:
+        runs-on: windows-latest
+        timeout-minutes: 15
+        outputs:
+            versionString: ${{ steps.get_version.outputs.version-without-v }}
+            fullVersionString: ${{ steps.get_version.outputs.version}}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                fetch-depth: 0 # Mandatory to use the extract version from tag action
+        
+            - name: Extract version from tag
+              id: get_version
+              uses: battila7/get-version-action@v2
+                          
+    call-build-workflow:
+        uses: ./.github/workflows/Build.yml
+        needs: prepareVersion
+        with:
+            version: ${{needs.prepareVersion.outputs.versionString}}
+            runs-on: windows-latest
+        secrets: inherit
+
+    call-publish-workflow-version:
+        needs: [prepareVersion,call-build-workflow]
+        uses: ./.github/workflows/publish.yml
+        with:
+            nexus-path: ${{vars.NEXUSARTIFACTREPO}}/${{needs.prepareVersion.outputs.fullVersionString}}
+        secrets: inherit
+
+    call-publish-workflow:
+      needs: [prepareVersion,call-build-workflow]
+      uses: ./.github/workflows/publish.yml
+      with:
+          nexus-path: ${{vars.NEXUSARTIFACTREPO}}
+      secrets: inherit

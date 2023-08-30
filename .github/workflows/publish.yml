@@ -1,0 +1,67 @@
+name: publish 
+ 
+on:
+  workflow_call:
+    inputs:
+      nexus-path:
+        required: true
+        type: string
+jobs:
+    publish:
+        runs-on: ubuntu-latest #good idea to be able to do chmod to fix the artifact issues.
+        steps:
+            - name: Download LemonTree.Pipeline.Tools.ModelCheck.Linux
+              uses: actions/download-artifact@v3
+              with:
+                name: LemonTree.Pipeline.Tools.ModelCheck.Linux
+            
+            - name: Upload LemonTree.Pipeline.Tools.ModelCheck.Linux
+              shell: pwsh
+              run: |
+                $targetUrl = "${{inputs.nexus-path}}/LemonTree.Pipeline.Tools.ModelCheck"
+                #workaround because github artifacts logic doesn't maintain properties
+                chmod +x ./LemonTree.Pipeline.Tools.ModelCheck 
+                echo "Uploading 	LemonTree.Pipeline.Tools.ModelCheck to Nexus: $targetUrl"
+                while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+                curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T ./LemonTree.Pipeline.Tools.ModelCheck $targetUrl 
+
+            - name: Download LemonTree.Pipeline.Tools.ModelCheck.Windows
+              uses: actions/download-artifact@v3
+              with:
+                 name: LemonTree.Pipeline.Tools.ModelCheck.Windows
+            
+            - name: Upload LemonTree.Pipeline.Tools.ModelCheck.Windows
+              shell: pwsh
+              run: |
+                $targetUrl = "${{inputs.nexus-path}}/LemonTree.Pipeline.Tools.ModelCheck.exe"
+                echo "Uploading 	LemonTree.Pipeline.Tools.ModelCheck.exe to Nexus: $targetUrl"
+                while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+                curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T ./LemonTree.Pipeline.Tools.ModelCheck.exe $targetUrl
+
+            - name: Download LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
+              uses: actions/download-artifact@v3
+              with:
+                    name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
+                 
+            - name: Upload LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
+              shell: pwsh
+              run: |
+                $targetUrl = "${{inputs.nexus-path}}/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
+                echo "Uploading 	LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe to Nexus: $targetUrl"
+                while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+                curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T ./LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe $targetUrl
+
+            - name: Download LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
+              uses: actions/download-artifact@v3
+              with:
+                    name: LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
+                   
+            - name: Upload LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
+              shell: pwsh
+              run: |
+                  $targetUrl = "${{inputs.nexus-path}}/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
+                  echo "Uploading 	LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe to Nexus: $targetUrl"
+                  while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+                  curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T ./LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe $targetUrl             
+            
+            
