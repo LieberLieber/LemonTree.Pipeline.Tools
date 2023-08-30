@@ -15,6 +15,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+	<PublishTrimmed>true</PublishTrimmed>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Models\PWC.eapx">
       <Link>Models\PWC.eapx</Link>
