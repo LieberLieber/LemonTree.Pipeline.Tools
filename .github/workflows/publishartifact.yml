@@ -31,3 +31,11 @@ jobs:
                 echo "Uploading ${{inputs.binary-name}} to Nexus: $targetUrl"
                 while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
                 curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T ./${{inputs.binary-name}} $targetUrl 
+
+            - name: Upload the artifacts to the release
+              if: github.event.release.created
+              uses: skx/github-action-publish-binaries@master
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                args: '*.*'
