@@ -1,0 +1,33 @@
+name: publish artifact
+ 
+on:
+  workflow_call:
+    inputs:
+      nexus-path:
+        required: true
+        type: string
+      artifact-name:
+        required: true
+        type: string
+      binary-name:
+        required: true
+        type: string
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest #good idea to be able to do chmod to fix the artifact issues.
+        steps:
+            - name: Download Artifact
+              uses: actions/download-artifact@v3
+              with:
+                name: ${{inputs.artifact-name}}
+            
+            - name: Upload Binary to Nexus
+              shell: pwsh
+              run: |
+                $targetUrl = "${{inputs.nexus-path}}/${{inputs.binary-name}}"
+                #workaround because github artifacts logic doesn't maintain properties
+                chmod +x ./${{inputs.binary-name}} 
+                echo "Uploading ${{inputs.binary-name}} to Nexus: $targetUrl"
+                while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
+                curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T ./${{inputs.binary-name}} $targetUrl 

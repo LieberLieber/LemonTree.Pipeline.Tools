@@ -1,0 +1,27 @@
+name: Push on main 
+
+on:
+    push:
+      branches:
+        - main
+jobs:
+    call-build-workflow:
+        uses: ./.github/workflows/Build.yml
+        with:
+            version: ${{vars.PRODUCTVERSION}}
+            runs-on: windows-latest
+        secrets: inherit
+    
+    call-executetests-workflow:
+        needs: call-build-workflow
+        uses: ./.github/workflows/executetests.yml
+        secrets: inherit
+    
+    call-publish-workflow:
+        needs: call-executetests-workflow
+        uses: ./.github/workflows/publish.yml
+        with:
+            nexus-path: ${{vars.NEXUSARTIFACTREPO}}/latest
+        secrets: inherit
+    
+      
