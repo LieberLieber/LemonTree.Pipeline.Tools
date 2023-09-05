@@ -14,7 +14,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
 	<PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
