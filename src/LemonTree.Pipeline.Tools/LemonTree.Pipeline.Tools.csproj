@@ -17,7 +17,10 @@
 		<PublishTrimmed>false</PublishTrimmed>
 	</PropertyGroup>
 	<PropertyGroup>
-		<IsTrimmable>false</IsTrimmable>
+		<IsTrimmable>false</IsTrimmable>	
+	</PropertyGroup>
+	<PropertyGroup>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.OleDb" Version="7.0.0" />
