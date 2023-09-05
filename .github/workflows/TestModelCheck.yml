@@ -1,0 +1,85 @@
+name: test 
+ 
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        required: true
+        type: string
+      model-path:
+        required: true
+        type: string
+      expected-exitcode:
+        type: number
+        default: 0
+
+jobs:
+    TestModelCheckOnCleanRunner:
+        runs-on: ${{inputs.runs-on}}
+        timeout-minutes: 15
+        steps:
+
+          - name: Download LemonTree.Pipeline.Tools.ModelCheck.Models
+            uses: actions/download-artifact@v3
+            with:
+             name: LemonTree.Pipeline.Tools.ModelCheck.Models
+          
+          - name: Download LemonTree.Pipeline.Tools.ModelCheck.Linux
+            if:  runner.os == 'Linux'
+            uses: actions/download-artifact@v3
+            with:
+                name: LemonTree.Pipeline.Tools.ModelCheck.Linux
+
+          - name: Download LemonTree.Pipeline.Tools.ModelCheck.Windows
+            if:  runner.os == 'Windows'
+            uses: actions/download-artifact@v3
+            with:
+             name: LemonTree.Pipeline.Tools.ModelCheck.Windows
+          
+          - name: Run LemonTree Check Tool
+            shell: pwsh
+            run: |
+                Write-Output "# Modelcheck of  ${{inputs.model-path}} on ${{runner.os}}" >> $env:GITHUB_STEP_SUMMARY
+                Write-Output "Starting validation"
+
+
+                if ('${{runner.os}}' -eq 'Linux') {
+                    #workaround because github artifacts logic doesn't maintain properties
+                    chmod +x ./LemonTree.Pipeline.Tools.ModelCheck             
+                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --out "./output.md" 
+                }
+                elseif ('${{runner.os}}' -eq 'Windows') {
+                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --out "./output.md" 
+                }
+                else {
+                    Write-Output "${{runner.os}} is not supported"
+                    Exit -1
+                }
+
+                if (Test-Path -Path "output.md" -PathType Leaf) {
+                    Get-Content "output.md" >> $env:GITHUB_STEP_SUMMARY
+                }
+                else {
+                    Write-Output "output.md was not created"
+                    Write-Output "output.md was not created" >> $env:GITHUB_STEP_SUMMARY
+                }
+        
+                
+
+                #  Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:
+                #  * -2 = other runtime exception occurred
+                #  * -1 = CLI argument parsing error occurred
+                #  *  0 = model is valid (no error, no warning, no runtime exception)
+                #  *  1 = model has at least one warning (only if --FailOnWarnings or --FailOnErrors)
+                #  *  2 = model has at least one error  (only if --FailOnErrors)
+                
+                if (${{inputs.expected-exitcode}} -eq $LASTEXITCODE) {
+                  Write-Output "Finished validation with expected Exitcode: $LASTEXITCODE"
+                  Write-Output "# Finished validation with esxpected Exitcode: $LASTEXITCODE" >> $env:GITHUB_STEP_SUMMARY
+                  exit 0
+                }
+                else {   
+                  Write-Output "Finished validation with unexpected Exitcode: $LASTEXITCODE"
+                  Write-Output "# Finished validation with unexpected Exitcode: $LASTEXITCODE" >> $env:GITHUB_STEP_SUMMARY               
+                  exit -1
+                }

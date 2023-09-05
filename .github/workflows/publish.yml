@@ -1,0 +1,43 @@
+name: publish single artifact
+ 
+on:
+  workflow_call:
+    inputs:
+      nexus-path:
+        required: true
+        type: string
+jobs:
+
+    call-publishartifact-workflow-1:
+      uses: ./.github/workflows/publishartifact.yml
+      with:
+        nexus-path: ${{inputs.nexus-path}}
+        artifact-name: LemonTree.Pipeline.Tools.ModelCheck.Linux
+        binary-name: LemonTree.Pipeline.Tools.ModelCheck
+      secrets: inherit
+
+    call-publishartifact-workflow-2:
+      uses: ./.github/workflows/publishartifact.yml
+      with:
+        nexus-path: ${{inputs.nexus-path}}
+        artifact-name: LemonTree.Pipeline.Tools.ModelCheck.Windows
+        binary-name: LemonTree.Pipeline.Tools.ModelCheck.exe
+      secrets: inherit   
+
+    call-publishartifact-workflow-3:
+      uses: ./.github/workflows/publishartifact.yml
+      with:
+        nexus-path: ${{inputs.nexus-path}}
+        artifact-name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
+        binary-name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
+      secrets: inherit          
+
+    call-publishartifact-workflow-4:
+      uses: ./.github/workflows/publishartifact.yml
+      with:
+        nexus-path: ${{inputs.nexus-path}}
+        artifact-name: LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
+        binary-name: LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe
+      secrets: inherit        
+
+           
