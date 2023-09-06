@@ -1,0 +1,69 @@
+name: test LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams
+ 
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        required: true
+        type: string
+      model-path:
+        required: true
+        type: string
+      expected-exitcode:
+        type: number
+        default: 0
+
+jobs:
+    TestRemovePrerenderedDiagramsOnCleanRunner:
+        runs-on: ${{inputs.runs-on}}
+        timeout-minutes: 15
+        steps:
+
+          - name: Download LemonTree.Pipeline.Tools.ModelCheck.Models
+            uses: actions/download-artifact@v3
+            with:
+             name: LemonTree.Pipeline.Tools.ModelCheck.Models
+          
+          - name: Download LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Linux
+            if:  runner.os == 'Linux'
+            uses: actions/download-artifact@v3
+            with:
+                name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Linux
+
+          - name: Download LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
+            if:  runner.os == 'Windows'
+            uses: actions/download-artifact@v3
+            with:
+             name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
+          
+          - name: Run LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams
+            shell: pwsh
+            run: |
+                Write-Output "# Modelcheck of  ${{inputs.model-path}} on ${{runner.os}}" >> $env:GITHUB_STEP_SUMMARY
+                Write-Output "Starting validation"
+
+
+                if ('${{runner.os}}' -eq 'Linux') {
+                    #workaround because github artifacts logic doesn't maintain properties
+                    chmod +x ./LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams             
+                    ./LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams  --model "${{inputs.model-path}}" 
+                }
+                elseif ('${{runner.os}}' -eq 'Windows') {
+                    ./LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe  --model "${{inputs.model-path}}" 
+                }
+                else {
+                    Write-Output "${{runner.os}} is not supported"
+                    Exit -1
+                }
+
+                
+                if (${{inputs.expected-exitcode}} -eq $LASTEXITCODE) {
+                  Write-Output "Finished removing with expected Exitcode: $LASTEXITCODE"
+                  Write-Output "# Finished removing with esxpected Exitcode: $LASTEXITCODE" >> $env:GITHUB_STEP_SUMMARY
+                  exit 0
+                }
+                else {   
+                  Write-Output "Finished removing with unexpected Exitcode: $LASTEXITCODE"
+                  Write-Output "# Finished removing with unexpected Exitcode: $LASTEXITCODE" >> $env:GITHUB_STEP_SUMMARY               
+                  exit -1
+                }
