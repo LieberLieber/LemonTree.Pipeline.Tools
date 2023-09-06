@@ -17,10 +17,3 @@ jobs:
         uses: ./.github/workflows/executetests.yml
         secrets: inherit
     
-    call-publish-workflow:
-        needs: call-executetests-workflow
-        uses: ./.github/workflows/publish.yml
-        with:
-            nexus-path: ${{vars.NEXUSARTIFACTREPO}}/test
-        secrets: inherit
-    
