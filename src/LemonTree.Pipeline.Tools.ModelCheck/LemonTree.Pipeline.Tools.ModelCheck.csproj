@@ -14,9 +14,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
-	<PublishTrimmed>true</PublishTrimmed>
-  </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Models\PWC.eapx">
       <Link>Models\PWC.eapx</Link>

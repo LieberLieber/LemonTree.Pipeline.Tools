@@ -47,10 +47,10 @@ jobs:
        run: msbuild src/LemonTree.Pipeline.Tools.sln /p:Configuration=Release
 
      - name: Publish Solution for Windows
-       run: dotnet publish -c Release -r win-x86 src/LemonTree.Pipeline.Tools.sln
+       run: dotnet publish -c Release -r win-x86 --self-contained false src/LemonTree.Pipeline.Tools.sln
 
      - name: Publish Solution for Linux
-       run: dotnet publish -c Release -r linux-x64 src/LemonTree.Pipeline.Tools.sln
+       run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishTrimmed=true src/LemonTree.Pipeline.Tools.sln 
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Models
        uses: actions/upload-artifact@v3

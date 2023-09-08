@@ -4,18 +4,14 @@
   <RuntimeIdentifier>win-x86</RuntimeIdentifier>
   <OutputType>Exe</OutputType>
   <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<PublishSingleFile>true</PublishSingleFile>
-	<SelfContained>true</SelfContained>
-	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  <PublishSingleFile>true</PublishSingleFile>
+  <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <OutputPath>bin\x86\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup>
-   <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
 	<PackageReference Include="System.IO.Compression" Version="4.3.0" />
