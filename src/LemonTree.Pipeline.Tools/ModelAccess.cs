@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace LemonTree.Pipeline.Tools
 {
@@ -67,6 +68,12 @@ namespace LemonTree.Pipeline.Tools
         {
             if (model.EndsWith(".eap") || model.EndsWith(".eapx"))
             {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+                {
+                    // Do something
+                    throw new NotSupportedException($"Model '{Path.GetFileName(model)}' only supported on Windows 32bit.");
+                }
+
                 eaDatabase = new JetDatabase();
                 eaDatabase.SetModel(model);
             }
