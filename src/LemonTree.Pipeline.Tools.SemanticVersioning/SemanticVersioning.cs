@@ -12,12 +12,15 @@ public class SemanticVersioning
 {
 	private readonly IEnumerable<ISemanticVersioningRule> _rules;
 
-	public SemanticVersioning(IEnumerable<ISemanticVersioningRule> rules)
+	public SemanticVersioning(IEnumerable<ISemanticVersioningRule> rules, bool tryRun)
 	{
-		_rules = rules;
+		_rules = rules.OrderBy(r => r.Sequence);
+		_tryRun = tryRun;
 	}
 
 	public List<string> Exceptions = new List<string>();
+
+	private bool _tryRun;
 
 	private static string CreateNewVersion(string version, ChangeLevel changeLevel)
 	{
@@ -65,15 +68,18 @@ public class SemanticVersioning
 		return version;
 	}
 
-	private void UpdateVersion(string guid, string newVersion)
+	private void UpdateVersion(string guid, string newVersion, bool tryRun)
 	{
 		try
 		{
-			string placeholder = ModelAccess.ParameterPlaceholder();
+			if (!tryRun)
+			{
+				string placeholder = ModelAccess.ParameterPlaceholder();
 
-			ModelAccess.RunSql($"UPDATE t_object SET version = {placeholder} WHERE ea_guid = {placeholder}",
-				new EAParameter("newVersion", newVersion),
-				new EAParameter("guid", guid));
+				ModelAccess.RunSql($"UPDATE t_object SET version = {placeholder} WHERE ea_guid = {placeholder}",
+					new EAParameter("newVersion", newVersion),
+					new EAParameter("guid", guid));
+			}
 		}
 		catch (Exception ex)
 		{
@@ -110,57 +116,71 @@ public class SemanticVersioning
 		Exceptions.Clear();
 
 		var doc = XDocument.Parse(File.ReadAllText(file));
-		var elements = doc.Root.Descendants().Where(item => item.Name.LocalName == "element");
-		var modified = elements.Where(item =>
-			item.Attributes().Any(attribute => attribute.Name.LocalName == "diffState" && attribute.Value == "Modified"));
 
-		foreach (var modifiedElement in modified)
+		var packages = doc.Root.Descendants().Where(item => item.Name.LocalName == "package");
+
+		foreach (var package in packages)
 		{
-			//TODO: check for name property exists -> if not, possible downgrade of version
+			RunRulesOnNode(package, packages);
 
-			string guid = modifiedElement.Attribute("guid").Value.ToString();
-			string version = GetVersionInfoFromElement(guid);
-
-			if (string.IsNullOrEmpty(version))
+			var elements = package.Descendants().Where(item => item.Name.LocalName == "classifier");
+			foreach (XElement element in elements)
 			{
-				Console.WriteLine($"{guid} - {version} ==> not set");
-				continue;
-			}
-
-			var overallChange = ChangeLevel.None;
-			foreach (var rule in _rules)
-			{
-				//we need to find the highest ranked change off all changes
-				var singleChange = rule.Apply(modifiedElement);
-				if (singleChange > overallChange)
-				{
-					overallChange = singleChange;
-				}
-
-				VersioningStatistics.Add(rule, singleChange);
-			}
-
-			if (overallChange == ChangeLevel.Downgrade)
-			{
-				//downgrade version number to old value in diff file
-				var oldVersionItem = elements.Elements().Elements().FirstOrDefault(i => i.FirstAttribute.Value.Equals("EA Specifics 1.0::Version"));
-				if (null != oldVersionItem)
-				{
-					string oldVersion = oldVersionItem.Attribute("oldValue").Value;
-					Console.WriteLine($"{guid} - {version} ==> {oldVersion}");
-					UpdateVersion(guid, oldVersion);
-				}
-			}
-			else if (overallChange != ChangeLevel.None)
-			{
-				string newVersion = CreateNewVersion(version, overallChange);
-				Console.WriteLine($"{guid} - {version} ==> {newVersion}");
-				UpdateVersion(guid, newVersion);
-			} 
-			else
-			{
-				Console.WriteLine($"{guid} - {version} ==> {version}");
+				RunRulesOnNode(element, elements);
 			}
 		}
+	}
+
+	private void RunRulesOnNode(XElement node, IEnumerable<XElement> elements)
+	{
+		string guid = node.Attribute("guid").Value.ToString();
+		string version = GetVersionInfoFromElement(guid);
+
+		if (string.IsNullOrEmpty(version))
+		{
+			Console.WriteLine($"{guid} - {version} ==> not set");
+			return;
+		}
+
+		var overallChangeLevel = ChangeLevel.None;
+		foreach (var rule in _rules)
+		{
+			//we need to find the highest ranked change off all changes
+			var changeLevelOfCurrentRule = rule.Apply(node, overallChangeLevel);
+			if (changeLevelOfCurrentRule > overallChangeLevel)
+			{
+				overallChangeLevel = changeLevelOfCurrentRule;
+			}
+
+			VersioningStatistics.Add(rule, changeLevelOfCurrentRule, guid);
+		}
+
+		if (overallChangeLevel == ChangeLevel.Downgrade)
+		{
+			//downgrade version number to old value in diff file
+			var oldVersionItem = GetVersionNode(node);
+
+			if (null != oldVersionItem)
+			{
+				string oldVersion = oldVersionItem.Attribute("oldValue").Value;
+				Console.WriteLine($"{guid} - {version} ==> {oldVersion}");
+				UpdateVersion(guid, oldVersion, _tryRun);
+			}
+		}
+		else if (overallChangeLevel != ChangeLevel.None)
+		{
+			string newVersion = CreateNewVersion(version, overallChangeLevel);
+			Console.WriteLine($"{guid} - {version} ==> {newVersion}");
+			UpdateVersion(guid, newVersion, _tryRun);
+		}
+		else
+		{
+			Console.WriteLine($"{guid} - {version} ==> {version}");
+		}
+	}
+
+	private XElement GetVersionNode(XElement node)
+	{
+		return node.Elements().Elements().Elements().FirstOrDefault(i => i.FirstAttribute.Value.Equals("EA Specifics 1.0::Version"));
 	}
 }

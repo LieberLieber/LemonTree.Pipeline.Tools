@@ -11,9 +11,9 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Contracts
 			_appliedRules.Clear();
 		}
 
-		public void Add(ISemanticVersioningRule rule, ChangeLevel changeLevel)
+		public void Add(ISemanticVersioningRule rule, ChangeLevel changeLevel, string elementGuid)
 		{
-			_appliedRules.Add(new StatisticsItem(rule, changeLevel));
+			_appliedRules.Add(new StatisticsItem(rule, changeLevel, elementGuid));
 		}
 	}
 }

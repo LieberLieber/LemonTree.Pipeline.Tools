@@ -15,13 +15,21 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Contracts
 		string Description { get; }
 
 		/// <summary>
+		/// Sequence of rules, some may execute at the end only
+		/// </summary>
+		int Sequence { get; }
+
+		/// <summary>
 		/// Change caused by this rule
 		/// </summary>
 		ChangeLevel Change { get; }
-		
+
 		/// <summary>
 		/// Applies the rule
 		/// </summary>
-		ChangeLevel Apply(XElement modifiedElement);
+		/// <param name="classifier">classifier node to check</param>
+		/// <param name="currentChangeLevel">some rules are only to be executed for certain changeLevels</param>
+		/// <returns></returns>
+		ChangeLevel Apply(XElement classifier, ChangeLevel currentChangeLevel);
 	}
 }

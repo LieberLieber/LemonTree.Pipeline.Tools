@@ -1,8 +1,16 @@
 {
-  "profiles": {
-    "LemonTree.Pipeline.Tools.SemanticVersioning.Runner": {
-      "commandName": "Project",
-      "commandLineArgs": "--model Semantic-Change.qeax --changes export_202302240831421465.xml"
-    }
-  }
+	"profiles": {
+		"LemonTree.Pipeline.Tools.SemanticVersioning.Runner": {
+			"commandName": "Project",
+			"commandLineArgs": "--model Semantic-Change.qeax --changes export_202302240831421465.xml"
+		},
+		"AB": {
+			"commandName": "Project",
+			"commandLineArgs": "--Changes \"c:\\_UnitTest\\semanticversioning\\SemanticVersion_DiffReport.xml\" --Model \"c:\\_UnitTest\\semanticversioning\\git\\PersonalTestProject\\SemanticBase.qeax\" --TryRun"
+		},
+		"AB_VKB": {
+			"commandName": "Project",
+			"commandLineArgs": "--Changes \"c:\\_UnitTest\\semanticversioning\\gitFake\\20230731_vkb_DiffReport.xml\" --Model \"c:\\_UnitTest\\semanticversioning\\gitFake\\20230731_vkb.qeax\" --TryRun"
+		}
+	}
 }

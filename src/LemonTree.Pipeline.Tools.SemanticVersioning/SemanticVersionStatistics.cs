@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LemonTree.Pipeline.Tools.SemanticVersioning.Contracts
 {
-	public class SemanticVersionStatistics: Statistics
+	public class SemanticVersionStatistics : Statistics
 	{
 		public Dictionary<string, int> NumberOfAppliedByRuleName()
 		{

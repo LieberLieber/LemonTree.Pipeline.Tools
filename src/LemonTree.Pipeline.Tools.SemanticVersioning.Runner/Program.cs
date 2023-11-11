@@ -70,7 +70,7 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
                 Console.WriteLine($"Semantic on: {opts.Model}");
                 ModelAccess.ConfigureAccess(opts.Model);
 
-                var semVer = new SemanticVersioning(_rules);
+                var semVer = new SemanticVersioning(_rules, opts.TryRun);
                 semVer.Run(opts.Changes);
 
 				WriteStatistics(semVer.VersioningStatistics, semVer.Exceptions);
