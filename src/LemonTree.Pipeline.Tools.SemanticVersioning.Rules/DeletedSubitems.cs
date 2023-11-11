@@ -17,27 +17,22 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 
 #if (DEBUG)
 			string elementGuid = GetGuid(item);
-			if ((elementGuid == "{41F7CA6C-7DE6-48ca-87FF-EE9287C8C462}") ||    //ElementOfDeletedSubitems
-				(elementGuid == "{4D15DE7B-A45C-45d6-B0BF-D28E2F06244C}"))      //ElementOfOneDeletedSubitemAndOneRenamed
+			if (elementGuid == "{41F7CA6C-7DE6-48ca-87FF-EE9287C8C462}")		//ElementOfDeletedSubitems
 			{
 				item.ToString();
 			}
 #endif
 
-			XElement elementNode = GetElementNode(item);
-			if (null != elementNode)
+			var childNodes = GetChildNodes(item);
+			foreach (var childNode in childNodes)
 			{
-				var childNodes = GetChildNodes(item);
-				foreach (var element in childNodes)
-				{
-					string nodeName = GetName(element);
-					string diffState = GetDiffState(element);
+				string changedProperty = GetName(childNode);
+				string diffState = GetDiffState(childNode) ?? "";
 
-					if (diffState == DiffStates.REMOVED)
-					{
-						localChangeLevel = SetChangeLevel(ChangeLevel.Major, localChangeLevel);
-						break;
-					}
+				if (diffState == DiffStates.REMOVED)
+				{
+					localChangeLevel = SetChangeLevel(ChangeLevel.Major, localChangeLevel);
+					break;
 				}
 			}
 

@@ -17,33 +17,22 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 
 #if(DEBUG)
 			string elementGuid = GetGuid(item);
-			if ((elementGuid == "{301253EB-D53D-4460-8E4A-F1857D4DD357}")       //ElementOfNewSubitems
-				|| (elementGuid == "{50E48D93-6512-4627-AC5A-9DBCB1FFD792}"))   //MyPackage3_Alias
+			if (elementGuid == "{5605CA7D-2EFB-4a60-9463-A1502FE7EE7B}")       //RM___Risikomanagement (new diagram)
 			{
 				item.ToString();
 			}
 #endif
 
-			XElement elementNode = GetElementNode(item);
-			if (null != elementNode)
+			var childNodes = GetChildNodes(item);
+			foreach (var childNode in childNodes)
 			{
-				string elementState = GetDiffState(elementNode);
-				if (elementState.Equals(DiffStates.SUB_ELEMENT_MODIFIED) 
-					|| elementState.Equals(DiffStates.MODIFIED))
-				{
-					var childNodes = GetChildNodes(item);
-					foreach (var childNode in childNodes)
-					{
-						string changedProperty = GetName(childNode);
-						string diffState = GetDiffState(childNode) ?? "";
+				string changedProperty = GetName(childNode);
+				string diffState = GetDiffState(childNode) ?? "";
 
-						//we need to find the highest ranked change off all the attributes that have changed.
-						if (diffState == DiffStates.NEW)
-						{
-							localChangeLevel = SetChangeLevel(ChangeLevel.Major, localChangeLevel);
-							break;
-						}
-					}
+				if (diffState == DiffStates.NEW)
+				{
+					localChangeLevel = SetChangeLevel(ChangeLevel.Major, localChangeLevel);
+					break;
 				}
 			}
 

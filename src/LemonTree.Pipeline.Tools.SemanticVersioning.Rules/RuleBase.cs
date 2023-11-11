@@ -19,6 +19,12 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 
 				retVal = subElement?.Attribute("diffState")?.Value;
 			}
+			else if (element.Name.LocalName == "diagram")
+			{
+				var subElement = GetElementNode(element);
+
+				retVal = subElement?.Attribute("diffState")?.Value;
+			}
 			else
 			{
 				retVal = element.Attribute("diffState")?.Value;
@@ -50,9 +56,9 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 			}
 		}
 
-		protected XElement GetElementNode(XElement classifier)
+		protected XElement GetElementNode(XElement item)
 		{
-			return classifier.Elements().FirstOrDefault(i => i.Name.LocalName.EndsWith("element"));
+			return item.Elements().FirstOrDefault(i => i.Name.LocalName.EndsWith("element"));
 		}
 
 		protected IEnumerable<XElement> GetChildNodes(XElement item)
@@ -65,6 +71,21 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 			{
 				return item.Elements().Skip(1);
 			}
+		}
+
+		protected bool NodeHasElement(XElement item)
+		{
+			return item.Elements().FirstOrDefault(i => i.Name.LocalName.EndsWith("element")) != null;
+		}
+
+		protected bool NodeIsPackage(XElement item)
+		{
+			return item.Name.LocalName.Equals("package", System.StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		protected bool NodeIsElement(XElement item)
+		{
+			return item.Name.LocalName.Equals("classifier", System.StringComparison.InvariantCultureIgnoreCase);
 		}
 	}
 }

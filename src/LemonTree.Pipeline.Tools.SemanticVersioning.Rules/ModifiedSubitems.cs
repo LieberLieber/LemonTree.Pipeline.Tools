@@ -23,20 +23,16 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules
 			}
 #endif
 
-			XElement elementNode = GetElementNode(item);
-			if (null != elementNode)
+			var childNodes = GetChildNodes(item);
+			foreach (var childNode in childNodes)
 			{
-				var childNodes = GetChildNodes(item);
-				foreach (var element in childNodes)
-				{
-					string nodeName = GetName(element);
-					string diffState = GetDiffState(element);
+				string changedProperty = GetName(childNode);
+				string diffState = GetDiffState(childNode) ?? "";
 
-					if (diffState == DiffStates.MODIFIED)
-					{
-						localChangeLevel = SetChangeLevel(ChangeLevel.Major, localChangeLevel);
-						break;
-					}
+				if (diffState == DiffStates.MODIFIED)
+				{
+					localChangeLevel = SetChangeLevel(ChangeLevel.Major, localChangeLevel);
+					break;
 				}
 			}
 

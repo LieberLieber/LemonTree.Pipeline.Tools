@@ -102,7 +102,7 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
 
 			Console.WriteLine("Exceptions:");
 			if (exceptions.Count > 0)
-			{				
+			{
 				foreach (string item in exceptions)
 				{
 					Console.WriteLine(item);
@@ -110,7 +110,8 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Runner
 			}
 			else
 			{
-				Console.WriteLine("- <none>");			}
+				Console.WriteLine("- <none>");
+			}
 		}
 	}
 }
