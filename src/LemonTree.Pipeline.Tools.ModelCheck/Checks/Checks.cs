@@ -428,7 +428,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             //dd syntay might be better down the road then <BR>
             //|< dl >< dt > Beast of Bodmin</ dt >< dd > A large feline inhabiting Bodmin Moor.</ dd >< dt > Morgawr </ dt >< dd > A sea serpent</ dd >< dt > Owlman </ dt >< dd > A giant owl-like creature.</ dd ></ dl
             StringBuilder sb = new StringBuilder();
-            int i = 0;
+            
             int maxColIdx = 0;
 
             if (t?.Columns?.Count > 0)
@@ -460,7 +460,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     foreach (DataRow r in t.Rows)
                     {
-                        i = 0;
+                        
                         foreach (var item in r.ItemArray)
                         {
 

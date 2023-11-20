@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32210.238
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33423.256
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools", "LemonTree.Pipeline.Tools\LemonTree.Pipeline.Tools.csproj", "{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.SetFilterInSessionFile", "LemonTree.Pipeline.Tools.SetFilterInSessionFile\LemonTree.Pipeline.Tools.SetFilterInSessionFile.csproj", "{42A8BDD8-B038-437F-AD44-29FB41AA4913}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.ModelCheck", "LemonTree.Pipeline.Tools.ModelCheck\LemonTree.Pipeline.Tools.ModelCheck.csproj", "{2D43523B-04F5-4CE1-BD74-22623722FD31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.TraceReport", "LemonTree.Pipeline.Tools.TraceReport\LemonTree.Pipeline.Tools.TraceReport.csproj", "{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,14 @@ Global
 		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Release|x86.ActiveCfg = Release|x86
 		{2D43523B-04F5-4CE1-BD74-22623722FD31}.Release|x86.Build.0 = Release|x86
+		{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}.Debug|x86.ActiveCfg = Debug|x86
+		{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}.Debug|x86.Build.0 = Debug|x86
+		{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}.Release|x86.ActiveCfg = Release|x86
+		{F4F1588A-BDF2-4AFA-A56E-71DC5F44C74F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
