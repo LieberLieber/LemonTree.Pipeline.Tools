@@ -43,10 +43,13 @@ public class PluginLoader
 
 	internal void Run()
 	{
-		//default plugin search path is <ExecutingAssembly>/Rules/Debug
+        //default plugin search path is <ExecutingAssembly>/Rules/Debug
 
-		string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-		string pluginPath = Path.Combine(exePath, "Rules", "Debug");
+        var assemblyConfigurationAttribute = typeof(PluginLoader).Assembly.GetCustomAttribute<AssemblyConfigurationAttribute>();
+        var buildConfigurationName = assemblyConfigurationAttribute?.Configuration;
+
+        string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+		string pluginPath = Path.Combine(exePath, "Rules", buildConfigurationName);
 		
 		var rules = new List<ISemanticVersioningRule>();
 		int pluginsLoaded = 0;
