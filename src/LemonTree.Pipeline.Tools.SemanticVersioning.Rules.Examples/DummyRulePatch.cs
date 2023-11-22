@@ -12,9 +12,11 @@ namespace LemonTree.Pipeline.Tools.SemanticVersioning.Rules.Examples
 
 		public ChangeLevel Change => ChangeLevel.Patch;
 
-		public ChangeLevel Apply(XElement modifiedElement)
-		{
-			return ChangeLevel.Patch;
-		}
+		public int Sequence => 1; 
+		
+		public ChangeLevel Apply(XElement classifier, ChangeLevel currentChangeLevel)
+        {
+            return ChangeLevel.Patch;
+        }
 	}
 }
