@@ -10,7 +10,7 @@ namespace LemonTree.Pipeline.Tools.Database
 
         int RunSQLnonQuery(string sql);
 
-        long RunSQLQueryScalar(string sql);
+        int RunSQLQueryScalar(string sql);
 
         /// <summary>
         /// run SQL and return result table
