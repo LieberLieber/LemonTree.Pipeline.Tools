@@ -11,7 +11,7 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
 ### Powershell Example:
 ```
 &"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe --output LemonTree.Pipeline.Tools.ModelCheck.exe
-
+      
 LemonTree.Pipeline.Tools.ModelCheck.exe  --model "model.eapx" --out ".\output.md" --FailOnErrors --FailOnWarnings
 echo "finished validation with $LASTEXITCODE"
 echo "Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:"
