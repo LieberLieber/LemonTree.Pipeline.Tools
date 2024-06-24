@@ -4,7 +4,7 @@ namespace LemonTree.Pipeline.Tools.Database
 {
     public interface IEADatabase
     {
-        void SetModel(string model);
+        void SetModel(string model); //mm
 
         bool Compact(string source, string destination);
 
@@ -17,7 +17,7 @@ namespace LemonTree.Pipeline.Tools.Database
         /// </summary>
         /// <param name="sql"></param>
         /// <returns>dataTable with result table or null</returns>
-        DataTable RunSql(string sql);
+        DataTable RunSql(string sqlQuery);
 
         string GetExtension();
         string GetWildcard();
