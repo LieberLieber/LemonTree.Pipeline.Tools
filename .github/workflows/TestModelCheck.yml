@@ -75,7 +75,7 @@ jobs:
                 
                 if (${{inputs.expected-exitcode}} -eq $LASTEXITCODE) {
                   Write-Output "Finished validation with expected Exitcode: $LASTEXITCODE"
-                  Write-Output "# Finished validation with esxpected Exitcode: $LASTEXITCODE" >> $env:GITHUB_STEP_SUMMARY
+                  Write-Output "# Finished validation with expected Exitcode: $LASTEXITCODE" >> $env:GITHUB_STEP_SUMMARY
                   exit 0
                 }
                 else {   
