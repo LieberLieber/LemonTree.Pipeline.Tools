@@ -16,5 +16,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions
 
         [Option("FailOnWarnings", Required = false, HelpText = "If set the Exitcode will be 1 if there is at least on Check of Status Warning!")]
         public bool FailOnWarnings { get; set; }
+
+        [Option("TableSize", Required = false, HelpText = "If set the size of the tables in the database will be reported!")]
+        public bool TableSize { get; set; }
     }
 }

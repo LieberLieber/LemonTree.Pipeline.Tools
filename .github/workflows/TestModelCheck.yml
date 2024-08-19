@@ -46,10 +46,10 @@ jobs:
                 if ('${{runner.os}}' -eq 'Linux') {
                     #workaround because github artifacts logic doesn't maintain properties
                     chmod +x ./LemonTree.Pipeline.Tools.ModelCheck             
-                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --out "./output.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --tablesize --out "./output.md" 
                 }
                 elseif ('${{runner.os}}' -eq 'Windows') {
-                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --out "./output.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --tablesize --out "./output.md" 
                 }
                 else {
                     Write-Output "${{runner.os}} is not supported"

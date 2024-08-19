@@ -114,5 +114,10 @@ namespace LemonTree.Pipeline.Tools
                 throw new Exception("Model not set");
             }
         }
+
+        public static bool IsSqlLite()
+        {
+            return eaDatabase is SqLiteDatabase;
+        }
     }
 }

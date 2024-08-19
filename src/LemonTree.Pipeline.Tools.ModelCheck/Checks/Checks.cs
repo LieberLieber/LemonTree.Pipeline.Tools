@@ -1,5 +1,5 @@
 
-﻿using System;
+using System;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
@@ -399,7 +399,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             #region process result table and calculate Issue number
 
-           
+
 
 
             #endregion
@@ -421,14 +421,48 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return result;
         }
 
+        internal static Issue CheckTableSize(string model)
+        {
+            #region get result table
 
+            const string statisticSql = @"SELECT name ,SUM(pgsize)/1024 table_size  FROM 'dbstat' GROUP BY name HAVING table_size > 32 ORDER BY table_size desc ; ";
+
+            var resultTable = ModelAccess.RunSql(statisticSql);
+            //resultTable.DefaultView.Sort = "table_size";
+
+
+            Console.WriteLine(ToMD(resultTable, header: true));
+
+            #endregion
+
+
+            #region process result table and calculate Issue number
+
+
+            #endregion
+
+            #region set Issue Level
+
+            Issue result = new Issue();
+
+            result.Level = IssueLevel.Information;
+            result.Title = "Table Statistics (all >32)";
+
+
+
+            result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
+
+
+            #endregion
+
+            return result;
+        }
         private static string ToMD(DataTable t, bool header)
         {
 
             //dd syntay might be better down the road then <BR>
             //|< dl >< dt > Beast of Bodmin</ dt >< dd > A large feline inhabiting Bodmin Moor.</ dd >< dt > Morgawr </ dt >< dd > A sea serpent</ dd >< dt > Owlman </ dt >< dd > A giant owl-like creature.</ dd ></ dl
             StringBuilder sb = new StringBuilder();
-            int i = 0;
             int maxColIdx = 0;
 
             if (t?.Columns?.Count > 0)
@@ -440,8 +474,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     {
 
                         sb.Append("|");
-                        sb.Append(c.ColumnName.Replace("'",""));
-                        
+                        sb.Append(c.ColumnName.Replace("'", ""));
+
                     }
                     sb.Append("|");
                     sb.Append(Environment.NewLine);
@@ -460,13 +494,12 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     foreach (DataRow r in t.Rows)
                     {
-                        i = 0;
                         foreach (var item in r.ItemArray)
                         {
 
                             sb.Append("|");
                             sb.Append(item);
-                            
+
                         }
                         sb.Append("|");
                         sb.Append(Environment.NewLine);
@@ -477,6 +510,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return sb.ToString();
 
         }
+
     }
 }
 

@@ -75,14 +75,32 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
                 Console.WriteLine(issues.ToString());
 
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(issues.ToMd());
+                sb.AppendLine("# Project Statistics");
+                sb.AppendLine(Checks.Checks.CheckProjectStatitics(opts.Model).Detail);
+
+                if (opts.TableSize == true)
+                {
+                    if (ModelAccess.IsSqlLite())
+                    {
+                        sb.AppendLine(Checks.Checks.CheckTableSize(opts.Model).Detail);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Talbesize reporting only supported for SqlLite!");
+                    }
+                }
+
+               
+
+
                 if (opts.Out != null)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.AppendLine(issues.ToMd());
-                    sb.AppendLine("# Project Statistics");
-                    sb.AppendLine(Checks.Checks.CheckProjectStatitics(opts.Model).Detail);
-                    File.WriteAllText(opts.Out, sb.ToString());
+                     File.WriteAllText(opts.Out, sb.ToString());
                 }
+
+            
 
                 if (opts.FailOnErrors == true)
                 {
