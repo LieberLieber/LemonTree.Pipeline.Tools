@@ -21,7 +21,7 @@ jobs:
     
     steps:
      - name: Checkout Code
-       uses: actions/checkout@v3.4.0
+       uses: actions/checkout@v4
      
      - name: Setup MSBuild Path
        uses: microsoft/setup-msbuild@v1.1
@@ -53,35 +53,35 @@ jobs:
        run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishTrimmed=true src/LemonTree.Pipeline.Tools.sln 
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Models
-       uses: actions/upload-artifact@v3
+       uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Models
             path: "src/Models/*.*"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Linux
-       uses: actions/upload-artifact@v3
+       uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Linux
             path: "bin/LemonTree.Pipeline.Tools.ModelCheck"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Windows
-       uses: actions/upload-artifact@v3
+       uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Windows
             path: "bin/LemonTree.Pipeline.Tools.ModelCheck.exe"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
-       uses: actions/upload-artifact@v3
+       uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
             path: "bin/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
-       uses: actions/upload-artifact@v3
+       uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
             path: "bin/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
