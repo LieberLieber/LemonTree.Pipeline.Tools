@@ -429,7 +429,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             var resultTable = ModelAccess.RunSql(statisticSql);
             //resultTable.DefaultView.Sort = "table_size";
-
+            resultTable.Columns[1].ColumnName = "table_size (bytes)";
 
             Console.WriteLine(ToMD(resultTable, header: true));
 
