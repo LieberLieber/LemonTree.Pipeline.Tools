@@ -1,5 +1,5 @@
 
-﻿using System;
+using System;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
@@ -399,7 +399,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             #region process result table and calculate Issue number
 
-           
+
 
 
             #endregion
@@ -421,7 +421,42 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return result;
         }
 
+        internal static Issue CheckTableSize(string model)
+        {
+            #region get result table
 
+            const string statisticSql = @"SELECT name ,SUM(pgsize)/1024 table_size  FROM 'dbstat' GROUP BY name ORDER BY table_size desc;";
+
+            var resultTable = ModelAccess.RunSql(statisticSql);
+            resultTable.DefaultView.Sort = "table_size";
+
+
+            Console.WriteLine(ToMD(resultTable, header: true));
+
+            #endregion
+
+
+            #region process result table and calculate Issue number
+
+
+            #endregion
+
+            #region set Issue Level
+
+            Issue result = new Issue();
+
+            result.Level = IssueLevel.Information;
+            result.Title = "Table Statistics";
+
+
+
+            result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
+
+
+            #endregion
+
+            return result;
+        }
         private static string ToMD(DataTable t, bool header)
         {
 
@@ -440,8 +475,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     {
 
                         sb.Append("|");
-                        sb.Append(c.ColumnName.Replace("'",""));
-                        
+                        sb.Append(c.ColumnName.Replace("'", ""));
+
                     }
                     sb.Append("|");
                     sb.Append(Environment.NewLine);
@@ -466,7 +501,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
                             sb.Append("|");
                             sb.Append(item);
-                            
+
                         }
                         sb.Append("|");
                         sb.Append(Environment.NewLine);
@@ -477,6 +512,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return sb.ToString();
 
         }
+
     }
 }
 

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LemonTree.Pipeline.Tools.ModelCheck": {
+      "commandName": "Project",
+      "commandLineArgs": "--model models\\model.qeax --tablesize"
+    }
+  }
+}
