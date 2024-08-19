@@ -19,7 +19,7 @@ jobs:
         
             - name: Extract version from tag
               id: get_version
-              uses: dhkatz/get-version-action@v3
+              uses: dhkatz/get-version-action@v3.0.0
                           
     call-build-workflow:
         uses: ./.github/workflows/Build.yml
