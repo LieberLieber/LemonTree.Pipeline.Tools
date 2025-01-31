@@ -31,3 +31,13 @@ jobs:
                 echo "Uploading ${{inputs.binary-name}} to Nexus: $targetUrl"
                 while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
                 curl "-u${{secrets.NEXUSAUTHENTICATION}}" -T ./${{inputs.binary-name}} $targetUrl 
+          
+            - name: Upload binaries to release
+              uses: svenstaro/upload-release-action@2.9.0
+              with:
+                repo_token: ${{ secrets.GITHUB_TOKEN }}
+                file: ./${{inputs.binary-name}}
+                asset_name: ${{inputs.binary-name}}
+                tag: ${{ github.ref }}
+                overwrite: true
+               
