@@ -49,7 +49,7 @@ jobs:
                     ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --tablesize --out "./output.md" 
                 }
                 elseif ('${{runner.os}}' -eq 'Windows') {
-                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --tablesize --out "./output.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --tablesize --orphans --out "./output.md" 
                 }
                 else {
                     Write-Output "${{runner.os}} is not supported"
