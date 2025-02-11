@@ -70,7 +70,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 }
 
 
-               // issues.WriteOutPut(Checks.Checks.CheckProjectStatitics(opts.Model));
+                // issues.WriteOutPut(Checks.Checks.CheckProjectStatitics(opts.Model));
 
 
                 Console.WriteLine(issues.ToString());
@@ -84,7 +84,9 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 {
                     if (ModelAccess.IsSqlLite())
                     {
-                        sb.AppendLine(Checks.Checks.CheckTableSize(opts.Model).Detail);
+                        var result = Checks.Checks.CheckTableSize(opts.Model);
+                        sb.AppendLine(result.Detail);
+                        issues.AddIfNotNull(result);
                     }
                     else
                     {
@@ -92,15 +94,29 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                     }
                 }
 
-               
+                if (opts.Orphans == true)
+                {
+                    if (ModelAccess.IsSqlLite())
+                    {
+                        var result = Checks.Checks.CheckModelOrphans(opts.Model);
+                        sb.AppendLine(result.Detail);
+                        issues.AddIfNotNull(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Orphans reporting only supported for SqlLite!");
+                    }
+                }
+
+
 
 
                 if (opts.Out != null)
                 {
-                     File.WriteAllText(opts.Out, sb.ToString());
+                    File.WriteAllText(opts.Out, sb.ToString());
                 }
 
-            
+
 
                 if (opts.FailOnErrors == true)
                 {

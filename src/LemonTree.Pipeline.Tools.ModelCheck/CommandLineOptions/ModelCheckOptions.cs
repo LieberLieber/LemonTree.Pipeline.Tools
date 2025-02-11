@@ -19,5 +19,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions
 
         [Option("TableSize", Required = false, HelpText = "If set the size of the tables in the database will be reported!")]
         public bool TableSize { get; set; }
+
+        [Option("Orphans", Required = false, HelpText = "If Model Orphans will be reported!")]
+        public bool Orphans { get; set; }
     }
 }
