@@ -69,24 +69,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                     issues.AddIfNotNull(Checks.Checks.CheckStrippedCompact(opts.Model));
                 }
 
-
-                // issues.WriteOutPut(Checks.Checks.CheckProjectStatitics(opts.Model));
-
-
-                Console.WriteLine(issues.ToString());
-
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine(issues.ToMd());
-                sb.AppendLine("# Project Statistics");
-                sb.AppendLine(Checks.Checks.CheckProjectStatitics(opts.Model).Detail);
-
+                Issue resultTableSize = null;
                 if (opts.TableSize == true)
                 {
                     if (ModelAccess.IsSqlLite())
                     {
-                        var result = Checks.Checks.CheckTableSize(opts.Model);
-                        sb.AppendLine(result.Detail);
-                        issues.AddIfNotNull(result);
+                         resultTableSize = Checks.Checks.CheckTableSize(opts.Model);
+                       
+                        issues.AddIfNotNull(resultTableSize);
                     }
                     else
                     {
@@ -94,13 +84,13 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                     }
                 }
 
+                Issue resultOrphans = null;
                 if (opts.Orphans == true)
                 {
                     if (ModelAccess.IsSqlLite())
                     {
-                        var result = Checks.Checks.CheckModelOrphans(opts.Model);
-                        sb.AppendLine(result.Detail);
-                        issues.AddIfNotNull(result);
+                        resultOrphans = Checks.Checks.CheckModelOrphans(opts.Model);
+                        issues.AddIfNotNull(resultOrphans);
                     }
                     else
                     {
@@ -108,15 +98,24 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                     }
                 }
 
-
-
+                Console.WriteLine(issues.ToString());
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(issues.ToMd());
+                sb.AppendLine("# Project Statistics");
+                sb.AppendLine(Checks.Checks.CheckProjectStatitics(opts.Model).Markdown);
+                if (resultTableSize != null)
+                {
+                    sb.AppendLine(resultTableSize.Markdown);
+                }
+                if (resultOrphans != null)
+                {
+                    sb.AppendLine(resultOrphans.Markdown);
+                }
 
                 if (opts.Out != null)
                 {
                     File.WriteAllText(opts.Out, sb.ToString());
                 }
-
-
 
                 if (opts.FailOnErrors == true)
                 {

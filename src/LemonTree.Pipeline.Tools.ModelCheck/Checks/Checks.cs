@@ -410,10 +410,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             result.Level = IssueLevel.Information;
             result.Title = "Project Statistics";
+            result.Detail = "Executed Project Statistics on Model"; 
 
 
-
-            result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
+            result.Markdown = ToMD(resultTable.DefaultView.ToTable(), header: true);
 
 
             #endregion
@@ -431,10 +431,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             //resultTable.DefaultView.Sort = "table_size";
             resultTable.Columns[1].ColumnName = "table_size (bytes)";
 
-            Console.WriteLine(ToMD(resultTable, header: true));
-
             #endregion
-
 
             #region process result table and calculate Issue number
 
@@ -447,10 +444,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             result.Level = IssueLevel.Information;
             result.Title = "Table Statistics (all >32)";
+            result.Detail = $"Found {resultTable.Rows.Count} Tables bigger 32";
 
 
-
-            result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
+            result.Markdown = ToMD(resultTable.DefaultView.ToTable(), header: true);
 
 
             #endregion
@@ -482,10 +479,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             var resultTable = ModelAccess.RunSql(statisticSql);
 
-            Console.WriteLine(ToMD(resultTable, header: true));
-
             #endregion
-
 
             #region process result table and calculate Issue number
 
@@ -497,12 +491,13 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             Issue result = new Issue();
 
             result.Level = IssueLevel.Information;
-            result.Title = "Model Orphans Statistics (all >32)";
+            result.Title = "Model Orphans Statistics";
 
 
             if (resultTable.Rows.Count > 0)
             {
-                result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
+                result.Markdown = ToMD(resultTable.DefaultView.ToTable(), header: true);
+                result.Detail = $"Found {resultTable.Rows.Count} Orphans in Model";
             }
             else
             {
