@@ -7,6 +7,27 @@ https://nexus.lieberlieber.com/#browse/browse:lemontree-pipeline-tools
 Used to check Models for LemonTree Readiness.
 https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe
 
+### Commandline Reference
+
+```
+  --Out               File to output .md e.g.: 'out.md'
+
+  --NoCompact         If set the Checks that compact the Model are not run!
+
+  --FailOnErrors      If set the Exitcode will be 2 if there is at least on Check of Status Error!
+
+  --FailOnWarnings    If set the Exitcode will be 1 if there is at least on Check of Status Warning!
+
+  --TableSize         If set the size of the tables in the database will be reported!
+
+  --Orphans           If set Model Orphans will be reported!
+
+  --Model             Required. The  'Model' used for the operation.
+
+  --help              Display this help screen.
+
+  --version           Display version information.
+```
 
 ### Powershell Example:
 ```

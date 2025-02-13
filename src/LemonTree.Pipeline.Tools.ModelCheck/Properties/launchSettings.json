@@ -2,7 +2,11 @@
   "profiles": {
     "LemonTree.Pipeline.Tools.ModelCheck": {
       "commandName": "Project",
-      "commandLineArgs": "--model models\\model.qeax --tablesize"
+      "commandLineArgs": "--model models\\model.qeax --tablesize --orphans"
+    },
+    "ExampleModel": {
+      "commandName": "Project",
+      "commandLineArgs": "--model \"C:\\repos\\SixthForth\\lemontree_demo\\EAExample.qeax\" --tablesize --orphans"
     }
   }
 }

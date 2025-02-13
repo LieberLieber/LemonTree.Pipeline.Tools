@@ -6,6 +6,8 @@
         internal string Detail { get; set; }
         internal string Title { get; set; }
 
+        internal string Markdown { get; set; }
+
         internal string Symbol
         {
             get

@@ -17,8 +17,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             var mySortedList = this.OrderBy(x => x.Level);
             foreach (Issue issue in mySortedList)
             {
-
-
                 sb.AppendLine($"|{issue.Symbol}|{issue.Level}|{issue.Title}|{issue.Detail}|");
             }
             return sb.ToString();

@@ -410,10 +410,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             result.Level = IssueLevel.Information;
             result.Title = "Project Statistics";
+            result.Detail = "Executed Project Statistics on Model"; 
 
 
-
-            result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
+            result.Markdown = ToMD(resultTable.DefaultView.ToTable(), header: true);
 
 
             #endregion
@@ -431,10 +431,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             //resultTable.DefaultView.Sort = "table_size";
             resultTable.Columns[1].ColumnName = "table_size (bytes)";
 
-            Console.WriteLine(ToMD(resultTable, header: true));
-
             #endregion
-
 
             #region process result table and calculate Issue number
 
@@ -447,10 +444,65 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             result.Level = IssueLevel.Information;
             result.Title = "Table Statistics (all >32)";
+            result.Detail = $"Found {resultTable.Rows.Count} Tables bigger 32";
 
 
+            result.Markdown = ToMD(resultTable.DefaultView.ToTable(), header: true);
 
-            result.Detail = ToMD(resultTable.DefaultView.ToTable(), header: true);
+
+            #endregion
+
+            return result;
+        }
+
+        internal static Issue CheckModelOrphans(string model)
+        {
+            #region get result table
+
+            const string statisticSql = @"
+            SELECT ea_guid AS CLASSGUID, Object_Type AS CLASSTYPE, t_object.* 
+            FROM t_object 
+            WHERE t_object.Object_Type <> 'Package'  
+            AND t_object.Object_ID NOT IN (SELECT t_diagramobjects.Object_ID FROM t_diagramobjects)  
+            AND t_object.Object_ID NOT IN (SELECT t_object.Classifier FROM t_object WHERE t_object.Classifier <> 0) 
+            AND t_object.Object_ID NOT IN (SELECT a.Object_ID FROM t_object AS a JOIN t_object AS b ON b.PDATA1 = a.ea_guid) 
+            AND t_object.Object_ID NOT IN (SELECT CAST(t_attribute.Classifier AS INTEGER) FROM t_attribute WHERE t_attribute.Classifier <> '0' AND t_attribute.Classifier <> '') 
+            AND t_object.Object_ID NOT IN (SELECT CAST(t_operation.Classifier AS INTEGER) FROM t_operation WHERE t_operation.Classifier <> '0' AND t_operation.Classifier <> '') 
+            AND t_object.Object_ID NOT IN (SELECT CAST(t_operationparams.Classifier AS INTEGER) FROM t_operationparams WHERE t_operationparams.Classifier <> '0' AND t_operationparams.Classifier <> '') 
+            AND t_object.Object_ID NOT IN (SELECT t_connector.Start_Object_ID FROM t_connector) 
+            AND t_object.Object_ID NOT IN (SELECT t_connector.End_Object_ID FROM t_connector) 
+            AND t_object.Object_ID NOT IN (SELECT t_object.ParentID FROM t_object) 
+            AND t_object.Object_ID NOT IN (SELECT t_object.Object_ID  FROM t_xref  JOIN t_object ON t_xref.Description LIKE '%' || t_object.ea_guid || '%' WHERE t_xref.Name = 'MOFProps') 
+            AND t_object.ea_guid NOT IN (SELECT t_operation.Behaviour FROM t_operation WHERE t_operation.Behaviour <> '') 
+            AND t_object.Object_ID NOT IN (SELECT CAST(t_connector.PDATA1 AS INTEGER)  FROM t_connector  WHERE t_connector.Connector_Type = 'Association' AND t_connector.SubType = 'Class');
+            ";
+
+            var resultTable = ModelAccess.RunSql(statisticSql);
+
+            #endregion
+
+            #region process result table and calculate Issue number
+
+
+            #endregion
+
+            #region set Issue Level
+
+            Issue result = new Issue();
+
+            result.Level = IssueLevel.Information;
+            result.Title = "Model Orphans Statistics";
+
+
+            if (resultTable.Rows.Count > 0)
+            {
+                result.Markdown = ToMD(resultTable.DefaultView.ToTable(), header: true);
+                result.Detail = $"Found {resultTable.Rows.Count} Orphans in Model";
+            }
+            else
+            {
+                result.Detail = "No Orphans found in Model!";
+            }
 
 
             #endregion
