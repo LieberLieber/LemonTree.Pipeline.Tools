@@ -20,7 +20,6 @@ permissions:
   id-token: write
   deployments: write
 
-
 jobs:
     publish:
         runs-on: ubuntu-latest #good idea to be able to do chmod to fix the artifact issues.
