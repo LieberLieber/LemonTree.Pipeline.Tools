@@ -62,26 +62,26 @@ jobs:
        uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Linux
-            path: "bin/LemonTree.Pipeline.Tools.ModelCheck"
+            path: "src/LemonTree.Pipeline.Tools.ModelCheck/bin/Release/net8.0/linux-x64/publish/LemonTree.Pipeline.Tools.ModelCheck"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Windows
        uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Windows
-            path: "bin/LemonTree.Pipeline.Tools.ModelCheck.exe"
+            path: "src/LemonTree.Pipeline.Tools.ModelCheck/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.ModelCheck.exe"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
        uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
-            path: "bin/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
+            path: "src/LemonTree.Pipeline.Tools.SetFilterInSessionFile/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
        uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
-            path: "bin/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
+            path: "src/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
             retention-days: 2
