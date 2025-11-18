@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
  <PropertyGroup>
-  <TargetFramework>net6.0</TargetFramework>
+  <TargetFramework>net8.0</TargetFramework>
   <RuntimeIdentifier>win-x86</RuntimeIdentifier>
   <OutputType>Exe</OutputType>
   <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   <PublishSingleFile>true</PublishSingleFile>
+  <SelfContained>true</SelfContained>
   <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -34,6 +35,6 @@
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
   <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
-	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe" DestinationFolder="$(SolutionDir)..\bin\" />
+	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe" DestinationFolder="$(SolutionDir)..\bin\" Condition="'$(SolutionDir)' != '' AND '$(SolutionDir)' != '*Undefined*'" />
   </Target>
 </Project>

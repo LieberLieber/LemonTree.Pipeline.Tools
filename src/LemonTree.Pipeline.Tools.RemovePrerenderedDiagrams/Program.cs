@@ -2,7 +2,6 @@
 using LemonTree.Pipeline.Tools;
 using LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.CommandLineOptions;
 using System;
-using System.Data.OleDb;
 using System.IO;
 
 namespace RemovePrerenderedDiagrams

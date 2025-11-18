@@ -11,7 +11,6 @@ on:
         type: string
 env:
   NexusArtifactRepo: https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools
-  ModelName: ./src/Models/PWC.eapx
   ModelNameSqLite: ./src/Models/Model.qeax
   
 jobs:
@@ -49,8 +48,8 @@ jobs:
      - name: Publish Solution for Windows
        run: dotnet publish -c Release -r win-x86 --self-contained false src/LemonTree.Pipeline.Tools.sln
 
-     - name: Publish Solution for Linux
-       run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishTrimmed=true src/LemonTree.Pipeline.Tools.sln 
+     - name: Publish ModelCheck for Linux
+       run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false src/LemonTree.Pipeline.Tools.ModelCheck/LemonTree.Pipeline.Tools.ModelCheck.csproj 
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Models
        uses: actions/upload-artifact@v4
@@ -63,26 +62,26 @@ jobs:
        uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Linux
-            path: "bin/LemonTree.Pipeline.Tools.ModelCheck"
+            path: "src/LemonTree.Pipeline.Tools.ModelCheck/bin/Release/net8.0/linux-x64/publish/LemonTree.Pipeline.Tools.ModelCheck"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Windows
        uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Windows
-            path: "bin/LemonTree.Pipeline.Tools.ModelCheck.exe"
+            path: "src/LemonTree.Pipeline.Tools.ModelCheck/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.ModelCheck.exe"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
        uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
-            path: "bin/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
+            path: "src/LemonTree.Pipeline.Tools.SetFilterInSessionFile/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
        uses: actions/upload-artifact@v4
        with:
             name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
-            path: "bin/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
+            path: "src/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
             retention-days: 2

@@ -3,7 +3,6 @@ using System;
 using System.Data;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace LemonTree.Pipeline.Tools
 {
@@ -66,26 +65,15 @@ namespace LemonTree.Pipeline.Tools
 
         public static void ConfigureAccess(string model)
         {
-            if (model.EndsWith(".eap") || model.EndsWith(".eapx"))
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X64))
-                {
-                    // Do something
-                    throw new NotSupportedException($"Model '{Path.GetFileName(model)}' only supported on Windows 32bit.");
-                }
-
-                eaDatabase = new JetDatabase();
-                eaDatabase.SetModel(model);
-            }
-            else if (model.EndsWith(".qea") || model.EndsWith(".qeax"))
+            if (model.EndsWith(".qea") || model.EndsWith(".qeax"))
             {
                 eaDatabase = new SqLiteDatabase();
                 eaDatabase.SetModel(model);
             }
             else
             {
-                Console.WriteLine("only .eap, .eapx, .qea and .qeax are suported");
-                throw new NotSupportedException("only .eap, .eapx, .qea and .qeax are suported");
+                Console.WriteLine("Only .qea and .qeax are supported");
+                throw new NotSupportedException("Only .qea and .qeax are supported");
             }
         }
 

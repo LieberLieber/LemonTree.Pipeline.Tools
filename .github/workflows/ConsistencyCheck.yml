@@ -9,7 +9,7 @@ on:
  push:
 
 env:
-  ModelName: src\models\pwc.eapx
+  ModelName: src\models\Model.qeax
   LemonTreeAutomationExecutable: C:\Program Files\LieberLieber\LemonTree.Automation\LemonTree.Automation.exe
 
 jobs:

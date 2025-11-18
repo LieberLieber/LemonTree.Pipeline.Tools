@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifier>win-x86</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -15,12 +16,6 @@
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\Models\PWC.eapx">
-      <Link>Models\PWC.eapx</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\LemonTree.Pipeline.Tools\LemonTree.Pipeline.Tools.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +23,6 @@
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
   </ItemGroup>
   <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
-	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe" DestinationFolder="$(SolutionDir)..\bin\" />
+	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe" DestinationFolder="$(SolutionDir)..\bin\" Condition="'$(SolutionDir)' != '' AND '$(SolutionDir)' != '*Undefined*'" />
   </Target>
 </Project>
