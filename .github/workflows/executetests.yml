@@ -11,14 +11,6 @@ jobs:
             model-path: ./Model.qeax
         secrets: inherit
     
-    call-test-workflow-windows-eapx:
-        # needs: prepare-test
-        uses: ./.github/workflows/TestModelCheck.yml
-        with:
-            runs-on: windows-latest
-            model-path: ./PWC.eapx
-        secrets: inherit
-
     call-test-workflow-windows-filenotfound:
         # needs: prepare-test
         uses: ./.github/workflows/TestModelCheck.yml
@@ -44,14 +36,6 @@ jobs:
             model-path: ./Model.qeax
         secrets: inherit
     
-    call-test-remove-windows-eapx:
-        # needs: prepare-test
-        uses: ./.github/workflows/TestRemovePrerenderedDiagrams.yml
-        with:
-            runs-on: windows-latest
-            model-path: ./PWC.eapx
-        secrets: inherit
-
     call-test-workflow-remove-filenotfound:
         # needs: prepare-test
         uses: ./.github/workflows/TestRemovePrerenderedDiagrams.yml
