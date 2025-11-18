@@ -34,7 +34,7 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
-  <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+  <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86' And '$(SolutionDir)' != ''">
 	<Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe" DestinationFolder="$(SolutionDir)..\bin\" />
   </Target>
 </Project>

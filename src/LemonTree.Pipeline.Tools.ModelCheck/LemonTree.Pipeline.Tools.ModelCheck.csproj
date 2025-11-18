@@ -28,10 +28,10 @@
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
   </ItemGroup>
-  <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+  <Target Name="PostPublishWin" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x86' And '$(SolutionDir)' != ''">
 	  <Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck.exe" DestinationFolder="$(SolutionDir)..\bin\" />
   </Target>
-  <Target Name="PostPublishLinux" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+  <Target Name="PostPublishLinux" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'linux-x64' And '$(SolutionDir)' != ''">
 	  <Copy SourceFiles="$(PublishDir)LemonTree.Pipeline.Tools.ModelCheck" DestinationFolder="$(SolutionDir)..\bin\" />
   </Target>
 </Project> 
