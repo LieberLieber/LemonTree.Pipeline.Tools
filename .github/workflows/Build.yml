@@ -72,13 +72,6 @@ jobs:
             path: "src/LemonTree.Pipeline.Tools.ModelCheck/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.ModelCheck.exe"
             retention-days: 2
 
-     - name: Archive LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
-       uses: actions/upload-artifact@v4
-       with:
-            name: LemonTree.Pipeline.Tools.SetFilterInSessionFile.Windows
-            path: "src/LemonTree.Pipeline.Tools.SetFilterInSessionFile/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.SetFilterInSessionFile.exe"
-            retention-days: 2
-
      - name: Archive LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
        uses: actions/upload-artifact@v4
        with:
