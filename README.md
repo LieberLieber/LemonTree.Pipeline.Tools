@@ -22,12 +22,46 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
 
   --Orphans           If set Model Orphans will be reported!
 
+  --ChecksConfig      Path to JSON file with checks configuration. If not set, hardcoded checks will be used.
+
   --Model             Required. The  'Model' used for the operation.
 
   --help              Display this help screen.
 
   --version           Display version information.
 ```
+
+### Custom Checks Configuration
+
+ModelCheck supports loading checks from a JSON configuration file using the `--ChecksConfig` parameter. If no configuration file is specified, the tool uses hardcoded default checks.
+
+To use a custom checks configuration:
+
+```
+LemonTree.Pipeline.Tools.ModelCheck.exe --model "model.eapx" --ChecksConfig "./checks-config.json" --out ".\output.md"
+```
+
+The JSON configuration file should follow this structure:
+
+```json
+{
+  "checks": [
+    {
+      "id": "check-id",
+      "query": "SELECT COUNT(*) FROM [table] WHERE [condition]",
+      "passedTitle": "Title when check passes",
+      "failedTitle": "Title when check fails",
+      "passedDetail": "Details when check passes",
+      "failedDetail": "Details when check fails",
+      "passedLevel": "Info",
+      "failedLevel": "Error",
+      "includeCountInTitle": true
+    }
+  ]
+}
+```
+
+See the [sample checks-config.json](src/LemonTree.Pipeline.Tools.ModelCheck/checks-config.json) in the repository for a complete example with all default checks.
 
 ### Powershell Example:
 ```
