@@ -32,7 +32,7 @@
 ## Conventions & Integration
 - **Command-line arguments** are parsed using custom classes in `CommandLineOptions/`.
 - **Output** is typically Markdown or direct model file modification.
-- **CI/CD Integration**: The workflow `.github/workflows/testmodelcheck.yml` automates validation of models using the ModelCheck tool. It:
+- **CI/CD Integration**: The workflow `.github/workflows/TestModelCheck.yml` automates validation of models using the ModelCheck tool. It:
   - Downloads platform-specific ModelCheck binaries and test models as artifacts.
   - Runs ModelCheck on both Linux and Windows runners, using the provided model path and expected exit code.
   - Summarizes results and output in the GitHub Actions summary.

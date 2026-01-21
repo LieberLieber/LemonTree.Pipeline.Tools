@@ -53,7 +53,7 @@ The JSON configuration file should follow this structure:
       "failedTitle": "Title when check fails",
       "passedDetail": "Details when check passes",
       "failedDetail": "Details when check fails",
-      "passedLevel": "Info",
+      "passedLevel": "Information",
       "failedLevel": "Error",
       "includeCountInTitle": true
     }
