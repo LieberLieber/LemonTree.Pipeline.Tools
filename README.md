@@ -83,8 +83,8 @@ echo "*  2 = model has at least one error  (only if --FailOnErrors)"
 | | Severity | Issue | Message |
 |----------|----------|---------|---------|
 |:red_circle:|Error|Auditing is enabled.|Auditing is not helpful or required if you manage a model inside a VCS with LemonTree.|
-|:red_circle:|Error|Model has 12 Audit Entires|Audits are not helpful or required if you manage a model inside a VCS with LemonTree.|
-|:red_circle:|Error|Model has 1 Resource Allocation Entires|Resource Allocations are not supported when using LemonTree.|
+|:red_circle:|Error|Model has 12 Audit Entries|Audits are not helpful or required if you manage a model inside a VCS with LemonTree.|
+|:red_circle:|Error|Model has 1 Resource Allocation Entries|Resource Allocations are not supported when using LemonTree.|
 |:orange_circle:|Warning|Model has 1 VCS enabled Packages|Models with Package based VCS  are not a supported scenario.|
 |:green_circle:|Passed|No DIAGRAMIMAGEMAP entries in the model||
 |:green_circle:|Passed|No Baseline entries in the model||
