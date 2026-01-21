@@ -10,6 +10,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 {
     internal static class Checks
     {
+        /// <summary>
+        /// Execute all SQL-based checks in their defined order
+        /// </summary>
+        internal static Issues ExecuteAllSqlChecks()
+        {
+            return SqlCheckRegistry.ExecuteAllSqlChecks();
+        }
+
         internal static Issue CheckDiagramImagemaps(string model)
         {
             return SqlCheckRegistry.ExecuteCheck("DiagramImagemaps");

@@ -9,17 +9,39 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
     internal static class SqlCheckRegistry
     {
         private static List<SqlCheck> _checks = null;
+        private static List<string> _checkOrder = null;
 
         /// <summary>
-        /// Get or initialize the list of all available checks
+        /// Get the ordered list of check IDs for execution
         /// </summary>
-        internal static List<SqlCheck> GetAllChecks()
+        internal static List<string> GetCheckOrder()
         {
-            if (_checks == null)
+            if (_checkOrder == null)
             {
-                _checks = InitializeChecks();
+                _checkOrder = InitializeCheckOrder();
             }
-            return _checks;
+            return _checkOrder;
+        }
+
+        /// <summary>
+        /// Define the order in which checks should be executed
+        /// </summary>
+        private static List<string> InitializeCheckOrder()
+        {
+            return new List<string>
+            {
+                "DiagramImagemaps",
+                "Baselines",
+                "AuditingEnabled",
+                "AuditLogs",
+                "UserSecurity",
+                "VCSConnection",
+                "ExtDoc",
+                "ModelDocuments",
+                "TImages",
+                "ResourceAllocation",
+                "Journal"
+            };
         }
 
         /// <summary>
@@ -194,6 +216,19 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             foreach (var check in GetAllChecks())
             {
                 results.AddIfNotNull(ExecuteCheck(check));
+            }
+            return results;
+        }
+
+        /// <summary>
+        /// Execute all SQL-based checks in their defined order
+        /// </summary>
+        internal static Issues ExecuteAllSqlChecks()
+        {
+            Issues results = new Issues();
+            foreach (string checkId in GetCheckOrder())
+            {
+                results.AddIfNotNull(ExecuteCheck(checkId));
             }
             return results;
         }

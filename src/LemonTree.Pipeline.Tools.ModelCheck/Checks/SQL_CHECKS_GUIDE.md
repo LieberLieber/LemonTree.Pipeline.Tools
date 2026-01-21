@@ -19,24 +19,43 @@ The `LemonTree.Pipeline.Tools.ModelCheck` now uses a standardized, declarative S
      - `IncludeCountInTitle`: Whether to insert count into the failed title
 
 2. **SqlCheckRegistry** (`Checks/SqlCheckRegistry.cs`)
-   - Central registry managing all available checks
+   - Central registry managing all available checks and their execution order
+   - `GetCheckOrder()`: Returns the ordered list of check IDs to execute
    - `InitializeChecks()`: Defines all SQL-based checks with their queries and messages
    - `ExecuteCheck(checkId)`: Execute a single check by ID
-   - `ExecuteAllChecks()`: Execute all checks and return results
+   - `ExecuteAllSqlChecks()`: Execute all checks in order and return results
    - Handles database-specific wildcard replacement
 
 3. **Checks.cs** (Refactored)
-   - Each `Check*()` method now delegates to `SqlCheckRegistry.ExecuteCheck()`
-   - Old hardcoded logic replaced with clean delegating methods
+   - `ExecuteAllSqlChecks()`: Public method to run all SQL-based checks using registry's defined order
+   - Individual `Check*()` methods delegate to `SqlCheckRegistry.ExecuteCheck()` for backward compatibility
    - Maintains backward compatibility with existing code
+
+4. **Program.cs** (Updated)
+   - Uses `Checks.ExecuteAllSqlChecks()` to execute all SQL checks via a foreach approach
+   - Non-SQL checks (Compact, Statistics, Orphans) are executed separately with their individual options
 
 ## Adding a New Check
 
 To add a new SQL-based check:
 
 1. Open `SqlCheckRegistry.cs`
-2. Add a new `SqlCheck` object to the list in `InitializeChecks()`:
 
+2. Add the check ID to `InitializeCheckOrder()` list in the desired position:
+```csharp
+private static List<string> InitializeCheckOrder()
+{
+    return new List<string>
+    {
+        "DiagramImagemaps",
+        // ... add your check ID in the correct position
+        "UniqueCheckId",
+        // ...
+    };
+}
+```
+
+3. Add the check definition to `InitializeChecks()` method:
 ```csharp
 new SqlCheck
 {
@@ -52,14 +71,29 @@ new SqlCheck
 }
 ```
 
-3. Add a delegating method to `Checks.cs`:
-
+4. (Optional) Add a delegating method to `Checks.cs` for direct access:
 ```csharp
 internal static Issue CheckMyCheck(string model)
 {
     return SqlCheckRegistry.ExecuteCheck("UniqueCheckId");
 }
 ```
+
+Note: Checks are executed in the order defined in `GetCheckOrder()`. The order matters for report readability and logical grouping of related checks.
+
+## Execution Flow
+
+The check execution now uses a centralized foreach approach:
+
+1. **Program.cs** calls `Checks.ExecuteAllSqlChecks()`
+2. **Checks.cs** delegates to `SqlCheckRegistry.ExecuteAllSqlChecks()`
+3. **SqlCheckRegistry** iterates through `GetCheckOrder()` and executes each check in sequence
+4. Results are collected and returned as an `Issues` collection
+
+This approach ensures:
+- Consistent, predictable execution order
+- Easy reordering of checks without code changes
+- Centralized control of check sequence
 
 ## Database-Specific Wildcards
 
