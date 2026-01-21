@@ -22,12 +22,46 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
 
   --Orphans           If set Model Orphans will be reported!
 
+  --ChecksConfig      Path to JSON file with checks configuration. If not set, hardcoded checks will be used.
+
   --Model             Required. The  'Model' used for the operation.
 
   --help              Display this help screen.
 
   --version           Display version information.
 ```
+
+### Custom Checks Configuration
+
+ModelCheck supports loading checks from a JSON configuration file using the `--ChecksConfig` parameter. If no configuration file is specified, the tool uses hardcoded default checks.
+
+To use a custom checks configuration:
+
+```
+LemonTree.Pipeline.Tools.ModelCheck.exe --model "model.eapx" --ChecksConfig "./checks-config.json" --out ".\output.md"
+```
+
+The JSON configuration file should follow this structure:
+
+```json
+{
+  "checks": [
+    {
+      "id": "check-id",
+      "query": "SELECT COUNT(*) FROM [table] WHERE [condition]",
+      "passedTitle": "Title when check passes",
+      "failedTitle": "Title when check fails",
+      "passedDetail": "Details when check passes",
+      "failedDetail": "Details when check fails",
+      "passedLevel": "Information",
+      "failedLevel": "Error",
+      "includeCountInTitle": true
+    }
+  ]
+}
+```
+
+See the [sample checks-config.json](src/LemonTree.Pipeline.Tools.ModelCheck/checks-config.json) in the repository for a complete example with all default checks.
 
 ### Powershell Example:
 ```
@@ -49,8 +83,8 @@ echo "*  2 = model has at least one error  (only if --FailOnErrors)"
 | | Severity | Issue | Message |
 |----------|----------|---------|---------|
 |:red_circle:|Error|Auditing is enabled.|Auditing is not helpful or required if you manage a model inside a VCS with LemonTree.|
-|:red_circle:|Error|Model has 12 Audit Entires|Audits are not helpful or required if you manage a model inside a VCS with LemonTree.|
-|:red_circle:|Error|Model has 1 Resource Allocation Entires|Resource Allocations are not supported when using LemonTree.|
+|:red_circle:|Error|Model has 12 Audit Entries|Audits are not helpful or required if you manage a model inside a VCS with LemonTree.|
+|:red_circle:|Error|Model has 1 Resource Allocation Entries|Resource Allocations are not supported when using LemonTree.|
 |:orange_circle:|Warning|Model has 1 VCS enabled Packages|Models with Package based VCS  are not a supported scenario.|
 |:green_circle:|Passed|No DIAGRAMIMAGEMAP entries in the model||
 |:green_circle:|Passed|No Baseline entries in the model||

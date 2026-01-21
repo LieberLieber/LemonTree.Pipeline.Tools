@@ -40,27 +40,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 Console.WriteLine($"ModelCheck on {opts.Model}");
                 ModelAccess.ConfigureAccess(opts.Model);
 
-                issues.AddIfNotNull(Checks.Checks.CheckDiagramImagemaps(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckBaseline(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckAuditEnabled(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckAuditLogs(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckUserSecurity(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckVCSConnection(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckExtDoc(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckModelDocument(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckT_image(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckResourceAllocation(opts.Model));
-
-                issues.AddIfNotNull(Checks.Checks.CheckJournal(opts.Model));
+                // Execute all SQL-based checks in their defined order
+                issues.AddRange(Checks.Checks.ExecuteAllSqlChecks(opts.ChecksConfig));
 
                 if (opts.NoCompact != true)
                 {

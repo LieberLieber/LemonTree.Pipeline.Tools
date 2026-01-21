@@ -1,0 +1,136 @@
+{
+  "checks": [
+    {
+      "id": "Custom check from JSON File",
+      "query": "Select Count(*) from t_document",
+      "passedTitle": "There are no entries in t_document",
+      "failedTitle": "Model has {count} entries in t_document",
+      "passedDetail": null,
+      "failedDetail": "This is just to show case loading rules from JSON file.",
+      "passedLevel": "Passed",
+      "failedLevel": "Information",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "DiagramImagemaps",
+      "query": "Select Count(*) from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP'",
+      "passedTitle": "No DIAGRAMIMAGEMAP entries in the model",
+      "failedTitle": "Model has {count} DIAGRAMIMAGEMAPS",
+      "passedDetail": null,
+      "failedDetail": "This is perfect if you use it with WebEA and Prolaborate but makes merging/diffing harder",
+      "passedLevel": "Passed",
+      "failedLevel": "Information",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "Baselines",
+      "query": "SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'",
+      "passedTitle": "No Baseline entries in the model",
+      "failedTitle": "Model has {count} Baselines",
+      "passedDetail": null,
+      "failedDetail": "Baselines are not helpful or required if you manage a model inside a VCS with LemonTree.",
+      "passedLevel": "Passed",
+      "failedLevel": "Warning",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "AuditingEnabled",
+      "query": "SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{wildcard}enabled=1;{wildcard}\"",
+      "passedTitle": "Auditing is disabled in the model",
+      "failedTitle": "Auditing is enabled.",
+      "passedDetail": null,
+      "failedDetail": "Auditing is not helpful or required if you manage a model inside a VCS with LemonTree.",
+      "passedLevel": "Passed",
+      "failedLevel": "Error",
+      "includeCountInTitle": false
+    },
+    {
+      "id": "AuditLogs",
+      "query": "SELECT Count(*) from t_snapshot",
+      "passedTitle": "No Audit entries in the model",
+      "failedTitle": "Model has {count} Audit Entries",
+      "passedDetail": null,
+      "failedDetail": "Audits are not helpful or required if you manage a model inside a VCS with LemonTree.",
+      "passedLevel": "Passed",
+      "failedLevel": "Error",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "UserSecurity",
+      "query": "SELECT Count(*) from t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'",
+      "passedTitle": "User Security not enabled in the Model",
+      "failedTitle": "Model has {count} User Security Entries",
+      "passedDetail": null,
+      "failedDetail": "User Security is enabled in the Model! Can cause higher complexity with LemonTree.",
+      "passedLevel": "Passed",
+      "failedLevel": "Warning",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "VCSConnection",
+      "query": "SELECT count(*) FROM t_package WHERE IsControlled = True",
+      "passedTitle": "VCS is not configured in the Model",
+      "failedTitle": "Model has {count} VCS enabled Packages",
+      "passedDetail": null,
+      "failedDetail": "Models with Package based VCS are not a supported scenario.",
+      "passedLevel": "Passed",
+      "failedLevel": "Warning",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "ExtDoc",
+      "query": "SELECT Count(*) FROM t_document where DocType = 'ExtDoc'",
+      "passedTitle": "No embedded binary images or document entries in the model",
+      "failedTitle": "Model has {count} embedded binary images or document entries.",
+      "passedDetail": null,
+      "failedDetail": "Embedded binary files will increase your model size, it is advised to check if they are required.",
+      "passedLevel": "Passed",
+      "failedLevel": "Warning",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "ModelDocuments",
+      "query": "SELECT Count(*) FROM t_document where DocType = 'ModelDocument'",
+      "passedTitle": "No ModelDocument entries in the model",
+      "failedTitle": "Model has {count} ModelDocument entries.",
+      "passedDetail": null,
+      "failedDetail": "ModelDocuments will increase your model size, it is advised to check if they are required.",
+      "passedLevel": "Passed",
+      "failedLevel": "Warning",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "TImages",
+      "query": "Select Count(*) from t_image",
+      "passedTitle": "No t_image entries in the model",
+      "failedTitle": "Model has {count} t_image entries",
+      "passedDetail": null,
+      "failedDetail": "Binary image data makes the model bigger!",
+      "passedLevel": "Passed",
+      "failedLevel": "Information",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "ResourceAllocation",
+      "query": "SELECT Count(*) from t_objectresource",
+      "passedTitle": "No Resource Allocation entries in the model",
+      "failedTitle": "Model has {count} Resource Allocation Entries",
+      "passedDetail": null,
+      "failedDetail": "Resource Allocations are not supported when using LemonTree.",
+      "passedLevel": "Passed",
+      "failedLevel": "Error",
+      "includeCountInTitle": true
+    },
+    {
+      "id": "Journal",
+      "query": "Select Count(*) from t_document where t_document.DocType = \"JEntry\"",
+      "passedTitle": "No Journal entries in the model",
+      "failedTitle": "Model has {count} Journal Entries",
+      "passedDetail": null,
+      "failedDetail": "Journal entries are not merged by LemonTree.",
+      "passedLevel": "Passed",
+      "failedLevel": "Error",
+      "includeCountInTitle": true
+    }
+  ]
+}
