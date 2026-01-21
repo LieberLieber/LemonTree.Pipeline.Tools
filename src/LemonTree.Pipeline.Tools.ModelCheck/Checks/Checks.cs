@@ -19,26 +19,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             return SqlCheckRegistry.ExecuteAllSqlChecks();
         }
 
-        internal static Issue CheckDiagramImagemaps(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("DiagramImagemaps");
-        }
-
-        internal static Issue CheckT_image(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("TImages");
-        }
-
-        internal static Issue CheckBaseline(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("Baselines");
-        }
-
-        internal static Issue CheckExtDoc(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("ExtDoc");
-        }
-
         internal static Issue CheckCompact(string model)
         {
             Issue result = new Issue();
@@ -128,51 +108,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             return result;
         }
-
-        internal static Issue CheckModelDocument(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("ModelDocuments");
-        }
-
-
-
-        internal static Issue CheckAuditLogs(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("AuditLogs");
-        }
-
-        internal static Issue CheckJournal(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("Journal");
-        }
-
-        internal static Issue CheckAuditEnabled(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("AuditingEnabled");
-        }
-
-        internal static Issue CheckResourceAllocation(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("ResourceAllocation");
-        }
-
-        internal static Issue CheckUserSecurity(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("UserSecurity");
-        }
-
-        internal static Issue CheckVCSConnection(string model)
-        {
-            return SqlCheckRegistry.ExecuteCheck("VCSConnection");
-        }
-
-
-        /// <summary>
-        /// get EA's project statistic view
-        /// </summary>
-        /// <param name="model"></param>
-
-        /// <returns></returns>
 
         internal static Issue CheckProjectStatitics(string model)
         {
