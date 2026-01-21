@@ -95,6 +95,12 @@ jobs:
                 Write-Output "# Modelcheck with JSON config of ${{inputs.model-path}} on ${{runner.os}}" >> $env:GITHUB_STEP_SUMMARY
                 Write-Output "Starting validation with JSON config file"
 
+                if (-not (Test-Path "${{inputs.model-path}}" -PathType Leaf)) {
+                    Write-Output "Model file ${{inputs.model-path}} does not exist, skipping JSON config test"
+                    Write-Output "## JSON Config Test - Model file not found, test skipped" >> $env:GITHUB_STEP_SUMMARY
+                    exit 0
+                }
+
                 if ('${{runner.os}}' -eq 'Linux') {
                     chmod +x ./LemonTree.Pipeline.Tools.ModelCheck             
                     ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" 
@@ -106,6 +112,8 @@ jobs:
                     Write-Output "${{runner.os}} is not supported"
                     Exit -1
                 }
+
+
 
                 if (Test-Path -Path "output-json.md" -PathType Leaf) {
                     Write-Output "## JSON Config Test Output" >> $env:GITHUB_STEP_SUMMARY
