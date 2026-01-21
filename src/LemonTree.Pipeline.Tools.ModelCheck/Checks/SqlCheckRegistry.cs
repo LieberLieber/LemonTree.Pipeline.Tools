@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 {
     /// <summary>
     /// Registry of standardized SQL-based checks.
     /// Centralizes check configuration and execution logic.
+    /// Supports loading checks from JSON configuration file or using hardcoded defaults.
     /// </summary>
     internal static class SqlCheckRegistry
     {
@@ -25,9 +29,24 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         /// <summary>
         /// Define the order in which checks should be executed
+        /// Attempts to load from JSON file first, falls back to hardcoded defaults
         /// </summary>
         private static List<string> InitializeCheckOrder()
         {
+            // Try to load from JSON configuration file
+            var jsonChecks = TryLoadChecksFromJson();
+            if (jsonChecks != null && jsonChecks.Count > 0)
+            {
+                // Extract order from the checks as they appear in JSON
+                var order = new List<string>();
+                foreach (var check in jsonChecks)
+                {
+                    order.Add(check.Id);
+                }
+                return order;
+            }
+
+            // Fallback to hardcoded defaults
             return new List<string>
             {
                 "DiagramImagemaps",
@@ -58,8 +77,25 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         /// <summary>
         /// Initialize all SQL-based checks with their queries and messages
+        /// Attempts to load from JSON file first, falls back to hardcoded defaults
         /// </summary>
         private static List<SqlCheck> InitializeChecks()
+        {
+            // Try to load from JSON configuration file
+            var jsonChecks = TryLoadChecksFromJson();
+            if (jsonChecks != null && jsonChecks.Count > 0)
+            {
+                return jsonChecks;
+            }
+
+            // Fallback to hardcoded defaults
+            return GetHardcodedChecks();
+        }
+
+        /// <summary>
+        /// Get the hardcoded default checks
+        /// </summary>
+        private static List<SqlCheck> GetHardcodedChecks()
         {
             return new List<SqlCheck>
             {
@@ -279,6 +315,106 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 // Restore original query
                 check.Query = originalQuery;
             }
+        }
+
+        /// <summary>
+        /// Try to load checks from JSON configuration file
+        /// Returns null if file doesn't exist or fails to parse
+        /// </summary>
+        private static List<SqlCheck> TryLoadChecksFromJson()
+        {
+            try
+            {
+                string configPath = Path.Combine(AppContext.BaseDirectory, "checks-config.json");
+                if (!File.Exists(configPath))
+                {
+                    return null;
+                }
+
+                string json = File.ReadAllText(configPath);
+                using (JsonDocument doc = JsonDocument.Parse(json))
+                {
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("checks", out var checksElement))
+                    {
+                        var checks = new List<SqlCheck>();
+                        foreach (var checkJson in checksElement.EnumerateArray())
+                        {
+                            var check = ParseCheckFromJson(checkJson);
+                            if (check != null)
+                            {
+                                checks.Add(check);
+                            }
+                        }
+                        return checks.Count > 0 ? checks : null;
+                    }
+                }
+                return null;
+            }
+            catch
+            {
+                // If JSON loading fails, return null to use hardcoded defaults
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Parse a single check from JSON element
+        /// </summary>
+        private static SqlCheck ParseCheckFromJson(JsonElement checkElement)
+        {
+            try
+            {
+                var check = new SqlCheck();
+
+                if (checkElement.TryGetProperty("id", out var id))
+                    check.Id = id.GetString();
+
+                if (checkElement.TryGetProperty("query", out var query))
+                    check.Query = query.GetString();
+
+                if (checkElement.TryGetProperty("passedTitle", out var passedTitle))
+                    check.PassedTitle = passedTitle.ValueKind == JsonValueKind.Null ? null : passedTitle.GetString();
+
+                if (checkElement.TryGetProperty("failedTitle", out var failedTitle))
+                    check.FailedTitle = failedTitle.GetString();
+
+                if (checkElement.TryGetProperty("passedDetail", out var passedDetail))
+                    check.PassedDetail = passedDetail.ValueKind == JsonValueKind.Null ? null : passedDetail.GetString();
+
+                if (checkElement.TryGetProperty("failedDetail", out var failedDetail))
+                    check.FailedDetail = failedDetail.ValueKind == JsonValueKind.Null ? null : failedDetail.GetString();
+
+                if (checkElement.TryGetProperty("passedLevel", out var passedLevel))
+                    check.PassedLevel = ParseIssueLevel(passedLevel.GetString());
+
+                if (checkElement.TryGetProperty("failedLevel", out var failedLevel))
+                    check.FailedLevel = ParseIssueLevel(failedLevel.GetString());
+
+                if (checkElement.TryGetProperty("includeCountInTitle", out var includeCount))
+                    check.IncludeCountInTitle = includeCount.GetBoolean();
+
+                return check;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Parse issue level from string
+        /// </summary>
+        private static IssueLevel ParseIssueLevel(string level)
+        {
+            return level?.ToLower() switch
+            {
+                "error" => IssueLevel.Error,
+                "warning" => IssueLevel.Warning,
+                "information" => IssueLevel.Information,
+                "passed" => IssueLevel.Passed,
+                _ => IssueLevel.Information
+            };
         }
     }
 }
