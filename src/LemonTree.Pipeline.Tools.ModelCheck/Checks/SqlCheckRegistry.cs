@@ -45,6 +45,18 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         }
 
         /// <summary>
+        /// Get or initialize the list of all available checks
+        /// </summary>
+        internal static List<SqlCheck> GetAllChecks()
+        {
+            if (_checks == null)
+            {
+                _checks = InitializeChecks();
+            }
+            return _checks;
+        }
+
+        /// <summary>
         /// Initialize all SQL-based checks with their queries and messages
         /// </summary>
         private static List<SqlCheck> InitializeChecks()
