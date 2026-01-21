@@ -12,90 +12,22 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
     {
         internal static Issue CheckDiagramImagemaps(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "No DIAGRAMIMAGEMAP entries in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Information;
-                result.Detail = $"This is perfect if you use it with WebEA and Prolaborate but makes merging/diffing harder";
-                result.Title = $"Model has {retVal} DIAGRAMIMAGEMAPS";
-
-            }
-
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("DiagramImagemaps");
         }
-
-
 
         internal static Issue CheckT_image(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_image");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "No t_image entries in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Information;
-                result.Detail = $"Binary image data makes the model bigger!";
-                result.Title = $"Model has {retVal} t_image entries";
-
-            }
-
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("TImages");
         }
 
         internal static Issue CheckBaseline(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "No Baseline entries in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Warning;
-                result.Detail = $"Baselines are not helpful or required if you manage a model inside a VCS with LemonTree.";
-                result.Title = $"Model has {retVal} Baselines";
-
-            }
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("Baselines");
         }
 
         internal static Issue CheckExtDoc(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where DocType = 'ExtDoc'");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "No embedded binary images or document entries in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Warning;
-                result.Detail = $"Embedded binary files will increase your model size, it is advised to check if they are required.";
-                result.Title = $"Model has {retVal} embedded binary images or document entries.";
-
-            }
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("ExtDoc");
         }
 
         internal static Issue CheckCompact(string model)
@@ -190,150 +122,39 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
         internal static Issue CheckModelDocument(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) FROM t_document where DocType = 'ModelDocument'");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "No ModelDocument entries in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Warning;
-                result.Detail = $"ModelDocuments will increase your model size, it is advised to check if they are required.";
-                result.Title = $"Model has {retVal} ModelDocument entries.";
-
-            }
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("ModelDocuments");
         }
 
 
 
         internal static Issue CheckAuditLogs(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from t_snapshot");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "No Audit entries in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Error;
-                result.Detail = $"Audits are not helpful or required if you manage a model inside a VCS with LemonTree.";
-                result.Title = $"Model has {retVal} Audit Entires";
-            }
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("AuditLogs");
         }
 
         internal static Issue CheckJournal(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("Select Count(*) from t_document where t_document.DocType = \"JEntry\"");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "No Journal entries in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Error;
-                result.Detail = $"Journal entries are not merged by LemonTree.";
-                result.Title = $"Model has {retVal} Journal Entires";
-            }
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("Journal");
         }
 
         internal static Issue CheckAuditEnabled(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar($"SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{ModelAccess.GetWildcard()}enabled=1;{ModelAccess.GetWildcard()}\"");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "Auditing is disabled in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Error;
-                result.Detail = $"Auditing is not helpful or required if you manage a model inside a VCS with LemonTree.";
-                result.Title = $"Auditing is enabled.";
-            }
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("AuditingEnabled");
         }
-
 
         internal static Issue CheckResourceAllocation(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from t_objectresource");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "No Resource Allocation entries in the model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Error;
-                result.Detail = $"Resource Allocations are not supported when using LemonTree.";
-                result.Title = $"Model has {retVal} Resource Allocation Entires";
-            }
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("ResourceAllocation");
         }
 
         internal static Issue CheckUserSecurity(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT Count(*) from  t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "User Security not enabled in the Model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Warning;
-                result.Detail = $"User Security is enabled in the Model! Can cause higher complexity with LemonTree.";
-                result.Title = $"Model has {retVal} User Security Entries";
-
-            }
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("UserSecurity");
         }
-
 
         internal static Issue CheckVCSConnection(string model)
         {
-            long retVal = ModelAccess.RunSQLQueryScalar("SELECT count(*) FROM t_package WHERE IsControlled = True");
-
-            Issue result = new Issue();
-            if (retVal == 0)
-            {
-                result.Level = IssueLevel.Passed;
-                result.Title = "VCS is not configured in the Model";
-            }
-            else
-            {
-                result.Level = IssueLevel.Warning;
-                result.Detail = $"Models with Package based VCS  are not a supported scenario.";
-                result.Title = $"Model has {retVal} VCS enabled Packages";
-
-            }
-
-
-            return result;
+            return SqlCheckRegistry.ExecuteCheck("VCSConnection");
         }
 
 
