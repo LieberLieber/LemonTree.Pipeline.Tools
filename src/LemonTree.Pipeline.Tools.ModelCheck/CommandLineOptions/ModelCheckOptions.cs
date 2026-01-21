@@ -22,5 +22,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions
 
         [Option("Orphans", Required = false, HelpText = "If set Model Orphans will be reported!")]
         public bool Orphans { get; set; }
+
+        [Option("ChecksConfig", Required = false, HelpText = "Path to JSON file with checks configuration. If not set, hardcoded checks will be used.")]
+        public string ChecksConfig { get; set; }
     }
 }

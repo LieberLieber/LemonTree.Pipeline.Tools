@@ -13,8 +13,9 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         /// <summary>
         /// Execute all SQL-based checks in their defined order
         /// </summary>
-        internal static Issues ExecuteAllSqlChecks()
+        internal static Issues ExecuteAllSqlChecks(string checksConfigPath = null)
         {
+            SqlCheckRegistry.SetConfigPath(checksConfigPath);
             return SqlCheckRegistry.ExecuteAllSqlChecks();
         }
 

@@ -14,6 +14,18 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
     {
         private static List<SqlCheck> _checks = null;
         private static List<string> _checkOrder = null;
+        private static string _configPath = null;
+
+        /// <summary>
+        /// Set the path to the checks configuration file
+        /// </summary>
+        internal static void SetConfigPath(string configPath)
+        {
+            _configPath = configPath;
+            // Reset cached values so they'll be reinitialized with the new config
+            _checks = null;
+            _checkOrder = null;
+        }
 
         /// <summary>
         /// Get the ordered list of check IDs for execution
@@ -34,7 +46,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         private static List<string> InitializeCheckOrder()
         {
             // Try to load from JSON configuration file
-            var jsonChecks = TryLoadChecksFromJson();
+            var jsonChecks = TryLoadChecksFromJson(_configPath);
             if (jsonChecks != null && jsonChecks.Count > 0)
             {
                 // Extract order from the checks as they appear in JSON
@@ -82,7 +94,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         private static List<SqlCheck> InitializeChecks()
         {
             // Try to load from JSON configuration file
-            var jsonChecks = TryLoadChecksFromJson();
+            var jsonChecks = TryLoadChecksFromJson(_configPath);
             if (jsonChecks != null && jsonChecks.Count > 0)
             {
                 return jsonChecks;
@@ -321,11 +333,17 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         /// Try to load checks from JSON configuration file
         /// Returns null if file doesn't exist or fails to parse
         /// </summary>
-        private static List<SqlCheck> TryLoadChecksFromJson()
+        private static List<SqlCheck> TryLoadChecksFromJson(string customConfigPath = null)
         {
             try
             {
-                string configPath = Path.Combine(AppContext.BaseDirectory, "checks-config.json");
+                // Use custom path if provided, otherwise fall back to default location
+                string configPath = customConfigPath;
+                if (string.IsNullOrEmpty(configPath))
+                {
+                    configPath = Path.Combine(AppContext.BaseDirectory, "checks-config.json");
+                }
+                
                 if (!File.Exists(configPath))
                 {
                     return null;

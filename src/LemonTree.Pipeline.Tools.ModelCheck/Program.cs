@@ -41,7 +41,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 ModelAccess.ConfigureAccess(opts.Model);
 
                 // Execute all SQL-based checks in their defined order
-                issues.AddRange(Checks.Checks.ExecuteAllSqlChecks().FindAll(x => true));
+                issues.AddRange(Checks.Checks.ExecuteAllSqlChecks(opts.ChecksConfig).FindAll(x => true));
 
                 if (opts.NoCompact != true)
                 {

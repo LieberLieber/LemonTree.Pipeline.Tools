@@ -58,6 +58,13 @@ jobs:
             path: "src/Models/*.*"
             retention-days: 2
 
+     - name: Archive checks-config.json
+       uses: actions/upload-artifact@v4
+       with:
+            name: checks-config
+            path: "src/LemonTree.Pipeline.Tools.ModelCheck/checks-config.json"
+            retention-days: 2
+
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Linux
        uses: actions/upload-artifact@v4
        with:
