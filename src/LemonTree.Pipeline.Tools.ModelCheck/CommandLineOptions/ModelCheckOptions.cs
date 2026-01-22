@@ -25,5 +25,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions
 
         [Option("ChecksConfig", Required = false, HelpText = "Path to JSON file with checks configuration. If not set, hardcoded checks will be used.")]
         public string ChecksConfig { get; set; }
+
+        [Option("NoProjectStatistics", Required = false, HelpText = "If set the Project Statistics will not be included in the output!")]
+        public bool NoProjectStatistics { get; set; }
     }
 }

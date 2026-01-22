@@ -24,6 +24,8 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
 
   --ChecksConfig      Path to JSON file with checks configuration. If not set, hardcoded checks will be used.
 
+  --NoProjectStatistics    If set the Project Statistics will not be included in the output!
+
   --Model             Required. The  'Model' used for the operation.
 
   --help              Display this help screen.
