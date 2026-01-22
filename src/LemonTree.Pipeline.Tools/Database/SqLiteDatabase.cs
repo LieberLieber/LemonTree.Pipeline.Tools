@@ -9,7 +9,7 @@ namespace LemonTree.Pipeline.Tools.Database
     internal class SqLiteDatabase : IEADatabase
     {
         private static SQLiteConnectionStringBuilder _builder = new SQLiteConnectionStringBuilder();
-        private static bool _allowWrite = false;
+        private bool _allowWrite = false;
 
         public SqLiteDatabase()
         {

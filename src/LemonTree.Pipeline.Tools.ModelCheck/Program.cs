@@ -119,7 +119,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
 
                 return (int)Exitcode.Success;
             }
-            catch (InvalidOperationException ex) when (ex.Message.Contains("Unsafe SQL keyword"))
+            catch (InvalidOperationException ex) when (
+                ex.Message.Contains("Unsafe SQL keyword") || 
+                ex.Message.Contains("Non-SELECT statement") || 
+                ex.Message.Contains("Multiple SQL statements"))
             {
                 Console.WriteLine($"Security Error: {ex.Message}");
                 return (int)Exitcode.UnsafeSqlDetected;
