@@ -68,7 +68,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
             string tempFile = Path.GetTempFileName() + ModelAccess.GetExtension();
             File.Copy(model, tempFile, true);
-            ModelAccess.ConfigureAccess(tempFile);
+            ModelAccess.ConfigureAccessWithWrite(tempFile);
 
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'ModelDocument'");
             ModelAccess.RunSQLnonQuery("Delete FROM t_document where DocType = 'ExtDoc'");

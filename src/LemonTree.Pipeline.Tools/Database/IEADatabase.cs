@@ -6,6 +6,8 @@ namespace LemonTree.Pipeline.Tools.Database
     {
         void SetModel(string model);
 
+        void SetModelWithWriteAccess(string model);
+
         bool Compact(string source, string destination);
 
         int RunSQLnonQuery(string sql);

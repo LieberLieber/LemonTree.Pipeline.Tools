@@ -9,6 +9,7 @@ namespace LemonTree.Pipeline.Tools.Database
     internal class SqLiteDatabase : IEADatabase
     {
         private static SQLiteConnectionStringBuilder _builder = new SQLiteConnectionStringBuilder();
+        private static bool _allowWrite = false;
 
         public SqLiteDatabase()
         {
@@ -38,19 +39,31 @@ namespace LemonTree.Pipeline.Tools.Database
         public bool Compact(string source, string destination)
         {
             File.Copy(source, destination, true);
-            SetModel(destination);
-            using (var cn = new SQLiteConnection { ConnectionString = _builder.ConnectionString })
+            
+            // Temporarily allow write access for compact operation
+            bool previousAllowWrite = _allowWrite;
+            _allowWrite = true;
+            
+            try
             {
-                using (SQLiteCommand command = cn.CreateCommand())
+                SetModel(destination);
+                using (var cn = new SQLiteConnection { ConnectionString = _builder.ConnectionString })
                 {
-                    cn.Open();
-                    command.CommandText = "vacuum;";
-                    command.ExecuteNonQuery();
+                    using (SQLiteCommand command = cn.CreateCommand())
+                    {
+                        cn.Open();
+                        command.CommandText = "vacuum;";
+                        command.ExecuteNonQuery();
 
+                    }
                 }
+                SetModel(source);
+                return true;
             }
-            SetModel(source);
-            return true;
+            finally
+            {
+                _allowWrite = previousAllowWrite;
+            }
         }
 
         public string GetExtension()
@@ -144,6 +157,21 @@ namespace LemonTree.Pipeline.Tools.Database
             //}
 
             _builder.DataSource = model;
+            // Set ReadOnly to true unless write access is explicitly allowed (e.g., for compact operations)
+            _builder.ReadOnly = !_allowWrite;
+        }
+
+        public void SetModelWithWriteAccess(string model)
+        {
+            _allowWrite = true;
+            try
+            {
+                SetModel(model);
+            }
+            finally
+            {
+                _allowWrite = false;
+            }
         }
     }
 }

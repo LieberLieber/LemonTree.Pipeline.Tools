@@ -262,7 +262,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     check.Id = id.GetString();
 
                 if (checkElement.TryGetProperty("query", out var query))
+                {
                     check.Query = query.GetString();
+                    // Validate that the SQL query is read-only
+                    ValidateSqlIsReadOnly(check.Query, check.Id);
+                }
 
                 if (checkElement.TryGetProperty("passedTitle", out var passedTitle))
                     check.PassedTitle = passedTitle.ValueKind == JsonValueKind.Null ? null : passedTitle.GetString();
@@ -284,6 +288,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
                 return check;
             }
+            catch (InvalidOperationException)
+            {
+                // Re-throw validation exceptions
+                throw;
+            }
             catch
             {
                 return null;
@@ -303,6 +312,36 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 "passed" => IssueLevel.Passed,
                 _ => defaultLevel
             };
+        }
+
+        /// <summary>
+        /// Validate that SQL query contains only read-only operations
+        /// </summary>
+        private static void ValidateSqlIsReadOnly(string sql, string checkId)
+        {
+            if (string.IsNullOrWhiteSpace(sql))
+            {
+                return;
+            }
+
+            // List of potentially harmful SQL keywords that modify data
+            string[] unsafeKeywords = { "DROP", "DELETE", "INSERT", "UPDATE", "ALTER", "CREATE", "TRUNCATE" };
+
+            string sqlUpper = sql.ToUpperInvariant();
+            
+            foreach (var keyword in unsafeKeywords)
+            {
+                // Check for keyword as a whole word (surrounded by whitespace or SQL delimiters)
+                // This prevents false positives like "DROPPED" or "DELETED" in column names
+                if (System.Text.RegularExpressions.Regex.IsMatch(sqlUpper, 
+                    $@"\b{keyword}\b", 
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                {
+                    throw new InvalidOperationException(
+                        $"Unsafe SQL keyword '{keyword}' detected in check '{checkId}'. " +
+                        $"Only read-only SQL queries are allowed in JSON configuration files.");
+                }
+            }
         }
     }
 }

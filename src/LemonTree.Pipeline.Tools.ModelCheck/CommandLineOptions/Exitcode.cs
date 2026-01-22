@@ -12,6 +12,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions
         ErrorCmdParameter = -1, //Parsing error of command line parameter
         Success = 0, // Successful merge
         ModelWarning =1,
-        ModelError = 2
+        ModelError = 2,
+        UnsafeSqlDetected = 3 // Unsafe SQL keywords detected in checks configuration
     }
 }
