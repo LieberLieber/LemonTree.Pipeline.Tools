@@ -172,20 +172,27 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         /// </summary>
         private static List<SqlCheck> TryLoadChecksFromJson(string customConfigPath = null)
         {
+            // Use custom path if provided, otherwise fall back to default location
+            string configPath = customConfigPath;
+            bool isExplicitConfig = !string.IsNullOrEmpty(customConfigPath);
+            
+            if (string.IsNullOrEmpty(configPath))
+            {
+                configPath = Path.Combine(AppContext.BaseDirectory, "checks-config.json");
+            }
+            
+            if (!File.Exists(configPath))
+            {
+                // If user explicitly provided a config path, fail
+                if (isExplicitConfig)
+                {
+                    throw new FileNotFoundException($"Checks configuration file not found: {configPath}", configPath);
+                }
+                return null;
+            }
+
             try
             {
-                // Use custom path if provided, otherwise fall back to default location
-                string configPath = customConfigPath;
-                if (string.IsNullOrEmpty(configPath))
-                {
-                    configPath = Path.Combine(AppContext.BaseDirectory, "checks-config.json");
-                }
-                
-                if (!File.Exists(configPath))
-                {
-                    return null;
-                }
-
                 string json = File.ReadAllText(configPath);
                 using (JsonDocument doc = JsonDocument.Parse(json))
                 {
@@ -201,16 +208,45 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                                 checks.Add(check);
                             }
                         }
+                        
+                        // If user explicitly provided a config but it's empty or all checks failed to parse, fail
+                        if (isExplicitConfig && checks.Count == 0)
+                        {
+                            throw new InvalidOperationException($"Checks configuration file contains no valid checks: {configPath}");
+                        }
+                        
                         return checks.Count > 0 ? checks : null;
+                    }
+                    
+                    // If user explicitly provided a config but it has no "checks" property, fail
+                    if (isExplicitConfig)
+                    {
+                        throw new InvalidOperationException($"Checks configuration file is missing 'checks' property: {configPath}");
                     }
                 }
                 return null;
             }
-            catch
+            catch (JsonException ex)
             {
-                // If JSON loading fails, return null to use hardcoded defaults
+                // If user explicitly provided a config path, fail with parsing error
+                if (isExplicitConfig)
+                {
+                    throw new InvalidOperationException($"Failed to parse checks configuration file: {configPath}", ex);
+                }
+                // If JSON loading fails for default config, return null to use hardcoded defaults
                 return null;
             }
+            catch (IOException) when (!isExplicitConfig)
+            {
+                // For default config path, silently fall back to hardcoded defaults on IO errors
+                return null;
+            }
+            catch (UnauthorizedAccessException) when (!isExplicitConfig)
+            {
+                // For default config path, silently fall back to hardcoded defaults on access errors
+                return null;
+            }
+            // For explicit config, let other exceptions propagate
         }
 
         /// <summary>
