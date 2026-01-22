@@ -8,8 +8,7 @@
       "passedDetail": null,
       "failedDetail": "This is just to show case loading rules from JSON file.",
       "passedLevel": "Passed",
-      "failedLevel": "Information",
-      "includeCountInTitle": true
+      "failedLevel": "Information"
     },
     {
       "id": "DiagramImagemaps",
@@ -19,8 +18,7 @@
       "passedDetail": null,
       "failedDetail": "This is perfect if you use it with WebEA and Prolaborate but makes merging/diffing harder",
       "passedLevel": "Passed",
-      "failedLevel": "Information",
-      "includeCountInTitle": true
+      "failedLevel": "Information"
     },
     {
       "id": "Baselines",
@@ -30,8 +28,7 @@
       "passedDetail": null,
       "failedDetail": "Baselines are not helpful or required if you manage a model inside a VCS with LemonTree.",
       "passedLevel": "Passed",
-      "failedLevel": "Warning",
-      "includeCountInTitle": true
+      "failedLevel": "Warning"
     },
     {
       "id": "AuditingEnabled",
@@ -41,8 +38,7 @@
       "passedDetail": null,
       "failedDetail": "Auditing is not helpful or required if you manage a model inside a VCS with LemonTree.",
       "passedLevel": "Passed",
-      "failedLevel": "Error",
-      "includeCountInTitle": false
+      "failedLevel": "Error"
     },
     {
       "id": "AuditLogs",
@@ -52,8 +48,7 @@
       "passedDetail": null,
       "failedDetail": "Audits are not helpful or required if you manage a model inside a VCS with LemonTree.",
       "passedLevel": "Passed",
-      "failedLevel": "Error",
-      "includeCountInTitle": true
+      "failedLevel": "Error"
     },
     {
       "id": "UserSecurity",
@@ -63,8 +58,7 @@
       "passedDetail": null,
       "failedDetail": "User Security is enabled in the Model! Can cause higher complexity with LemonTree.",
       "passedLevel": "Passed",
-      "failedLevel": "Warning",
-      "includeCountInTitle": true
+      "failedLevel": "Warning"
     },
     {
       "id": "VCSConnection",
@@ -74,8 +68,7 @@
       "passedDetail": null,
       "failedDetail": "Models with Package based VCS are not a supported scenario.",
       "passedLevel": "Passed",
-      "failedLevel": "Warning",
-      "includeCountInTitle": true
+      "failedLevel": "Warning"
     },
     {
       "id": "ExtDoc",
@@ -85,8 +78,7 @@
       "passedDetail": null,
       "failedDetail": "Embedded binary files will increase your model size, it is advised to check if they are required.",
       "passedLevel": "Passed",
-      "failedLevel": "Warning",
-      "includeCountInTitle": true
+      "failedLevel": "Warning"
     },
     {
       "id": "ModelDocuments",
@@ -96,8 +88,7 @@
       "passedDetail": null,
       "failedDetail": "ModelDocuments will increase your model size, it is advised to check if they are required.",
       "passedLevel": "Passed",
-      "failedLevel": "Warning",
-      "includeCountInTitle": true
+      "failedLevel": "Warning"
     },
     {
       "id": "TImages",
@@ -107,8 +98,7 @@
       "passedDetail": null,
       "failedDetail": "Binary image data makes the model bigger!",
       "passedLevel": "Passed",
-      "failedLevel": "Information",
-      "includeCountInTitle": true
+      "failedLevel": "Information"
     },
     {
       "id": "ResourceAllocation",
@@ -118,8 +108,7 @@
       "passedDetail": null,
       "failedDetail": "Resource Allocations are not supported when using LemonTree.",
       "passedLevel": "Passed",
-      "failedLevel": "Error",
-      "includeCountInTitle": true
+      "failedLevel": "Error"
     },
     {
       "id": "Journal",
@@ -129,8 +118,7 @@
       "passedDetail": null,
       "failedDetail": "Journal entries are not merged by LemonTree.",
       "passedLevel": "Passed",
-      "failedLevel": "Error",
-      "includeCountInTitle": true
+      "failedLevel": "Error"
     }
   ]
 }

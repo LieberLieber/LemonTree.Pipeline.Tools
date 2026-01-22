@@ -25,7 +25,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "This is perfect if you use it with WebEA and Prolaborate but makes merging/diffing harder",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Information,
-                    IncludeCountInTitle = true
                 },
 
                 // T_Image Check
@@ -39,7 +38,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Binary image data makes the model bigger!",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Information,
-                    IncludeCountInTitle = true
                 },
 
                 // Baseline Check
@@ -53,7 +51,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Baselines are not helpful or required if you manage a model inside a VCS with LemonTree.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Warning,
-                    IncludeCountInTitle = true
                 },
 
                 // ExtDoc Check
@@ -67,7 +64,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Embedded binary files will increase your model size, it is advised to check if they are required.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Warning,
-                    IncludeCountInTitle = true
                 },
 
                 // ModelDocument Check
@@ -81,7 +77,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "ModelDocuments will increase your model size, it is advised to check if they are required.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Warning,
-                    IncludeCountInTitle = true
                 },
 
                 // Audit Logs Check
@@ -95,7 +90,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Audits are not helpful or required if you manage a model inside a VCS with LemonTree.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Error,
-                    IncludeCountInTitle = true
                 },
 
                 // Journal Check
@@ -109,7 +103,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Journal entries are not merged by LemonTree.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Error,
-                    IncludeCountInTitle = true
                 },
 
                 // Auditing Enabled Check
@@ -123,7 +116,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Auditing is not helpful or required if you manage a model inside a VCS with LemonTree.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Error,
-                    IncludeCountInTitle = false
                 },
 
                 // Resource Allocation Check
@@ -137,7 +129,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Resource Allocations are not supported when using LemonTree.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Error,
-                    IncludeCountInTitle = true
                 },
 
                 // User Security Check
@@ -151,7 +142,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "User Security is enabled in the Model! Can cause higher complexity with LemonTree.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Warning,
-                    IncludeCountInTitle = true
                 },
 
                 // VCS Connection Check
@@ -165,7 +155,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Models with Package based VCS are not a supported scenario.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Warning,
-                    IncludeCountInTitle = true
                 }
             };
         }

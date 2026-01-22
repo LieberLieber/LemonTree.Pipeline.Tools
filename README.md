@@ -56,12 +56,21 @@ The JSON configuration file should follow this structure:
       "passedDetail": "Details when check passes",
       "failedDetail": "Details when check fails",
       "passedLevel": "Information",
-      "failedLevel": "Error",
-      "includeCountInTitle": true
+      "failedLevel": "Error"
     }
   ]
 }
 ```
+
+**Parameters:**
+- `id` (required): Unique identifier for the check
+- `query` (required): SQL query to execute
+- `passedTitle` (required): Title displayed when check passes
+- `failedTitle` (required): Title displayed when check fails
+- `passedDetail` (optional): Details shown when check passes
+- `failedDetail` (optional): Details shown when check fails
+- `passedLevel` (optional): Severity level when check passes (Passed, Information, Warning, Error)
+- `failedLevel` (optional): Severity level when check fails (Passed,Information, Warning, Error)
 
 See the [sample checks-config.json](src/LemonTree.Pipeline.Tools.ModelCheck/checks-config.json) in the repository for a complete example with all default checks.
 
