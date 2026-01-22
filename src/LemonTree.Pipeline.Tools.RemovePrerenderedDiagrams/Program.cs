@@ -38,7 +38,7 @@ namespace RemovePrerenderedDiagrams
 
 
                 Console.WriteLine($"RemovePrerenderedDiagrams from {opts.Model}");
-                ModelAccess.ConfigureAccess(opts.Model);
+                ModelAccess.ConfigureAccessWithWrite(opts.Model);
                 
 
                 int retVal = ModelAccess.RunSQLnonQuery("Delete from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP' ");

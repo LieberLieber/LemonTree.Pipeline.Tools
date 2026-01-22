@@ -15,6 +15,31 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         private static List<SqlCheck> _checks = null;
         private static List<string> _checkOrder = null;
         private static string _configPath = null;
+        
+        // Pre-compiled regex patterns for SQL keyword validation (for performance)
+        private static readonly System.Text.RegularExpressions.Regex[] _unsafeKeywordPatterns = new[]
+        {
+            new System.Text.RegularExpressions.Regex(@"\bDROP\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bDELETE\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bINSERT\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bUPDATE\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bALTER\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bCREATE\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bTRUNCATE\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bEXEC\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bEXECUTE\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bCALL\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bMERGE\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled),
+            new System.Text.RegularExpressions.Regex(@"\bREPLACE\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled)
+        };
+        
+        private static readonly string[] _unsafeKeywordNames = { "DROP", "DELETE", "INSERT", "UPDATE", "ALTER", "CREATE", "TRUNCATE", "EXEC", "EXECUTE", "CALL", "MERGE", "REPLACE" };
+        
+        // Pre-compiled regex patterns for SQL parsing (for performance)
+        private static readonly System.Text.RegularExpressions.Regex _singleQuoteStringPattern = new System.Text.RegularExpressions.Regex(@"'([^']|'')*'", System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.Compiled);
+        private static readonly System.Text.RegularExpressions.Regex _doubleQuoteStringPattern = new System.Text.RegularExpressions.Regex(@"""([^""]|"""")*""", System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.Compiled);
+        private static readonly System.Text.RegularExpressions.Regex _lineCommentPattern = new System.Text.RegularExpressions.Regex(@"--.*$", System.Text.RegularExpressions.RegexOptions.Multiline | System.Text.RegularExpressions.RegexOptions.Compiled);
+        private static readonly System.Text.RegularExpressions.Regex _blockCommentPattern = new System.Text.RegularExpressions.Regex(@"/\*.*?\*/", System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.Compiled);
 
         /// <summary>
         /// Set the path to the checks configuration file
@@ -262,7 +287,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     check.Id = id.GetString();
 
                 if (checkElement.TryGetProperty("query", out var query))
+                {
                     check.Query = query.GetString();
+                    // Validate that the SQL query is read-only
+                    ValidateSqlIsReadOnly(check.Query, check.Id);
+                }
 
                 if (checkElement.TryGetProperty("passedTitle", out var passedTitle))
                     check.PassedTitle = passedTitle.ValueKind == JsonValueKind.Null ? null : passedTitle.GetString();
@@ -284,6 +313,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
                 return check;
             }
+            catch (InvalidOperationException)
+            {
+                // Re-throw validation exceptions
+                throw;
+            }
             catch
             {
                 return null;
@@ -303,6 +337,59 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 "passed" => IssueLevel.Passed,
                 _ => defaultLevel
             };
+        }
+
+        /// <summary>
+        /// Validate that SQL query contains only read-only operations
+        /// Enforces that JSON-loaded SQL must be a single SELECT statement
+        /// </summary>
+        private static void ValidateSqlIsReadOnly(string sql, string checkId)
+        {
+            if (string.IsNullOrWhiteSpace(sql))
+            {
+                return;
+            }
+
+            string normalizedSql = sql.Trim();
+            
+            // Remove string literals FIRST to avoid issues with comment-like content in strings
+            // This prevents malicious SQL that uses strings to bypass comment removal
+            string sqlWithoutStrings = _singleQuoteStringPattern.Replace(normalizedSql, "''");
+            sqlWithoutStrings = _doubleQuoteStringPattern.Replace(sqlWithoutStrings, "\"\"");
+            
+            // Now remove SQL comments (both -- and /* */ styles) 
+            sqlWithoutStrings = _lineCommentPattern.Replace(sqlWithoutStrings, "");
+            sqlWithoutStrings = _blockCommentPattern.Replace(sqlWithoutStrings, "");
+            sqlWithoutStrings = sqlWithoutStrings.Trim();
+
+            // Check for multiple statements (semicolons that are not at the end)
+            string sqlWithoutTrailingSemicolon = sqlWithoutStrings.TrimEnd(';').Trim();
+            if (sqlWithoutTrailingSemicolon.Contains(";"))
+            {
+                throw new InvalidOperationException(
+                    $"Multiple SQL statements detected in check '{checkId}'. " +
+                    $"Only a single SELECT statement is allowed in JSON configuration files.");
+            }
+
+            // Enforce that the statement must be a SELECT query
+            if (!System.Text.RegularExpressions.Regex.IsMatch(normalizedSql, @"^\s*SELECT\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"Non-SELECT statement detected in check '{checkId}'. " +
+                    $"Only SELECT queries are allowed in JSON configuration files.");
+            }
+
+            // Check for potentially harmful SQL keywords using pre-compiled regex patterns
+            // This provides defense in depth even though SELECT-only should be safe
+            for (int i = 0; i < _unsafeKeywordPatterns.Length; i++)
+            {
+                if (_unsafeKeywordPatterns[i].IsMatch(sqlWithoutStrings))
+                {
+                    throw new InvalidOperationException(
+                        $"Unsafe SQL keyword '{_unsafeKeywordNames[i]}' detected in check '{checkId}'. " +
+                        $"Only read-only SELECT queries are allowed in JSON configuration files.");
+                }
+            }
         }
     }
 }

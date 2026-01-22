@@ -67,7 +67,21 @@ namespace LemonTree.Pipeline.Tools
         {
             if (model.EndsWith(".qea") || model.EndsWith(".qeax"))
             {
-                eaDatabase = new SqLiteDatabase();
+                eaDatabase = new SqLiteDatabase(readOnly: true);
+                eaDatabase.SetModel(model);
+            }
+            else
+            {
+                Console.WriteLine("Only .qea and .qeax are supported");
+                throw new NotSupportedException("Only .qea and .qeax are supported");
+            }
+        }
+
+        public static void ConfigureAccessWithWrite(string model)
+        {
+            if (model.EndsWith(".qea") || model.EndsWith(".qeax"))
+            {
+                eaDatabase = new SqLiteDatabase(readOnly: false);
                 eaDatabase.SetModel(model);
             }
             else

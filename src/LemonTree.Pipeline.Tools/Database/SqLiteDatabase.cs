@@ -9,9 +9,15 @@ namespace LemonTree.Pipeline.Tools.Database
     internal class SqLiteDatabase : IEADatabase
     {
         private static SQLiteConnectionStringBuilder _builder = new SQLiteConnectionStringBuilder();
+        private readonly bool _readOnly;
 
-        public SqLiteDatabase()
+        public SqLiteDatabase() : this(readOnly: true)
         {
+        }
+
+        public SqLiteDatabase(bool readOnly)
+        {
+            _readOnly = readOnly;
             //string sqllitefile = "sqllite.dll";
             //Assembly currentAssembly = Assembly.GetExecutingAssembly();
 
@@ -38,7 +44,11 @@ namespace LemonTree.Pipeline.Tools.Database
         public bool Compact(string source, string destination)
         {
             File.Copy(source, destination, true);
-            SetModel(destination);
+            
+            // Create a new instance with write access for the temp file
+            var writeDb = new SqLiteDatabase(readOnly: false);
+            writeDb.SetModel(destination);
+            
             using (var cn = new SQLiteConnection { ConnectionString = _builder.ConnectionString })
             {
                 using (SQLiteCommand command = cn.CreateCommand())
@@ -46,10 +56,9 @@ namespace LemonTree.Pipeline.Tools.Database
                     cn.Open();
                     command.CommandText = "vacuum;";
                     command.ExecuteNonQuery();
-
                 }
             }
-            SetModel(source);
+            
             return true;
         }
 
@@ -121,29 +130,8 @@ namespace LemonTree.Pipeline.Tools.Database
 
         public void SetModel(string model)
         {
-            //string sqllitefile = "sqllite.dll";
-            //Assembly currentAssembly = Assembly.GetExecutingAssembly();
-
-            //string output = Path.Combine(Path.GetDirectoryName(currentAssembly.Location), sqllitefile);
-
-            //using (FileStream fs = File.OpenWrite(sqllitefile))
-            //{
-            //    using (Stream resourceStream = currentAssembly.GetManifestResourceStream(sqllitefile))
-            //    {
-            //        const int size = 4096;
-            //        byte[] bytes = new byte[4096];
-            //        int numBytes;
-            //        while ((numBytes = resourceStream.Read(bytes, 0, size)) > 0)
-            //        {
-            //            fs.Write(bytes, 0, numBytes);
-            //        }
-            //        fs.Flush();
-            //        fs.Close();
-            //        resourceStream.Close();
-            //    }
-            //}
-
             _builder.DataSource = model;
+            _builder.ReadOnly = _readOnly;
         }
     }
 }
