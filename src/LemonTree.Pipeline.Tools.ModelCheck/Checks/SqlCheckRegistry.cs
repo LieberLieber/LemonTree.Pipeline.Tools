@@ -241,13 +241,10 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     check.FailedDetail = failedDetail.ValueKind == JsonValueKind.Null ? null : failedDetail.GetString();
 
                 if (checkElement.TryGetProperty("passedLevel", out var passedLevel))
-                    check.PassedLevel = ParseIssueLevel(passedLevel.GetString());
+                    check.PassedLevel = ParseIssueLevel(passedLevel.GetString(),IssueLevel.Passed);
 
                 if (checkElement.TryGetProperty("failedLevel", out var failedLevel))
-                    check.FailedLevel = ParseIssueLevel(failedLevel.GetString());
-
-                if (checkElement.TryGetProperty("includeCountInTitle", out var includeCount))
-                    check.IncludeCountInTitle = includeCount.GetBoolean();
+                    check.FailedLevel = ParseIssueLevel(failedLevel.GetString(),IssueLevel.Error);
 
                 return check;
             }
@@ -260,7 +257,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         /// <summary>
         /// Parse issue level from string
         /// </summary>
-        private static IssueLevel ParseIssueLevel(string level)
+        private static IssueLevel ParseIssueLevel(string level, IssueLevel defaultLevel = IssueLevel.Information)
         {
             return level?.ToLower() switch
             {
@@ -268,7 +265,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 "warning" => IssueLevel.Warning,
                 "information" => IssueLevel.Information,
                 "passed" => IssueLevel.Passed,
-                _ => IssueLevel.Information
+                _ => defaultLevel
             };
         }
     }

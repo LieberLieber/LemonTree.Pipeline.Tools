@@ -49,11 +49,6 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         internal IssueLevel FailedLevel { get; set; } = IssueLevel.Warning;
 
         /// <summary>
-        /// If true, includes count in the failed title as {count}
-        /// </summary>
-        internal bool IncludeCountInTitle { get; set; } = true;
-
-        /// <summary>
         /// Execute this check against the model database
         /// </summary>
         internal Issue Execute()
@@ -71,9 +66,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             else
             {
                 result.Level = FailedLevel;
-                result.Title = IncludeCountInTitle 
-                    ? FailedTitle.Replace("{count}", count.ToString())
-                    : FailedTitle;
+                result.Title = FailedTitle.Replace("{count}", count.ToString());
                 result.Detail = FailedDetail;
             }
 
