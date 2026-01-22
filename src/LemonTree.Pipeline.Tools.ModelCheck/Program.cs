@@ -82,8 +82,11 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 Console.WriteLine(issues.ToString());
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine(issues.ToMd());
-                sb.AppendLine("# Project Statistics");
-                sb.AppendLine(Checks.Checks.CheckProjectStatitics(opts.Model).Markdown);
+                if (opts.NoProjectStatistics != true)
+                {
+                    sb.AppendLine("# Project Statistics");
+                    sb.AppendLine(Checks.Checks.CheckProjectStatitics(opts.Model).Markdown);
+                }
                 if (resultTableSize != null)
                 {
                     sb.AppendLine(resultTableSize.Markdown);
