@@ -86,14 +86,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                 {
                     sb.AppendLine("# Project Statistics");
                     sb.AppendLine(Checks.Checks.CheckProjectStatitics(opts.Model).Markdown);
-                    if (resultTableSize != null)
-                    {
-                        sb.AppendLine(resultTableSize.Markdown);
-                    }
-                    if (resultOrphans != null)
-                    {
-                        sb.AppendLine(resultOrphans.Markdown);
-                    }
+                }
+                if (resultTableSize != null)
+                {
+                    sb.AppendLine(resultTableSize.Markdown);
+                }
+                if (resultOrphans != null)
+                {
+                    sb.AppendLine(resultOrphans.Markdown);
                 }
 
                 if (opts.Out != null)
