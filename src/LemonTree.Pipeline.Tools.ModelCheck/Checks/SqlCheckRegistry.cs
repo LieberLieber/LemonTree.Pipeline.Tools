@@ -34,6 +34,12 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         };
         
         private static readonly string[] _unsafeKeywordNames = { "DROP", "DELETE", "INSERT", "UPDATE", "ALTER", "CREATE", "TRUNCATE", "EXEC", "EXECUTE", "CALL", "MERGE", "REPLACE" };
+        
+        // Pre-compiled regex patterns for SQL parsing (for performance)
+        private static readonly System.Text.RegularExpressions.Regex _singleQuoteStringPattern = new System.Text.RegularExpressions.Regex(@"'([^']|'')*'", System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.Compiled);
+        private static readonly System.Text.RegularExpressions.Regex _doubleQuoteStringPattern = new System.Text.RegularExpressions.Regex(@"""([^""]|"""")*""", System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.Compiled);
+        private static readonly System.Text.RegularExpressions.Regex _lineCommentPattern = new System.Text.RegularExpressions.Regex(@"--.*$", System.Text.RegularExpressions.RegexOptions.Multiline | System.Text.RegularExpressions.RegexOptions.Compiled);
+        private static readonly System.Text.RegularExpressions.Regex _blockCommentPattern = new System.Text.RegularExpressions.Regex(@"/\*.*?\*/", System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.Compiled);
 
         /// <summary>
         /// Set the path to the checks configuration file
@@ -344,18 +350,17 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 return;
             }
 
-            // Remove comments and normalize whitespace for validation
             string normalizedSql = sql.Trim();
             
-            // Remove SQL comments (both -- and /* */ styles)
-            normalizedSql = System.Text.RegularExpressions.Regex.Replace(normalizedSql, @"--.*$", "", System.Text.RegularExpressions.RegexOptions.Multiline);
-            normalizedSql = System.Text.RegularExpressions.Regex.Replace(normalizedSql, @"/\*.*?\*/", "", System.Text.RegularExpressions.RegexOptions.Singleline);
-            normalizedSql = normalizedSql.Trim();
-
-            // Remove string literals to avoid false positives with semicolons inside strings
-            // Handle both single and double quoted strings
-            string sqlWithoutStrings = System.Text.RegularExpressions.Regex.Replace(normalizedSql, @"'([^']|'')*'", "''", System.Text.RegularExpressions.RegexOptions.Singleline);
-            sqlWithoutStrings = System.Text.RegularExpressions.Regex.Replace(sqlWithoutStrings, @"""([^""]|"""")*""", "\"\"", System.Text.RegularExpressions.RegexOptions.Singleline);
+            // Remove string literals FIRST to avoid issues with comment-like content in strings
+            // This prevents malicious SQL that uses strings to bypass comment removal
+            string sqlWithoutStrings = _singleQuoteStringPattern.Replace(normalizedSql, "''");
+            sqlWithoutStrings = _doubleQuoteStringPattern.Replace(sqlWithoutStrings, "\"\"");
+            
+            // Now remove SQL comments (both -- and /* */ styles) 
+            sqlWithoutStrings = _lineCommentPattern.Replace(sqlWithoutStrings, "");
+            sqlWithoutStrings = _blockCommentPattern.Replace(sqlWithoutStrings, "");
+            sqlWithoutStrings = sqlWithoutStrings.Trim();
 
             // Check for multiple statements (semicolons that are not at the end)
             string sqlWithoutTrailingSemicolon = sqlWithoutStrings.TrimEnd(';').Trim();
@@ -378,7 +383,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             // This provides defense in depth even though SELECT-only should be safe
             for (int i = 0; i < _unsafeKeywordPatterns.Length; i++)
             {
-                if (_unsafeKeywordPatterns[i].IsMatch(normalizedSql))
+                if (_unsafeKeywordPatterns[i].IsMatch(sqlWithoutStrings))
                 {
                     throw new InvalidOperationException(
                         $"Unsafe SQL keyword '{_unsafeKeywordNames[i]}' detected in check '{checkId}'. " +

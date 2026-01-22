@@ -163,6 +163,9 @@ namespace LemonTree.Pipeline.Tools.Database
 
         public void SetModelWithWriteAccess(string model)
         {
+            // NOTE: This method modifies instance state and is not thread-safe.
+            // For command-line tools that run one operation at a time, this is acceptable.
+            // If concurrent access is needed, consider using a thread-local flag or synchronization.
             _allowWrite = true;
             try
             {
