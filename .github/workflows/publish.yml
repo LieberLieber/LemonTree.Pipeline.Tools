@@ -6,6 +6,17 @@ on:
       nexus-path:
         required: true
         type: string
+      publish-release:
+        required: false
+        type: boolean
+        default: false
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+    contents: write
+    pages: write
+    id-token: write
+    deployments: write
 jobs:
 
     call-publishartifact-workflow-1:
@@ -14,6 +25,7 @@ jobs:
         nexus-path: ${{inputs.nexus-path}}
         artifact-name: LemonTree.Pipeline.Tools.ModelCheck.Linux
         binary-name: LemonTree.Pipeline.Tools.ModelCheck
+        publish-release: ${{inputs.publish-release}}
       secrets: inherit
 
     call-publishartifact-workflow-2:
@@ -22,6 +34,7 @@ jobs:
         nexus-path: ${{inputs.nexus-path}}
         artifact-name: LemonTree.Pipeline.Tools.ModelCheck.Windows
         binary-name: LemonTree.Pipeline.Tools.ModelCheck.exe
+        publish-release: ${{inputs.publish-release}}
       secrets: inherit   
 
     call-publishartifact-workflow-3:
@@ -30,6 +43,7 @@ jobs:
         nexus-path: ${{inputs.nexus-path}}
         artifact-name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
         binary-name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
+        publish-release: ${{inputs.publish-release}}
       secrets: inherit          
 
            

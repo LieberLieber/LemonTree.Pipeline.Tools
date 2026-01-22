@@ -48,4 +48,5 @@ jobs:
       uses: ./.github/workflows/publish.yml
       with:
           nexus-path: ${{vars.NEXUSARTIFACTREPO}}
+          publish-release: true
       secrets: inherit
