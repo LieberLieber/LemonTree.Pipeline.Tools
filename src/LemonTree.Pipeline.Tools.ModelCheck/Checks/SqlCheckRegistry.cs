@@ -236,9 +236,14 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 // If JSON loading fails for default config, return null to use hardcoded defaults
                 return null;
             }
-            catch (Exception) when (!isExplicitConfig)
+            catch (IOException) when (!isExplicitConfig)
             {
-                // For default config path, silently fall back to hardcoded defaults
+                // For default config path, silently fall back to hardcoded defaults on IO errors
+                return null;
+            }
+            catch (UnauthorizedAccessException) when (!isExplicitConfig)
+            {
+                // For default config path, silently fall back to hardcoded defaults on access errors
                 return null;
             }
             // For explicit config, let other exceptions propagate
