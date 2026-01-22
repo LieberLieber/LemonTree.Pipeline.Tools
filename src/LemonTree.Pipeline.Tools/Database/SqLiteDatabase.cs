@@ -130,28 +130,6 @@ namespace LemonTree.Pipeline.Tools.Database
 
         public void SetModel(string model)
         {
-            //string sqllitefile = "sqllite.dll";
-            //Assembly currentAssembly = Assembly.GetExecutingAssembly();
-
-            //string output = Path.Combine(Path.GetDirectoryName(currentAssembly.Location), sqllitefile);
-
-            //using (FileStream fs = File.OpenWrite(sqllitefile))
-            //{
-            //    using (Stream resourceStream = currentAssembly.GetManifestResourceStream(sqllitefile))
-            //    {
-            //        const int size = 4096;
-            //        byte[] bytes = new byte[4096];
-            //        int numBytes;
-            //        while ((numBytes = resourceStream.Read(bytes, 0, size)) > 0)
-            //        {
-            //            fs.Write(bytes, 0, numBytes);
-            //        }
-            //        fs.Flush();
-            //        fs.Close();
-            //        resourceStream.Close();
-            //    }
-            //}
-
             _builder.DataSource = model;
             _builder.ReadOnly = _readOnly;
         }
