@@ -9,10 +9,15 @@ namespace LemonTree.Pipeline.Tools.Database
     internal class SqLiteDatabase : IEADatabase
     {
         private static SQLiteConnectionStringBuilder _builder = new SQLiteConnectionStringBuilder();
-        private bool _allowWrite = false;
+        private readonly bool _readOnly;
 
-        public SqLiteDatabase()
+        public SqLiteDatabase() : this(readOnly: true)
         {
+        }
+
+        public SqLiteDatabase(bool readOnly)
+        {
+            _readOnly = readOnly;
             //string sqllitefile = "sqllite.dll";
             //Assembly currentAssembly = Assembly.GetExecutingAssembly();
 
@@ -40,30 +45,21 @@ namespace LemonTree.Pipeline.Tools.Database
         {
             File.Copy(source, destination, true);
             
-            // Temporarily allow write access for compact operation
-            bool previousAllowWrite = _allowWrite;
-            _allowWrite = true;
+            // Create a new instance with write access for the temp file
+            var writeDb = new SqLiteDatabase(readOnly: false);
+            writeDb.SetModel(destination);
             
-            try
+            using (var cn = new SQLiteConnection { ConnectionString = _builder.ConnectionString })
             {
-                SetModel(destination);
-                using (var cn = new SQLiteConnection { ConnectionString = _builder.ConnectionString })
+                using (SQLiteCommand command = cn.CreateCommand())
                 {
-                    using (SQLiteCommand command = cn.CreateCommand())
-                    {
-                        cn.Open();
-                        command.CommandText = "vacuum;";
-                        command.ExecuteNonQuery();
-
-                    }
+                    cn.Open();
+                    command.CommandText = "vacuum;";
+                    command.ExecuteNonQuery();
                 }
-                SetModel(source);
-                return true;
             }
-            finally
-            {
-                _allowWrite = previousAllowWrite;
-            }
+            
+            return true;
         }
 
         public string GetExtension()
@@ -157,24 +153,7 @@ namespace LemonTree.Pipeline.Tools.Database
             //}
 
             _builder.DataSource = model;
-            // Set ReadOnly to true unless write access is explicitly allowed (e.g., for compact operations)
-            _builder.ReadOnly = !_allowWrite;
-        }
-
-        public void SetModelWithWriteAccess(string model)
-        {
-            // NOTE: This method modifies instance state and is not thread-safe.
-            // For command-line tools that run one operation at a time, this is acceptable.
-            // If concurrent access is needed, consider using a thread-local flag or synchronization.
-            _allowWrite = true;
-            try
-            {
-                SetModel(model);
-            }
-            finally
-            {
-                _allowWrite = false;
-            }
+            _builder.ReadOnly = _readOnly;
         }
     }
 }

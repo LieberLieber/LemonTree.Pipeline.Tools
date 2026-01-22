@@ -67,7 +67,7 @@ namespace LemonTree.Pipeline.Tools
         {
             if (model.EndsWith(".qea") || model.EndsWith(".qeax"))
             {
-                eaDatabase = new SqLiteDatabase();
+                eaDatabase = new SqLiteDatabase(readOnly: true);
                 eaDatabase.SetModel(model);
             }
             else
@@ -81,8 +81,8 @@ namespace LemonTree.Pipeline.Tools
         {
             if (model.EndsWith(".qea") || model.EndsWith(".qeax"))
             {
-                eaDatabase = new SqLiteDatabase();
-                eaDatabase.SetModelWithWriteAccess(model);
+                eaDatabase = new SqLiteDatabase(readOnly: false);
+                eaDatabase.SetModel(model);
             }
             else
             {
