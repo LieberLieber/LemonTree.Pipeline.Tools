@@ -105,10 +105,10 @@ jobs:
 
                 if ('${{runner.os}}' -eq 'Linux') {
                     chmod +x ./LemonTree.Pipeline.Tools.ModelCheck             
-                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" --junit "./junit-config.xml"
                 }
                 elseif ('${{runner.os}}' -eq 'Windows') {
-                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" --junit "./junit-config.xml"
                 }
                 else {
                     Write-Output "${{runner.os}} is not supported"
@@ -135,7 +135,7 @@ jobs:
             uses: mikepenz/action-junit-report@v4
             if: always()
             with:
-              report_paths: './junit.xml'
+              report_paths: './junit.xml, ./junit-config.xml'
               check_name: 'ModelCheck Results (${{inputs.runs-on}})'
               fail_on_failure: false
               require_tests: false
