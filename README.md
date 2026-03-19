@@ -40,7 +40,7 @@ ModelCheck supports loading checks from a JSON configuration file using the `--C
 To use a custom checks configuration:
 
 ```
-LemonTree.Pipeline.Tools.ModelCheck.exe --model "model.eapx" --ChecksConfig "./checks-config.json" --out ".\output.md"
+LemonTree.Pipeline.Tools.ModelCheck.exe --model "model.qeax" --ChecksConfig "./checks-config.json" --out ".\output.md"
 ```
 
 The JSON configuration file should follow this structure:
@@ -78,7 +78,7 @@ See the [sample checks-config.json](src/LemonTree.Pipeline.Tools.ModelCheck/chec
 ```
 &"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe --output LemonTree.Pipeline.Tools.ModelCheck.exe
 
-LemonTree.Pipeline.Tools.ModelCheck.exe  --model "model.eapx" --out ".\output.md" --FailOnErrors --FailOnWarnings
+LemonTree.Pipeline.Tools.ModelCheck.exe  --model "model.qeax" --out ".\output.md" --FailOnErrors --FailOnWarnings
 echo "finished validation with $LASTEXITCODE"
 echo "Exit codes of LemonTree.Pipeline.Tools.ModelCheck.exe:"
 echo "* -2 = other runtime exception occurred"
@@ -142,6 +142,6 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
 ```
 &"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe --output LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
 
-.\LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe .\DemoModel.eapx
+.\LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe .\DemoModel.qeax
 ```
 
