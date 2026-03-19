@@ -28,5 +28,8 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.CommandLineOptions
 
         [Option("NoProjectStatistics", Required = false, HelpText = "If set the Project Statistics will not be included in the output!")]
         public bool NoProjectStatistics { get; set; }
+
+        [Option("junit", Required = false, HelpText = "File to output JUnit XML report e.g.: 'junit.xml'. Defaults to 'junit.xml' when specified without a value.")]
+        public string JUnit { get; set; }
     }
 }
