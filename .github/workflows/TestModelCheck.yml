@@ -17,6 +17,8 @@ jobs:
     TestModelCheckOnCleanRunner:
         runs-on: ${{inputs.runs-on}}
         timeout-minutes: 15
+        permissions:
+            checks: write
         steps:
 
           - name: Download LemonTree.Pipeline.Tools.ModelCheck.Models
@@ -51,10 +53,10 @@ jobs:
                 if ('${{runner.os}}' -eq 'Linux') {
                     #workaround because github artifacts logic doesn't maintain properties
                     chmod +x ./LemonTree.Pipeline.Tools.ModelCheck             
-                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --tablesize --out "./output.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --tablesize --out "./output.md" --junit "./junit.xml"
                 }
                 elseif ('${{runner.os}}' -eq 'Windows') {
-                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --tablesize --orphans --out "./output.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --tablesize --orphans --out "./output.md" --junit "./junit.xml"
                 }
                 else {
                     Write-Output "${{runner.os}} is not supported"
@@ -103,10 +105,10 @@ jobs:
 
                 if ('${{runner.os}}' -eq 'Linux') {
                     chmod +x ./LemonTree.Pipeline.Tools.ModelCheck             
-                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" --junit "./junit-config.xml"
                 }
                 elseif ('${{runner.os}}' -eq 'Windows') {
-                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" 
+                    ./LemonTree.Pipeline.Tools.ModelCheck.exe  --model "${{inputs.model-path}}" --ChecksConfig "./checks-config.json" --out "./output-json.md" --junit "./junit-config.xml"
                 }
                 else {
                     Write-Output "${{runner.os}} is not supported"
@@ -128,3 +130,12 @@ jobs:
                 Write-Output "Finished validation with JSON config file"
                 Write-Output "# Finished validation with JSON config file" >> $env:GITHUB_STEP_SUMMARY
                 exit 0
+
+          - name: Publish JUnit Test Results
+            uses: mikepenz/action-junit-report@v4
+            if: always()
+            with:
+              report_paths: './junit.xml, ./junit-config.xml'
+              check_name: 'ModelCheck Results (${{inputs.runs-on}})'
+              fail_on_failure: false
+              require_tests: false

@@ -101,6 +101,13 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                     File.WriteAllText(opts.Out, sb.ToString());
                 }
 
+                if (opts.JUnit != null)
+                {
+                    string junitPath = string.IsNullOrWhiteSpace(opts.JUnit) ? "junit.xml" : opts.JUnit;
+                    Checks.JUnitReporter.WriteJUnitReport(issues, junitPath);
+                    Console.WriteLine($"JUnit report written to {junitPath}");
+                }
+
                 if (opts.FailOnErrors == true)
                 {
                     if (issues.HasErrors())
