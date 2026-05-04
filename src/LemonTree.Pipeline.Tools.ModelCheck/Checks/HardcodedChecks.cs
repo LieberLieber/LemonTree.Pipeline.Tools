@@ -19,6 +19,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "DiagramImagemaps",
                     Query = "Select Count(*) from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP'",
+                    QueryOnFail = "Select * from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP'",
                     PassedTitle = "No DIAGRAMIMAGEMAP entries in the model",
                     FailedTitle = "Model has {count} DIAGRAMIMAGEMAPS",
                     PassedDetail = null,
@@ -32,6 +33,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "TImages",
                     Query = "Select Count(*) from t_image",
+                    QueryOnFail = "Select * from t_image",
                     PassedTitle = "No t_image entries in the model",
                     FailedTitle = "Model has {count} t_image entries",
                     PassedDetail = null,
@@ -45,6 +47,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "Baselines",
                     Query = "SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'",
+                    QueryOnFail = "SELECT * FROM t_document where t_document.DocType = 'Baseline'",
                     PassedTitle = "No Baseline entries in the model",
                     FailedTitle = "Model has {count} Baselines",
                     PassedDetail = null,
@@ -58,6 +61,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "ExtDoc",
                     Query = "SELECT Count(*) FROM t_document where DocType = 'ExtDoc'",
+                    QueryOnFail = "SELECT * FROM t_document where DocType = 'ExtDoc'",
                     PassedTitle = "No embedded binary images or document entries in the model",
                     FailedTitle = "Model has {count} embedded binary images or document entries.",
                     PassedDetail = null,
@@ -71,6 +75,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "ModelDocuments",
                     Query = "SELECT Count(*) FROM t_document where DocType = 'ModelDocument'",
+                    QueryOnFail = "SELECT * FROM t_document where DocType = 'ModelDocument'",
                     PassedTitle = "No ModelDocument entries in the model",
                     FailedTitle = "Model has {count} ModelDocument entries.",
                     PassedDetail = null,
@@ -84,6 +89,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "AuditLogs",
                     Query = "SELECT Count(*) from t_snapshot",
+                    QueryOnFail = "SELECT * FROM t_snapshot",
                     PassedTitle = "No Audit entries in the model",
                     FailedTitle = "Model has {count} Audit Entries",
                     PassedDetail = null,
@@ -97,6 +103,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "Journal",
                     Query = "Select Count(*) from t_document where t_document.DocType = \"JEntry\"",
+                    QueryOnFail = "Select * from t_document where t_document.DocType = \"JEntry\"",
                     PassedTitle = "No Journal entries in the model",
                     FailedTitle = "Model has {count} Journal Entries",
                     PassedDetail = null,
@@ -110,6 +117,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "AuditingEnabled",
                     Query = "SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{wildcard}enabled=1;{wildcard}\"",
+                    QueryOnFail = "SELECT * FROM t_genopt where AppliesTo =\"auditing\"",
                     PassedTitle = "Auditing is disabled in the model",
                     FailedTitle = "Auditing is enabled.",
                     PassedDetail = null,
@@ -123,6 +131,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "ResourceAllocation",
                     Query = "SELECT Count(*) from t_objectresource",
+                    QueryOnFail = "SELECT * FROM t_objectresource",
                     PassedTitle = "No Resource Allocation entries in the model",
                     FailedTitle = "Model has {count} Resource Allocation Entries",
                     PassedDetail = null,
@@ -136,6 +145,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "UserSecurity",
                     Query = "SELECT Count(*) from t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'",
+                    QueryOnFail = "SELECT * FROM t_secpolicies where t_secpolicies.Property = 'UserSecurity'",
                     PassedTitle = "User Security not enabled in the Model",
                     FailedTitle = "Model has {count} User Security Entries",
                     PassedDetail = null,
@@ -149,6 +159,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 {
                     Id = "VCSConnection",
                     Query = "SELECT count(*) FROM t_package WHERE IsControlled = True",
+                    QueryOnFail = "SELECT * FROM t_package WHERE IsControlled = True",
                     PassedTitle = "VCS is not configured in the Model",
                     FailedTitle = "Model has {count} VCS enabled Packages",
                     PassedDetail = null,

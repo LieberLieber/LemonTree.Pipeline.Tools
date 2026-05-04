@@ -175,19 +175,21 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
         {
             // Replace wildcard placeholder with database-specific wildcard
             string query = check.Query.Replace("{wildcard}", ModelAccess.GetWildcard());
-            
-            // Temporarily modify the check's query for execution
             string originalQuery = check.Query;
             check.Query = query;
-            
+
+            string originalQueryOnFail = check.QueryOnFail;
+            if (!string.IsNullOrWhiteSpace(check.QueryOnFail))
+                check.QueryOnFail = check.QueryOnFail.Replace("{wildcard}", ModelAccess.GetWildcard());
+
             try
             {
                 return check.Execute();
             }
             finally
             {
-                // Restore original query
                 check.Query = originalQuery;
+                check.QueryOnFail = originalQueryOnFail;
             }
         }
 
@@ -310,6 +312,13 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 
                 if (checkElement.TryGetProperty("failedLevel", out var failedLevel))
                     check.FailedLevel = ParseIssueLevel(failedLevel.GetString(),IssueLevel.Error);
+
+                if (checkElement.TryGetProperty("queryOnFail", out var queryOnFail))
+                {
+                    check.QueryOnFail = queryOnFail.ValueKind == JsonValueKind.Null ? null : queryOnFail.GetString();
+                    if (!string.IsNullOrWhiteSpace(check.QueryOnFail))
+                        ValidateSqlIsReadOnly(check.QueryOnFail, check.Id + " [queryOnFail]");
+                }
 
                 return check;
             }

@@ -3,6 +3,7 @@
     {
       "id": "Custom check from JSON File",
       "query": "Select Count(*) from t_document",
+      "queryOnFail": "Select * from t_document",
       "passedTitle": "There are no entries in t_document",
       "failedTitle": "Model has {count} entries in t_document",
       "passedDetail": null,
@@ -13,6 +14,7 @@
     {
       "id": "DiagramImagemaps",
       "query": "Select Count(*) from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP'",
+      "queryOnFail": "Select * from t_document where t_document.DocName = 'DIAGRAMIMAGEMAP'",
       "passedTitle": "No DIAGRAMIMAGEMAP entries in the model",
       "failedTitle": "Model has {count} DIAGRAMIMAGEMAPS",
       "passedDetail": null,
@@ -23,6 +25,7 @@
     {
       "id": "Baselines",
       "query": "SELECT Count(*) FROM t_document where t_document.DocType = 'Baseline'",
+      "queryOnFail": "SELECT * FROM t_document where t_document.DocType = 'Baseline'",
       "passedTitle": "No Baseline entries in the model",
       "failedTitle": "Model has {count} Baselines",
       "passedDetail": null,
@@ -33,6 +36,7 @@
     {
       "id": "AuditingEnabled",
       "query": "SELECT Count(*) FROM t_genopt where AppliesTo =\"auditing\" and Option like \"{wildcard}enabled=1;{wildcard}\"",
+      "queryOnFail": "SELECT * FROM t_genopt where AppliesTo =\"auditing\"",
       "passedTitle": "Auditing is disabled in the model",
       "failedTitle": "Auditing is enabled.",
       "passedDetail": null,
@@ -43,6 +47,7 @@
     {
       "id": "AuditLogs",
       "query": "SELECT Count(*) from t_snapshot",
+      "queryOnFail": "SELECT * FROM t_snapshot",
       "passedTitle": "No Audit entries in the model",
       "failedTitle": "Model has {count} Audit Entries",
       "passedDetail": null,
@@ -53,6 +58,7 @@
     {
       "id": "UserSecurity",
       "query": "SELECT Count(*) from t_secpolicies where t_secpolicies.Property = 'UserSecurity' and t_secpolicies.Value = 'Enabled'",
+      "queryOnFail": "SELECT * FROM t_secpolicies where t_secpolicies.Property = 'UserSecurity'",
       "passedTitle": "User Security not enabled in the Model",
       "failedTitle": "Model has {count} User Security Entries",
       "passedDetail": null,
@@ -63,6 +69,7 @@
     {
       "id": "VCSConnection",
       "query": "SELECT count(*) FROM t_package WHERE IsControlled = True",
+      "queryOnFail": "SELECT * FROM t_package WHERE IsControlled = True",
       "passedTitle": "VCS is not configured in the Model",
       "failedTitle": "Model has {count} VCS enabled Packages",
       "passedDetail": null,
@@ -73,6 +80,7 @@
     {
       "id": "ExtDoc",
       "query": "SELECT Count(*) FROM t_document where DocType = 'ExtDoc'",
+      "queryOnFail": "SELECT * FROM t_document where DocType = 'ExtDoc'",
       "passedTitle": "No embedded binary images or document entries in the model",
       "failedTitle": "Model has {count} embedded binary images or document entries.",
       "passedDetail": null,
@@ -83,6 +91,7 @@
     {
       "id": "ModelDocuments",
       "query": "SELECT Count(*) FROM t_document where DocType = 'ModelDocument'",
+      "queryOnFail": "SELECT * FROM t_document where DocType = 'ModelDocument'",
       "passedTitle": "No ModelDocument entries in the model",
       "failedTitle": "Model has {count} ModelDocument entries.",
       "passedDetail": null,
@@ -93,6 +102,7 @@
     {
       "id": "TImages",
       "query": "Select Count(*) from t_image",
+      "queryOnFail": "Select * from t_image",
       "passedTitle": "No t_image entries in the model",
       "failedTitle": "Model has {count} t_image entries",
       "passedDetail": null,
@@ -103,6 +113,7 @@
     {
       "id": "ResourceAllocation",
       "query": "SELECT Count(*) from t_objectresource",
+      "queryOnFail": "SELECT * FROM t_objectresource",
       "passedTitle": "No Resource Allocation entries in the model",
       "failedTitle": "Model has {count} Resource Allocation Entries",
       "passedDetail": null,
@@ -111,8 +122,53 @@
       "failedLevel": "Error"
     },
     {
+      "id": "Untraced Requirements",
+      "query": "select count (*) from t_object where object_id not in  ( select o.object_id from t_object o inner join t_connector c on o.object_id = c.end_object_id where o.object_type = 'requirement' and c.stereotype = 'satisfy' ) and object_type = 'requirement'",
+      "queryOnFail": "select * from t_object where object_id not in  ( select o.object_id from t_object o inner join t_connector c on o.object_id = c.end_object_id where o.object_type = 'requirement' and c.stereotype = 'satisfy' ) and object_type = 'requirement'",
+      "passedTitle": "There are no untraced requirements",
+      "failedTitle": "Model has {count} untraced requirements",
+      "passedDetail": null,
+      "failedDetail": "Each requirement should be linked to at least one design element using a 'trace' relationship.",
+      "passedLevel": "Passed",
+      "failedLevel": "Error"
+    },
+    {
+      "id": "Suspected Tracebility Links",
+      "query": "SELECT Count(*) FROM t_xref WHERE Description LIKE '%suspected%'",
+      "queryOnFail": "SELECT * FROM t_xref WHERE Description LIKE '%suspected%'",
+      "passedTitle": "There are no suspected traceability links",
+      "failedTitle": "Model has {count} suspected traceability links",
+      "passedDetail": null,
+      "failedDetail": "Some requirements have suspected traceability links. Please review and confirm the traceability links.",
+      "passedLevel": "Passed",
+      "failedLevel": "Error"
+    },
+    {
+      "id": "Ports without Interface Defintion",
+      "query": "select count(*) from t_object where object_type = 'Port' and t_object.PDATA1 is NULL",
+      "queryOnFail": "select * from t_object where object_type = 'Port' and t_object.PDATA1 is NULL",
+      "passedTitle": "There are no ports without interface definition",
+      "failedTitle": "Model has {count} ports without interface definition",
+      "passedDetail": null,
+      "failedDetail": "All ports should have an interface definition assigned.",
+      "passedLevel": "Passed",
+      "failedLevel": "Error"
+    },
+    {
+      "id": "Orphaned InterfaceBlocks",
+      "query": "select count(*) from t_object where stereotype = 'InterfaceBlock' and ea_guid not in (select pdata1 from t_object where object_type = 'Port')",
+      "queryOnFail": "select * from t_object where stereotype = 'InterfaceBlock' and ea_guid not in (select pdata1 from t_object where object_type = 'Port')",
+      "passedTitle": "There are no orphaned InterfaceBlocks",
+      "failedTitle": "Model has {count} orphaned InterfaceBlocks",
+      "passedDetail": null,
+      "failedDetail": "There shouldn't be orphaned InterfaceBlocks.",
+      "passedLevel": "Passed",
+      "failedLevel": "Error"
+    },
+    {
       "id": "Journal",
       "query": "Select Count(*) from t_document where t_document.DocType = \"JEntry\"",
+      "queryOnFail": "Select * from t_document where t_document.DocType = \"JEntry\"",
       "passedTitle": "No Journal entries in the model",
       "failedTitle": "Model has {count} Journal Entries",
       "passedDetail": null,

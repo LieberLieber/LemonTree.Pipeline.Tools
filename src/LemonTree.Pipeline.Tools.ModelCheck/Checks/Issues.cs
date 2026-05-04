@@ -19,6 +19,16 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             {
                 sb.AppendLine($"|{issue.Symbol}|{issue.Level}|{issue.Title}|{issue.Detail}|");
             }
+
+            foreach (Issue issue in mySortedList)
+            {
+                if (!string.IsNullOrWhiteSpace(issue.Markdown))
+                {
+                    sb.AppendLine();
+                    sb.AppendLine(issue.Markdown);
+                }
+            }
+
             return sb.ToString();
         }
 
