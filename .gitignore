@@ -359,3 +359,5 @@ src/Models/GPUCache/index
 /.obsidian/workspace.json
 /modelcheck-queryonfail-demo.md
 /modelcheck-queryonfail-test.md
+/details.json
+/output.md
