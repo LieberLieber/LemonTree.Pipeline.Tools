@@ -78,10 +78,3 @@ jobs:
             name: LemonTree.Pipeline.Tools.ModelCheck.Windows
             path: "src/LemonTree.Pipeline.Tools.ModelCheck/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.ModelCheck.exe"
             retention-days: 2
-
-     - name: Archive LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
-       uses: actions/upload-artifact@v4
-       with:
-            name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
-            path: "src/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe"
-            retention-days: 2

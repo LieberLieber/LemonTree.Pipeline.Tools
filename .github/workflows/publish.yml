@@ -35,15 +35,6 @@ jobs:
         artifact-name: LemonTree.Pipeline.Tools.ModelCheck.Windows
         binary-name: LemonTree.Pipeline.Tools.ModelCheck.exe
         publish-release: ${{inputs.publish-release}}
-      secrets: inherit   
-
-    call-publishartifact-workflow-3:
-      uses: ./.github/workflows/publishartifact.yml
-      with:
-        nexus-path: ${{inputs.nexus-path}}
-        artifact-name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.Windows
-        binary-name: LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
-        publish-release: ${{inputs.publish-release}}
-      secrets: inherit          
+      secrets: inherit
 
            

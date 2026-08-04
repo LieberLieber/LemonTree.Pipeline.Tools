@@ -5,8 +5,6 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools", "LemonTree.Pipeline.Tools\LemonTree.Pipeline.Tools.csproj", "{B35D89CE-DBD7-4F5E-BB98-BFE9E262404B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams", "LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams\LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.csproj", "{9FB03307-65EF-4132-91CF-BC54A4B20676}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemonTree.Pipeline.Tools.ModelCheck", "LemonTree.Pipeline.Tools.ModelCheck\LemonTree.Pipeline.Tools.ModelCheck.csproj", "{2D43523B-04F5-4CE1-BD74-22623722FD31}"
 EndProject
 Global
