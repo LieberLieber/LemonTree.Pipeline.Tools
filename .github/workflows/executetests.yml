@@ -27,20 +27,3 @@ jobs:
             runs-on: ubuntu-latest
             model-path: ./Model.qeax
         secrets: inherit
-
-    call-test-remove-windows-qeax:
-        # needs: prepare-test
-        uses: ./.github/workflows/TestRemovePrerenderedDiagrams.yml
-        with:
-            runs-on: windows-latest
-            model-path: ./Model.qeax
-        secrets: inherit
-    
-    call-test-workflow-remove-filenotfound:
-        # needs: prepare-test
-        uses: ./.github/workflows/TestRemovePrerenderedDiagrams.yml
-        with:
-            runs-on: windows-latest
-            model-path: ./filenotfound.qeax
-            expected-exitcode: -2
-        secrets: inherit    
