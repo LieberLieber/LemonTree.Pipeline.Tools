@@ -108,6 +108,13 @@ namespace LemonTree.Pipeline.Tools.ModelCheck
                     Console.WriteLine($"JUnit report written to {junitPath}");
                 }
 
+                if (opts.Details != null)
+                {
+                    string detailsPath = string.IsNullOrWhiteSpace(opts.Details) ? "details.json" : opts.Details;
+                    Checks.JsonReporter.WriteJsonReport(issues, detailsPath);
+                    Console.WriteLine($"JSON details report written to {detailsPath}");
+                }
+
                 if (opts.FailOnErrors == true)
                 {
                     if (issues.HasErrors())

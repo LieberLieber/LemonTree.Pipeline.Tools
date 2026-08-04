@@ -357,3 +357,7 @@ src/Models/GPUCache/index
 /.obsidian/appearance.json
 /.obsidian/core-plugins.json
 /.obsidian/workspace.json
+/modelcheck-queryonfail-demo.md
+/modelcheck-queryonfail-test.md
+/details.json
+/output.md
