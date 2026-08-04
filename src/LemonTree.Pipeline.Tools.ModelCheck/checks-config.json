@@ -135,7 +135,7 @@
     {
       "id": "Suspected Tracebility Links",
       "query": "SELECT Count(*) FROM t_xref WHERE Description LIKE '%suspected%'",
-      "queryOnFail": "SELECT * FROM t_xref WHERE Description LIKE '%suspected%'",
+      "queryOnFail": "SELECT obj.ea_guid as CLASSGUID, obj.object_type as CLASSTYPE, obj.name as TargetName_of_SuspectedLink FROM t_object obj, t_connector conn WHERE obj.object_id = conn.start_object_id AND conn.ea_guid IN (SELECT client FROM t_xref WHERE t_xref.Description LIKE '%suspected%')",
       "passedTitle": "There are no suspected traceability links",
       "failedTitle": "Model has {count} suspected traceability links",
       "passedDetail": null,

@@ -26,6 +26,11 @@ https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pip
 
   --NoProjectStatistics    If set the Project Statistics will not be included in the output!
 
+  --details           File to output JSON details report e.g.: 'details.json'. Contains all check results
+                      including affected EA elements for failed checks.
+
+  --junit             File to output JUnit XML report e.g.: 'junit.xml'.
+
   --Model             Required. The  'Model' used for the operation.
 
   --help              Display this help screen.
@@ -64,15 +69,72 @@ The JSON configuration file should follow this structure:
 
 **Parameters:**
 - `id` (required): Unique identifier for the check
-- `query` (required): SQL query to execute
+- `query` (required): SQL SELECT query returning a scalar count — check fails when count > 0
+- `queryOnFail` (optional): SQL SELECT query executed when the check fails; returns the affected rows for the details report
 - `passedTitle` (required): Title displayed when check passes
-- `failedTitle` (required): Title displayed when check fails
+- `failedTitle` (required): Title displayed when check fails (`{count}` is replaced with the actual count)
 - `passedDetail` (optional): Details shown when check passes
 - `failedDetail` (optional): Details shown when check fails
 - `passedLevel` (optional): Severity level when check passes (Passed, Information, Warning, Error)
-- `failedLevel` (optional): Severity level when check fails (Passed,Information, Warning, Error)
+- `failedLevel` (optional): Severity level when check fails (Passed, Information, Warning, Error)
 
 See the [sample checks-config.json](src/LemonTree.Pipeline.Tools.ModelCheck/checks-config.json) in the repository for a complete example with all default checks.
+
+### JSON Details Report (`--details`)
+
+Use `--details` to produce a structured JSON file containing all check results, including the list of affected EA elements for any failed check that has a `queryOnFail` defined.
+
+```
+LemonTree.Pipeline.Tools.ModelCheck.exe --model "model.qeax" --ChecksConfig "./checks-config.json" --details "details.json"
+```
+
+**Output structure:**
+
+```json
+{
+  "checks": [
+    {
+      "id": "Suspected Tracebility Links",
+      "level": "Error",
+      "title": "Model has 1 suspected traceability links",
+      "detail": "Some requirements have suspected traceability links. Please review and confirm the traceability links.",
+      "affectedElements": [
+        {
+          "CLASSGUID": "{775328B3-8DB0-4b11-99E2-693710DBC2D7}",
+          "CLASSTYPE": "Class",
+          "TargetName_of_SuspectedLink": "Block1"
+        }
+      ]
+    },
+    {
+      "id": "Baselines",
+      "level": "Passed",
+      "title": "No Baseline entries in the model",
+      "detail": null,
+      "affectedElements": []
+    }
+  ]
+}
+```
+
+The `affectedElements` array is always present — it is empty for passed checks or checks without a `queryOnFail`. This output is suitable for pipeline scripts that need to evaluate results programmatically.
+
+**PowerShell example — listing affected elements for a specific check:**
+
+```powershell
+$details = Get-Content "details.json" -Raw | ConvertFrom-Json
+
+$check = $details.checks | Where-Object { $_.id -eq "Suspected Tracebility Links" }
+
+if ($check.level -eq "Passed") {
+    Write-Host "✅ No suspected traceability links found."
+} else {
+    Write-Host "❌ Affected elements:"
+    $check.affectedElements | Format-Table -AutoSize
+}
+```
+
+See [run-suspected-links-check.ps1](run-suspected-links-check.ps1) for a full working example.
 
 ### Powershell Example:
 ```

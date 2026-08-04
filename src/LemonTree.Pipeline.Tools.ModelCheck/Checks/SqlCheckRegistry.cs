@@ -96,7 +96,9 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                 "ModelDocuments",
                 "TImages",
                 "ResourceAllocation",
-                "Journal"
+                "Journal",
+                "UnnamedElements",
+                "SuspectedTraceabilityLinks"
             };
         }
 

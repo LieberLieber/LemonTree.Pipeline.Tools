@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
@@ -64,6 +65,7 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
             long count = ModelAccess.RunSQLQueryScalar(Query);
 
             Issue result = new Issue();
+            result.Id = Id;
 
             if (count == 0)
             {
@@ -83,11 +85,25 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     if (dt != null && dt.Rows.Count > 0)
                     {
                         result.Markdown = DataTableToMarkdown(dt, $"Details: {Id}");
+                        result.AffectedElements = DataTableToList(dt);
                     }
                 }
             }
 
             return result;
+        }
+
+        private static List<Dictionary<string, string>> DataTableToList(DataTable dt)
+        {
+            var list = new List<Dictionary<string, string>>();
+            foreach (DataRow row in dt.Rows)
+            {
+                var dict = new Dictionary<string, string>();
+                foreach (DataColumn col in dt.Columns)
+                    dict[col.ColumnName] = row[col]?.ToString();
+                list.Add(dict);
+            }
+            return list;
         }
 
         private static string DataTableToMarkdown(DataTable dt, string title)

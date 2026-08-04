@@ -1,12 +1,15 @@
-﻿namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
+﻿using System.Collections.Generic;
+
+namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
 {
     internal class Issue
     {
+        internal string Id { get; set; }
         internal IssueLevel Level { get; set; }
         internal string Detail { get; set; }
         internal string Title { get; set; }
-
         internal string Markdown { get; set; }
+        internal List<Dictionary<string, string>> AffectedElements { get; set; } = new List<Dictionary<string, string>>();
 
         internal string Symbol
         {

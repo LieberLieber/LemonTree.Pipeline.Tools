@@ -166,6 +166,34 @@ namespace LemonTree.Pipeline.Tools.ModelCheck.Checks
                     FailedDetail = "Models with Package based VCS are not a supported scenario.",
                     PassedLevel = IssueLevel.Passed,
                     FailedLevel = IssueLevel.Warning,
+                },
+
+                // Unnamed Elements Check
+                new SqlCheck
+                {
+                    Id = "UnnamedElements",
+                    Query = "SELECT Count(*) FROM t_object WHERE (Name IS NULL OR Name = '') AND Object_Type NOT IN ('Note', 'Text')",
+                    QueryOnFail = "SELECT Object_ID, Object_Type, Stereotype, Package_ID FROM t_object WHERE (Name IS NULL OR Name = '') AND Object_Type NOT IN ('Note', 'Text')",
+                    PassedTitle = "All elements have names",
+                    FailedTitle = "Model has {count} elements without a name",
+                    PassedDetail = null,
+                    FailedDetail = "Elements without a name are hard to identify and may cause issues in diagrams and reports.",
+                    PassedLevel = IssueLevel.Passed,
+                    FailedLevel = IssueLevel.Warning,
+                },
+
+                // Suspected Traceability Links Check
+                new SqlCheck
+                {
+                    Id = "SuspectedTraceabilityLinks",
+                    Query = "SELECT Count(*) FROM t_xref WHERE Description LIKE '%suspected%'",
+                    QueryOnFail = "SELECT obj.ea_guid as CLASSGUID, obj.object_type as CLASSTYPE, obj.name as TargetName_of_SuspectedLink FROM t_object obj, t_connector conn WHERE obj.object_id = conn.start_object_id AND conn.ea_guid IN (SELECT client FROM t_xref WHERE t_xref.Description LIKE '%suspected%')",
+                    PassedTitle = "There are no suspected traceability links",
+                    FailedTitle = "Model has {count} suspected traceability links",
+                    PassedDetail = null,
+                    FailedDetail = "Some requirements have suspected traceability links. Please review and confirm the traceability links.",
+                    PassedLevel = IssueLevel.Passed,
+                    FailedLevel = IssueLevel.Error,
                 }
             };
         }
