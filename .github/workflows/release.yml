@@ -20,13 +20,19 @@ jobs:
             fullVersionString: ${{ steps.get_version.outputs.version}}
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                 fetch-depth: 0 # Mandatory to use the extract version from tag action
         
             - name: Extract version from tag
               id: get_version
-              uses: dhkatz/get-version-action@v3.0.0
+              env:
+                VERSION: ${{ github.ref_name }}
+              shell: pwsh
+              run: |
+                $version = $env:VERSION
+                "version=$version" >> $env:GITHUB_OUTPUT
+                "version-without-v=$($version -replace '^v', '')" >> $env:GITHUB_OUTPUT
                           
     call-build-workflow:
         uses: ./.github/workflows/Build.yml
