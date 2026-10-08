@@ -22,24 +22,24 @@ jobs:
         steps:
 
           - name: Download LemonTree.Pipeline.Tools.ModelCheck.Models
-            uses: actions/download-artifact@v4
+            uses: actions/download-artifact@v7
             with:
              name: LemonTree.Pipeline.Tools.ModelCheck.Models
           
           - name: Download checks-config.json
-            uses: actions/download-artifact@v4
+            uses: actions/download-artifact@v7
             with:
              name: checks-config
           
           - name: Download LemonTree.Pipeline.Tools.ModelCheck.Linux
             if:  runner.os == 'Linux'
-            uses: actions/download-artifact@v4
+            uses: actions/download-artifact@v7
             with:
                 name: LemonTree.Pipeline.Tools.ModelCheck.Linux
 
           - name: Download LemonTree.Pipeline.Tools.ModelCheck.Windows
             if:  runner.os == 'Windows'
-            uses: actions/download-artifact@v4
+            uses: actions/download-artifact@v7
             with:
              name: LemonTree.Pipeline.Tools.ModelCheck.Windows
           
@@ -132,7 +132,7 @@ jobs:
                 exit 0
 
           - name: Publish JUnit Test Results
-            uses: mikepenz/action-junit-report@v4
+            uses: mikepenz/action-junit-report@v6
             if: always()
             with:
               report_paths: './junit.xml, ./junit-config.xml'

@@ -29,7 +29,7 @@ jobs:
         runs-on: ubuntu-latest #good idea to be able to do chmod to fix the artifact issues.
         steps:
             - name: Download Artifact
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v7
               with:
                 name: ${{inputs.artifact-name}}
             
