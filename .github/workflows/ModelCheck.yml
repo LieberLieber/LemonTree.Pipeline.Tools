@@ -27,7 +27,7 @@ jobs:
         run: |
           #Powershell sees curly brackets as codeblocks so use quotations marks "{}" or just write your guids without them
           while (Test-Path Alias:curl) {Remove-Item Alias:curl} #remove the alias binding from curl to Invoke-WebRequest
-          curl "https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe" --output .\LemonTree.Pipeline.Tools.ModelCheck.exe -k
+          curl "https://lieberlieber.nexus/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe" --output .\LemonTree.Pipeline.Tools.ModelCheck.exe -k
                       
       - name: Run LemonTree Check Tool
         id: modelcheck

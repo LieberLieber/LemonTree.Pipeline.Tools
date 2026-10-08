@@ -10,7 +10,7 @@ on:
         required: true
         type: string
 env:
-  NexusArtifactRepo: https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools
+  NexusArtifactRepo: https://lieberlieber.nexus/repository/lemontree-pipeline-tools
   ModelNameSqLite: ./src/Models/Model.qeax
   
 jobs:

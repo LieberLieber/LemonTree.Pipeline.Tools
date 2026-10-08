@@ -1,11 +1,11 @@
 # LemonTree.Pipeline.Tools
 
 They are availble for downloard from the LieberLieber Nexus:\
-https://nexus.lieberlieber.com/#browse/browse:lemontree-pipeline-tools
+https://lieberlieber.nexus/#browse/browse:lemontree-pipeline-tools
 
 ## LemonTree.Pipeline.Tools.ModelCheck.exe
 Used to check Models for LemonTree Readiness.
-https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe
+https://lieberlieber.nexus/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe
 
 ### Commandline Reference
 
@@ -138,7 +138,7 @@ See [run-suspected-links-check.ps1](run-suspected-links-check.ps1) for a full wo
 
 ### Powershell Example:
 ```
-&"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe --output LemonTree.Pipeline.Tools.ModelCheck.exe
+&"C:\Program Files\Git\mingw64\bin\curl.exe" https://lieberlieber.nexus/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe --output LemonTree.Pipeline.Tools.ModelCheck.exe
 
 LemonTree.Pipeline.Tools.ModelCheck.exe  --model "model.qeax" --out ".\output.md" --FailOnErrors --FailOnWarnings
 echo "finished validation with $LASTEXITCODE"
@@ -198,11 +198,11 @@ echo "*  2 = model has at least one error  (only if --FailOnErrors)"
 
 ## LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
 If the Enterprise Architect Models are "poluted" with DIAGRAMIMAGEMAPS - you can use this little commandline Tool to delete those! (.eap(x) and .qea(x) only)\
-https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
+https://lieberlieber.nexus/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
 
 ### Powershell Example:
 ```
-&"C:\Program Files\Git\mingw64\bin\curl.exe" https://nexus.lieberlieber.com/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe --output LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
+&"C:\Program Files\Git\mingw64\bin\curl.exe" https://lieberlieber.nexus/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe --output LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
 
 .\LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe .\DemoModel.qeax
 ```
