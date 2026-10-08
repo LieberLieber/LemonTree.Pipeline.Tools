@@ -25,5 +25,14 @@ jobs:
         with:
             nexus-path: ${{vars.NEXUSARTIFACTREPO}}/latest
         secrets: inherit
-    
-      
+
+    publish-container-test:
+        needs: call-executetests-workflow
+        permissions:
+            contents: read
+            packages: write
+        uses: ./.github/workflows/publishcontainer.yml
+        with:
+            tags: |
+                type=raw,value=main
+                type=sha,format=long,prefix=sha-
