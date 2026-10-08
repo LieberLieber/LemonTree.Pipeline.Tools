@@ -7,6 +7,15 @@ https://lieberlieber.nexus/#browse/browse:lemontree-pipeline-tools
 Used to check Models for LemonTree Readiness.
 https://lieberlieber.nexus/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.ModelCheck.exe
 
+### Docker
+
+The ModelCheck container is published to GitHub Container Registry on each release:
+
+```sh
+docker pull ghcr.io/lieberlieber/lemontree.pipeline.tools:latest
+docker run --rm -v "$PWD:/data" ghcr.io/lieberlieber/lemontree.pipeline.tools:latest --model /data/model.qeax --out /data/output.md
+```
+
 ### Commandline Reference
 
 ```

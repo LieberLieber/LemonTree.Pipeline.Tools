@@ -56,3 +56,57 @@ jobs:
           nexus-path: ${{vars.NEXUSARTIFACTREPO}}
           publish-release: true
       secrets: inherit
+
+    publish-container:
+      needs: [prepareVersion,call-build-workflow]
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        packages: write
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Download Linux binary
+          uses: actions/download-artifact@v4
+          with:
+            name: LemonTree.Pipeline.Tools.ModelCheck.Linux
+            path: docker/context
+
+        - name: Download checks configuration
+          uses: actions/download-artifact@v4
+          with:
+            name: checks-config
+            path: docker/context
+
+        - name: Set image name
+          id: image
+          run: echo "name=ghcr.io/$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+        - name: Log in to GitHub Container Registry
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Extract Docker metadata
+          id: meta
+          uses: docker/metadata-action@v5
+          with:
+            images: ${{ steps.image.outputs.name }}
+            tags: |
+              type=raw,value=${{ github.event.release.tag_name }}
+              type=raw,value=latest
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+
+        - name: Build and push Docker image
+          uses: docker/build-push-action@v6
+          with:
+            context: docker/context
+            file: docker/Dockerfile
+            push: true
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
