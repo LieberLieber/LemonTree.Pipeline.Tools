@@ -52,28 +52,28 @@ jobs:
        run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false src/LemonTree.Pipeline.Tools.ModelCheck/LemonTree.Pipeline.Tools.ModelCheck.csproj 
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Models
-       uses: actions/upload-artifact@v8
+       uses: actions/upload-artifact@v7
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Models
             path: "src/Models/*.*"
             retention-days: 2
 
      - name: Archive checks-config.json
-       uses: actions/upload-artifact@v8
+       uses: actions/upload-artifact@v7
        with:
             name: checks-config
             path: "src/LemonTree.Pipeline.Tools.ModelCheck/checks-config.json"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Linux
-       uses: actions/upload-artifact@v8
+       uses: actions/upload-artifact@v7
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Linux
             path: "src/LemonTree.Pipeline.Tools.ModelCheck/bin/Release/net8.0/linux-x64/publish/LemonTree.Pipeline.Tools.ModelCheck"
             retention-days: 2
 
      - name: Archive LemonTree.Pipeline.Tools.ModelCheck.Windows
-       uses: actions/upload-artifact@v8
+       uses: actions/upload-artifact@v7
        with:
             name: LemonTree.Pipeline.Tools.ModelCheck.Windows
             path: "src/LemonTree.Pipeline.Tools.ModelCheck/bin/Release/net8.0/win-x86/publish/LemonTree.Pipeline.Tools.ModelCheck.exe"
