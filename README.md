@@ -56,6 +56,7 @@ The JSON configuration file should follow this structure:
     {
       "id": "check-id",
       "query": "SELECT COUNT(*) FROM [table] WHERE [condition]",
+      "queryOnFail": "SELECT * FROM [table] WHERE [condition]",
       "passedTitle": "Title when check passes",
       "failedTitle": "Title when check fails",
       "passedDetail": "Details when check passes",
@@ -70,7 +71,7 @@ The JSON configuration file should follow this structure:
 **Parameters:**
 - `id` (required): Unique identifier for the check
 - `query` (required): SQL SELECT query returning a scalar count — check fails when count > 0
-- `queryOnFail` (optional): SQL SELECT query executed when the check fails; returns the affected rows for the details report
+- `queryOnFail` (optional): Detail SQL SELECT query executed when the check fails; returns affected rows for the details report
 - `passedTitle` (required): Title displayed when check passes
 - `failedTitle` (required): Title displayed when check fails (`{count}` is replaced with the actual count)
 - `passedDetail` (optional): Details shown when check passes
@@ -191,19 +192,4 @@ echo "*  2 = model has at least one error  (only if --FailOnErrors)"
 |4|Total Diagrams|
 |13|Total Elements|
 |8|Total Packages|
-|1|Total Root Packages|
-
-
-
-
-## LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
-If the Enterprise Architect Models are "poluted" with DIAGRAMIMAGEMAPS - you can use this little commandline Tool to delete those! (.eap(x) and .qea(x) only)\
-https://lieberlieber.nexus/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
-
-### Powershell Example:
-```
-&"C:\Program Files\Git\mingw64\bin\curl.exe" https://lieberlieber.nexus/repository/lemontree-pipeline-tools/LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe --output LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe
-
-.\LemonTree.Pipeline.Tools.RemovePrerenderedDiagrams.exe .\DemoModel.qeax
-```
-
+|1|Total Root Packag
