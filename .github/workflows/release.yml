@@ -46,14 +46,14 @@ jobs:
         needs: [prepareVersion,call-build-workflow]
         uses: ./.github/workflows/publish.yml
         with:
-            nexus-path: ${{vars.NEXUSARTIFACTREPO}}/${{needs.prepareVersion.outputs.fullVersionString}}
+            nexus-path: https://lieberlieber.nexus/repository/lemontree-pipeline-tools/${{needs.prepareVersion.outputs.fullVersionString}}
         secrets: inherit
 
     call-publish-workflow:
       needs: [prepareVersion,call-build-workflow]
       uses: ./.github/workflows/publish.yml
       with:
-          nexus-path: ${{vars.NEXUSARTIFACTREPO}}
+          nexus-path: https://lieberlieber.nexus/repository/lemontree-pipeline-tools
           publish-release: true
       secrets: inherit
 

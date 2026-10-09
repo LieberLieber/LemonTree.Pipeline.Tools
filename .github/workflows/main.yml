@@ -23,7 +23,7 @@ jobs:
         needs: call-executetests-workflow
         uses: ./.github/workflows/publish.yml
         with:
-            nexus-path: ${{vars.NEXUSARTIFACTREPO}}/latest
+            nexus-path: https://lieberlieber.nexus/repository/lemontree-pipeline-tools/latest
         secrets: inherit
 
     publish-container-test:
